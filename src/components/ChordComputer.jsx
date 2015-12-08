@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import PitchNames from '../PitchNames';
 import {findChordRootOffset} from '../HarmonicSeries';
 
-const DEFAULT_CHORD = [0, 4, 7];
+const DEFAULT_CHORD = [3, 7, 10];
 
 export default class ChordComputer extends Component {
 
@@ -17,9 +17,14 @@ export default class ChordComputer extends Component {
     render() {
         return <div>
             <p>
-            Enter pitches as comma-separated semitone values above middle C.
+            Enter a chord as comma-separated notes,
+            either in scientific pitch notation (like <tt>C#5</tt>)
+            or in a number of semitones above middle&nbsp;C (like <tt>13</tt>).
             For example, the input <tt>0, 4, 7</tt> corresponds to
-            the middle C&nbsp;major triad.
+            the middle C&nbsp;major triad,
+            as does <tt>C4, E4, G4</tt>.
+            You can use <tt>b</tt> and <tt>#</tt> for flats and sharps,
+            like <tt>Eb4</tt> or <tt>D###7</tt>.
             </p>
             <ChordInput
                 value={this.state.chord}
@@ -83,7 +88,7 @@ class ChordInput extends Component {
     }
 
     _toString(value) {
-        return value.join(", ");
+        return value.map(x => PitchNames.pitchToName(x, true)).join(", ");
     }
 
     _fromString(str) {
@@ -95,12 +100,15 @@ class ChordInput extends Component {
         if (trimmed.length === 0) {
             return { status: "success", result: [] };
         }
-        if (!trimmed.match(/^-?\d+(?:,-?\d+)*$/)) {
-            return { status: "error", error: "no match" };
+
+        const parts = trimmed.split(",").map(PitchNames.parseNameOrPitch);
+        if (parts.filter(x => x === null).length !== 0) {
+            return { status: "error", error: "some parts of parse failed" };
         }
+
         return {
             status: "success",
-            result: trimmed.split(",").map(x => parseInt(x, 10)),
+            result: parts,
         };
     }
 }
