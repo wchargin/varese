@@ -55,12 +55,17 @@ class ChordInput extends Component {
             <strong>Enter a chord:</strong>
             {" "}
             <input
+                className="form-control"
                 ref="input"
                 value={text}
                 onChange={() => this._handleChange()}
                 onBlur={() => this.setState({ text: null })}
                 style={{
-                    color: this._fromString(text).status === "error" ? "red" : undefined,
+                    color: this._fromString(text).status === "error" ?
+                        "red" :
+                        undefined,
+                    display: "inline-block",
+                    width: "unset",
                 }}
             />
         </div>;

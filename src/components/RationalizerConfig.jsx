@@ -118,6 +118,7 @@ class AcousticRatioEntry extends Component {
             `${this.props.value.a}:${this.props.value.b}`;
         return <input
             ref="input"
+            className="form-control"
             value={text}
             onChange={() => this._handleChange()}
             onBlur={() => this.setState({ text: null })}
@@ -126,6 +127,7 @@ class AcousticRatioEntry extends Component {
                 width: "100%",
                 textAlign: "center",
                 fontWeight: this.props.isDefault ? undefined : "bold",
+                padding: 1,
             }}
         />;
     }
