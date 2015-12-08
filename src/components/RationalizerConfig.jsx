@@ -4,20 +4,9 @@ import {canonicalRationalizer} from '../HarmonicSeries';
 import Rational from '../Rational';
 
 export default class RationalizerConfig extends Component {
-    constructor() {
-        super();
-        const initialInputs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-        this.state = {
-            values: initialInputs.map(canonicalRationalizer),
-        };
-    }
 
     render() {
-        const names = [
-            "m2", "M2", "m3", "M3",
-            "P4", "A4/d5", "P5",
-            "m6", "M6", "m7", "M7"
-        ];
+        const {values, defaults, names} = this.props;
         return <div>
             <h3>Configure rationalization</h3>
             <div style={{
@@ -25,28 +14,18 @@ export default class RationalizerConfig extends Component {
                 justifyContent: "flex-start",
                 padding: "10px 0",
             }}>
-                {this.state.values.map((value, index) => {
-                    const setValueTo = newValue => {
-                        const {values} = this.state;
-                        this.setState({
-                            values: [
-                            ...values.slice(0, index),
-                            newValue,
-                            ...values.slice(index + 1),
-                            ],
-                        });
-                    };
-                    const canonicalValue = canonicalRationalizer(index + 1);
+                {values.map((value, index) => {
+                    const setValueTo = v => this.props.onChangeValue(v, index);
                     return <AcousticRatioBox
                         value={value}
                         key={index}
                         name={names[index]}
                         onChange={newValue => setValueTo(newValue)}
-                        onReset={newValue => setValueTo(canonicalValue)}
+                        onReset={newValue => setValueTo(defaults[index])}
                     />;
                 })}
             </div>
-            {this._renderDescendingWarning(this.state.values, names)}
+            {this._renderDescendingWarning(values, names)}
         </div>;
     }
 
