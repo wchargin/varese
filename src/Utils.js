@@ -12,7 +12,7 @@ class Rational {
         if (b === 0) {
             throw new Error("denominator is zero");
         }
-        const divisor = Math.abs(gcd(a, b));
+        const divisor = gcd(a, b);
         const maybeNegate = b < 0 ? -1 : 1;
         const fac = maybeNegate / divisor;
 
