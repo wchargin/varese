@@ -74,4 +74,17 @@ describe('HarmonicSeries', () => {
             expect(temper(5)).to.equal(28));
     });
 
+    describe("#canonicalRationalizer", () => {
+        const {canonicalRationalizer: cr} = HarmonicSeries;
+
+        it("should map the tritone to 12:17", () =>
+            expect(cr(6)).to.deep.equal(new Rational(12, 17)));
+        it("should map the perfect fifth to 2:3", () =>
+            expect(cr(7)).to.deep.equal(new Rational(2, 3)));
+        it("should map the 1-compound perfect fifth to 1:3", () =>
+            expect(cr(7 + 12)).to.deep.equal(new Rational(1, 3)));
+        it("should map the 2-compound perfect fifth to 1:6", () =>
+            expect(cr(7 + 24)).to.deep.equal(new Rational(1, 6)));
+    });
+
 });
