@@ -56,6 +56,8 @@ if [[ "$(git rev-parse --abbrev-ref HEAD)" != "master" ]]; then
     fi
 fi
 
+ensure_clean_working_tree
+
 SOURCE_COMMIT="$(git rev-parse HEAD)"
 printf 'Preparing to deploy commit %s.\n' "$SOURCE_COMMIT"
 
