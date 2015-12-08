@@ -86,6 +86,28 @@ describe('Utils', () => {
                     .equals(new Rational(0, 1))).to.be.true);
         });
 
+        describe('#exponentiateScalar', () => {
+            const exp57 = k => new Rational(5, 7).exponentiateScalar(k);
+            it("exponentiates to the power of 2",
+                () => expect(exp57(2).equals(new Rational(25, 49)))
+                    .to.be.true);
+            it("exponentiates to the power of 1 (identity)",
+                () => expect(exp57(1).equals(new Rational(5, 7))).to.be.true);
+            it("exponentiates to the power of 0 (projection)",
+                () => expect(exp57(0).equals(new Rational(1, 1))).to.be.true);
+            it("exponentiates to the power of -1 (reciprocal)",
+                () => expect(exp57(-1).equals(new Rational(7, 5))).to.be.true);
+            it("exponentiates to the power of -2",
+                () => expect(exp57(-2).equals(new Rational(49, 25)))
+                    .to.be.true);
+
+            const exp0 = k => new Rational(0, 1).exponentiateScalar(k);
+            it("lets 0^88 = 0",
+                () => expect(exp0(88).equals(new Rational(0, 1))).to.be.true);
+            it("lets 0^0 = 1",
+                () => expect(exp0(0).equals(new Rational(1, 1))).to.be.true);
+        });
+
         describe("#toNumber", () => {
             it("converts zero to a number",
                 () => expect(new Rational(0, 12).toNumber()).to.equal(0));
