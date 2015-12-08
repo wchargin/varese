@@ -62,6 +62,23 @@ export function extendRationalizer(table) {
     };
 }
 
+/*
+ * Convert a multiple of the fundamental frequency
+ * to a equal-temperament semitone difference.
+ * For example, 4 maps to 24,
+ * because the fourth overtone is two octaves above the fundamental,
+ * and two octaves comprise 24 semitones.
+ * Similarly, 3 maps to about 19.01955,
+ * because the third overtone is an octave and a perfect fifth above,
+ * and this corresponds to about that many semitones.
+ *
+ * Note that the returned value need not be an integer.
+ */
+export function temperExact(fundamentalMultiple) {
+    return 12 * Math.log2(fundamentalMultiple);
+}
+
 export default {
     extendRationalizer,
+    temperExact,
 };

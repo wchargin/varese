@@ -43,4 +43,20 @@ describe('HarmonicSeries', () => {
             expect(() => rationalizer(NaN)).to.throw(/NaN/));
     });
 
+    describe("#temperExact", () => {
+        const {temperExact} = HarmonicSeries;
+        const epsilon = 1e-4;
+
+        it("should give  0.0000 for the fundamental itself", () =>
+            expect(temperExact(1)).to.be.closeTo(0.0000, epsilon));
+        it("should give 12.0000 for the second overtone", () =>
+            expect(temperExact(2)).to.be.closeTo(12.0000, epsilon));
+        it("should give 19.0196 for the third overtone", () =>
+            expect(temperExact(3)).to.be.closeTo(19.0196, epsilon));
+        it("should give 24.0000 for the fourth overtone", () =>
+            expect(temperExact(4)).to.be.closeTo(24.0000, epsilon));
+        it("should give 27.8631 for the fifth overtone", () =>
+            expect(temperExact(5)).to.be.closeTo(27.8631, epsilon));
+    });
+
 });
