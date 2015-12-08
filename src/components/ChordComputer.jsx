@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 
+import PitchNames from '../PitchNames';
 import {findChordRootOffset} from '../HarmonicSeries';
 
 const DEFAULT_CHORD = [0, 4, 7];
@@ -113,7 +114,10 @@ class ChordOutput extends Component {
             const offset = findChordRootOffset(rationalizer, chord);
             const noun = offset === 1 ? "semitone" : "semitones";
             const str = offset.toString().replace(/-/g, "\u2212");
-            return <span>The root of that chord is at {str} {noun}.</span>;
+            const note = PitchNames.pitchToName(offset, true);
+            return <span>
+                The root of that chord is {note}, at {str} {noun}.
+            </span>;
         }
     }
 }
