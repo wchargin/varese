@@ -86,6 +86,15 @@ describe('Utils', () => {
                     .equals(new Rational(0, 1))).to.be.true);
         });
 
+        describe("#toNumber", () => {
+            it("converts zero to a number",
+                () => expect(new Rational(0, 12).toNumber()).to.equal(0));
+            it("converts (7 / 1) to a number",
+                () => expect(new Rational(7, 1).toNumber()).to.equal(7));
+            it("converts (7 / 4) to a number",
+                () => expect(new Rational(7, 4).toNumber()).to.equal(7 / 4));
+        });
+
     })
 
 });
