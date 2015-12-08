@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e -x
+set -e
 
 # Disable this if you've already run 'npm build'.
 : "${BUILD:=true}"
@@ -38,17 +38,12 @@ ensure_clean_working_tree() {
 }
 
 prompt() {
-    set +x
-    >&2 echo
-    >&2 echo
     >&2 printf '%s\n' "$1"
     >&2 printf 'yes/no> '
     read line
     if [[ "$line" != "yes" ]]; then
         >&2 printf '%s\n' "Aborting!"
     fi
-    >&2 echo
-    >&2 echo
     printf '%s' "$line"
 }
 
