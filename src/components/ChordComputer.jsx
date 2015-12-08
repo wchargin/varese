@@ -127,7 +127,8 @@ class ChordOutput extends Component {
             const str = offset.toString().replace(/-/g, "\u2212");
             const note = PitchNames.pitchToName(offset, true);
             return <span>
-                The root of that chord is {note}, at {str} {noun}.
+                The root of that chord is <strong>{note}</strong>,
+                at {str} {noun}.
             </span>;
         }
     }
