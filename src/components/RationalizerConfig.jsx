@@ -11,6 +11,7 @@ export default class RationalizerConfig extends Component {
             values: initialInputs.map(canonicalRationalizer),
         };
     }
+
     render() {
         const names = [
             "m2", "M2", "m3", "M3",
@@ -38,6 +39,28 @@ export default class RationalizerConfig extends Component {
                     onReset={newValue => setValueTo(canonicalValue)}
                 />;
             })}
+            {this._renderDescendingWarning(this.state.values, names)}
+        </div>;
+    }
+
+    _renderDescendingWarning(values, names) {
+        const bad = values
+            .slice(0, values.length - 1)
+            .map((x, i) => i)
+            .filter(i => values[i].toNumber() <= values[i + 1].toNumber())
+            .map(i => `${names[i]}\u2013${names[i + 1]}`);
+        if (!bad.length) {
+            return null;
+        }
+
+        const prefix = bad.length === 1 ? "the interval" : "the intervals";
+        const list = bad.length === 1 ? bad[0] :
+            bad.length === 2 ? `${bad[0]} and ${bad[1]}` :
+            (bad.slice(0, bad.length - 1).join(", ") + ", and " +
+                bad[bad.length - 1]);
+        const verb = bad.length === 1 ? "is" : "are";
+        return <div className="alert alert-warning">
+            <strong>Warning:</strong> {prefix} {list} {verb} not descending.
         </div>;
     }
 }
