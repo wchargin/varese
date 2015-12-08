@@ -49,8 +49,10 @@ class ChordInput extends Component {
     }
 
     componentDidMount() {
-        this.refs.input.focus();
-        this.refs.input.select();
+        const {input} = this.refs;
+        input.focus();
+        input.selectionStart = input.value.length;
+        input.selectionEnd = input.value.length;
     }
 
     render() {
