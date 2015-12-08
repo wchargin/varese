@@ -19,9 +19,9 @@ export default class RationalizerConfig extends Component {
             and 0.5 (which would be a&nbsp;P8).
             </p>
             <div style={{
-                display: "flex",
-                justifyContent: "flex-start",
                 padding: "10px 0",
+                display: "table-row",
+                verticalAlign: "top",
             }}>
                 {values.map((value, index) => {
                     const setValueTo = v => this.props.onChangeValue(v, index);
@@ -65,13 +65,12 @@ class AcousticRatioBox extends Component {
 
     render() {
         return <div style={{
-            display: "inline-flex",
+            display: "table-cell",
             width: 60,
-            flexDirection: "column",
             textAlign: "center",
-            margin: "0 2px",
+            padding: "0 2px",
         }}>
-            <strong>{this.props.name}</strong>
+            <strong>{this.props.name}</strong><br />
             <AcousticRatioEntry
                 value={this.props.value}
                 onChange={this.props.onChange}
