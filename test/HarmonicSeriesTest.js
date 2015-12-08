@@ -59,4 +59,19 @@ describe('HarmonicSeries', () => {
             expect(temperExact(5)).to.be.closeTo(27.8631, epsilon));
     });
 
+    describe("#temper", () => {
+        const {temper} = HarmonicSeries;
+
+        it("should give  0 for the fundamental itself", () =>
+            expect(temper(1)).to.equal(0));
+        it("should give 12 for the the second overtone", () =>
+            expect(temper(2)).to.equal(12));
+        it("should give 19 for the the third overtone", () =>
+            expect(temper(3)).to.equal(19));
+        it("should give 24 for the the fourth overtone", () =>
+            expect(temper(4)).to.equal(24));
+        it("should give 28 for the the fifth overtone", () =>
+            expect(temper(5)).to.equal(28));
+    });
+
 });

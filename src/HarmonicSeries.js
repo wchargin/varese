@@ -78,7 +78,15 @@ export function temperExact(fundamentalMultiple) {
     return 12 * Math.log2(fundamentalMultiple);
 }
 
+/*
+ * Like 'temperExact', but rounds the result to the nearest integer.
+ */
+export function temper(fundamentalMultiple) {
+    return Math.round(temperExact(fundamentalMultiple));
+}
+
 export default {
     extendRationalizer,
     temperExact,
+    temper,
 };
