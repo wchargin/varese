@@ -24,6 +24,8 @@ describe('PitchNames', () => {
             () => expect(p2n(1, true)).to.equal("C\u266F4"));
         it("renders a pretty flat for A\u266D3",
             () => expect(p2n(-4, true)).to.equal("A\u266D3"));
+        it("renders a pretty minus sign for C\u22121",
+            () => expect(p2n(-60, true)).to.equal("C\u22121"));
     });
 
     describe('#nameToPitch', () => {
@@ -41,6 +43,9 @@ describe('PitchNames', () => {
 
         const dbbb4 = "Db\u266Db4";
         it("parses a mixed plain/pretty " + dbbb4, test(dbbb4, -1));
+
+        const cm1 = "C\u22121";
+        it("parses a pretty minus sign in " + cm1, test(cm1, -60));
 
         it("parses B#5 as a C6, not a C5", test("B#5", 24));
 

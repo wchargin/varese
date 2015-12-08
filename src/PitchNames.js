@@ -1,9 +1,11 @@
-const [flat, sharp] = ["\u266D", "\u266F"];
+const [flat, sharp, minus] = ["\u266D", "\u266F", "\u2212"];
 const baseTable = [
     "C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B",
 ];
-const prettify = (x) => x.replace("#", sharp).replace("b", flat);
-const prettyTable = baseTable.map(prettify);
+const prettify = (x) => x
+    .replace("#", sharp)
+    .replace("b", flat)
+    .replace("-", "\u2212");
 
 /*
  * Input: number of semitones above middle C.
@@ -18,7 +20,8 @@ export function pitchToName(semitones, pretty = false) {
     const phase1 = semitones % 12;
     const phase = phase1 < 0 ? phase1 + 12 : phase1;
 
-    return (pretty ? prettyTable : baseTable)[phase] + octaveName;
+    const plain = baseTable[phase] + octaveName;
+    return pretty ? prettify(plain) : plain;
 }
 
 /*
@@ -31,14 +34,14 @@ export function pitchToName(semitones, pretty = false) {
  * or null if it is not a valid note.
  */
 export function nameToPitch(name) {
-    const pat = /^([A-Ga-g])([#\u266F]*|[b\u266D]*)(-?\d+)$/;
+    const pat = /^([A-Ga-g])([#\u266F]*|[b\u266D]*)((?:-|\u2212)?\d+)$/;
     const match = name.match(pat);
     if (!match) {
         return null;
     }
     const letter = match[1].toUpperCase();
     const accidentals = prettify(match[2]);
-    const number = parseInt(match[3], 10);
+    const number = parseInt(match[3].replace(minus, "-"), 10);
 
     const accidental = accidentals.charAt(0);
     const accidentalShift =
