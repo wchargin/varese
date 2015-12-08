@@ -10,8 +10,19 @@ class Rational {
 
     constructor(a, b) {
         if (b === 0) {
-            throw new Error("denominator is zero");
+            throw new Error("denominator must not be zero");
         }
+        if (!isFinite(a)) {
+            throw new Error("numerator must be finite");
+        }
+        if (!isFinite(b)) {
+            throw new Error("denominator must be finite");
+        }
+        if (!isFinite(a / b)) {
+            // can arise when dividing by subnormals, etc.
+            throw new Error("rational must represent a finite quotient");
+        }
+
         const divisor = gcd(a, b);
         const maybeNegate = b < 0 ? -1 : 1;
         const fac = maybeNegate / divisor;

@@ -63,6 +63,20 @@ describe('Utils', () => {
                 expect(r.a).to.equal(-5);
                 expect(r.b).to.equal(3);
             });
+
+            it("rejects an infinity in the numerator",
+                () => expect(() => new Rational(Infinity, 1))
+                    .to.throw(/numerator/));
+            it("rejects an infinity in the denominator",
+                () => expect(() => new Rational(1, Infinity))
+                    .to.throw(/denominator/));
+            it("rejects an infinite quotient of finite numbers", () => {
+                const superSmall = 1e-313;
+                expect(superSmall !== 0).to.be.true;
+                expect(isFinite(superSmall)).to.be.true;
+                expect(() => new Rational(1, superSmall))
+                    .to.throw(/finite quotient/);
+            })
         });
 
         describe('#equals', () => {
