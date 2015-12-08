@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 
+import ChordComputer from './ChordComputer';
 import RationalizerConfig from './RationalizerConfig';
 
-import {canonicalRationalizer} from '../HarmonicSeries';
+import {extendRationalizer, canonicalRationalizer} from '../HarmonicSeries';
 const initialInputs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 const initialValues = initialInputs.map(canonicalRationalizer);
 const names = [
@@ -22,6 +23,9 @@ export default class App extends Component {
     render() {
         return <div className="container">
             <h1>Var&egrave;se pitch calculator</h1>
+            <ChordComputer
+                rationalizer={extendRationalizer(this.state.values)}
+            />
             <RationalizerConfig
                 values={this.state.values}
                 defaults={initialValues}
