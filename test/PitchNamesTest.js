@@ -60,4 +60,22 @@ describe('PitchNames', () => {
         it("allows a really positive note", test("C88",   84 * 12));
     });
 
+    describe('#parseNameOrPitch', () => {
+        const {parseNameOrPitch: parse} = PitchNames;
+        const test = (input, output) => () =>
+            expect(parse(input)).to.equal(output);
+
+        it("accepts a pitch like 0", test("0", 0));
+        it("accepts a pitch like 123", test("123", 123));
+
+        const m345 = "\u2212345";
+        it("accepts a pitch like -234, with hyphen", test("-234", -234));
+        it(`accepts a pitch like ${m345}, with minus sign`, test(m345, -345));
+
+        it("accepts a pitch like C5", test("C5", 12));
+
+        it("rejects a pitch like --12", test("--12", null));
+        it("rejects a pitch like +3", test("+3", null));
+    });
+
 })
