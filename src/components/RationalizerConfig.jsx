@@ -11,8 +11,8 @@ export default class RationalizerConfig extends Component {
             <h3>Configure rationalization</h3>
             <p>
             How do you want to map semitone differences to acoustic ratios?
-            You can modify the default mappings by changing the cells below,
-            or reset any cell to its original mapping.
+            You can modify the default mappings by changing the cells below.
+            Cells in bold have been changed from their original mappings.
             </p>
             <p>
             For best results, these values should be strictly decreasing,
@@ -30,6 +30,7 @@ export default class RationalizerConfig extends Component {
                         value={value}
                         key={index}
                         name={names[index]}
+                        isDefault={value.equals(defaults[index])}
                         onChange={newValue => setValueTo(newValue)}
                         onReset={newValue => setValueTo(defaults[index])}
                     />;
@@ -75,8 +76,10 @@ class AcousticRatioBox extends Component {
             <AcousticRatioEntry
                 value={this.props.value}
                 onChange={this.props.onChange}
+                isDefault={this.props.isDefault}
             />
-            <button onClick={this.props.onReset}>Reset</button>
+            {!this.props.isDefault &&
+                <button onClick={this.props.onReset}>Reset</button>}
         </div>;
     }
 
@@ -119,7 +122,11 @@ class AcousticRatioEntry extends Component {
             onChange={() => this._handleChange()}
             onBlur={() => this.setState({ text: null })}
             onClick={() => this.refs.input.select()}
-            style={{ width: "100%", textAlign: "center" }}
+            style={{
+                width: "100%",
+                textAlign: "center",
+                fontWeight: this.props.isDefault ? undefined : "bold",
+            }}
         />;
     }
 
