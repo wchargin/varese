@@ -107,6 +107,7 @@ class ChordInput extends Component {
         if (parts.filter(x => x === null).length !== 0) {
             return { status: "error", error: "some parts of parse failed" };
         }
+        parts.sort();
 
         return {
             status: "success",
