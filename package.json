@@ -7,7 +7,7 @@
   "scripts": {
     "start": "webpack-dev-server",
     "build": "NODE_ENV=production webpack",
-    "test": "mocha --compilers js:babel-register 'test/**/*.@(js|jsx)'"
+    "test": "mocha --compilers js:babel-register test/helper.js 'test/**/*.@(js|jsx)'"
   },
   "babel": {
     "ignore": ["node_modules"],
