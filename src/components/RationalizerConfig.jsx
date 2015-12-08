@@ -19,26 +19,33 @@ export default class RationalizerConfig extends Component {
             "m6", "M6", "m7", "M7"
         ];
         return <div>
-            {this.state.values.map((value, index) => {
-                const setValueTo = newValue => {
-                    const {values} = this.state;
-                    this.setState({
-                        values: [
-                        ...values.slice(0, index),
-                        newValue,
-                        ...values.slice(index + 1),
-                        ],
-                    });
-                };
-                const canonicalValue = canonicalRationalizer(index + 1);
-                return <AcousticRatioBox
-                    value={value}
-                    key={index}
-                    name={names[index]}
-                    onChange={newValue => setValueTo(newValue)}
-                    onReset={newValue => setValueTo(canonicalValue)}
-                />;
-            })}
+            <h3>Configure rationalization</h3>
+            <div style={{
+                display: "flex",
+                justifyContent: "flex-start",
+                padding: "10px 0",
+            }}>
+                {this.state.values.map((value, index) => {
+                    const setValueTo = newValue => {
+                        const {values} = this.state;
+                        this.setState({
+                            values: [
+                            ...values.slice(0, index),
+                            newValue,
+                            ...values.slice(index + 1),
+                            ],
+                        });
+                    };
+                    const canonicalValue = canonicalRationalizer(index + 1);
+                    return <AcousticRatioBox
+                        value={value}
+                        key={index}
+                        name={names[index]}
+                        onChange={newValue => setValueTo(newValue)}
+                        onReset={newValue => setValueTo(canonicalValue)}
+                    />;
+                })}
+            </div>
             {this._renderDescendingWarning(this.state.values, names)}
         </div>;
     }
@@ -73,7 +80,7 @@ class AcousticRatioBox extends Component {
             width: 60,
             flexDirection: "column",
             textAlign: "center",
-            marginRight: 5,
+            margin: "0 2px",
         }}>
             <strong>{this.props.name}</strong>
             <AcousticRatioEntry
