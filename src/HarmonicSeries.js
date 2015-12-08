@@ -113,6 +113,20 @@ export function findRootOffset(rationalizer, basePitch, highPitch) {
     return Math.round(findRootOffsetExact(rationalizer, basePitch, highPitch));
 }
 
+export function findChordRootOffset(rationalizer, notes) {
+    if (notes.length === 1) {
+        return notes[0];
+    }
+
+    // Zip with the binary operator on consecutive pairs.
+    // (That is, convert [a, b, c, d] to [f(a, b), f(b, c), f(c, d)].)
+    const results = new Array(notes.length - 1);
+    for (let i = 0; i < results.length; i++) {
+        results[i] = findRootOffset(rationalizer, notes[i], notes[i + 1]);
+    }
+    return findChordRootOffset(rationalizer, results);
+}
+
 export const canonicalRationalizer = extendRationalizer([
     new Rational(15, 16),
     new Rational(8, 9),
@@ -134,6 +148,8 @@ export default {
 
     findRootOffsetExact,
     findRootOffset,
+
+    findChordRootOffset,
 
     canonicalRationalizer,
 };

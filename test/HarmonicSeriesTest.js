@@ -87,6 +87,27 @@ describe('HarmonicSeries', () => {
             expect(findRootOffset(cr, 99, 99)).to.equal(99));
     });
 
+    describe("#findChordRootOffset", () => {
+        const {
+            findChordRootOffset,
+            canonicalRationalizer: cr,
+        } = HarmonicSeries;
+
+        it("should resolve a single-note \"chord\" to itself", () =>
+            expect(findChordRootOffset(cr, [77])).to.equal(77));
+        it("should resolve a binary chord to just the interval root", () =>
+            expect(findChordRootOffset(cr, [9, 12])).to.equal(5 - 24));
+
+        it("should resolve C-E-G to 15vb-C", () =>
+            expect(findChordRootOffset(cr, [0, 4, 7])).to.equal(-24));
+        it("should resolve C-E-G-B to 22vb-C", () =>
+            expect(findChordRootOffset(cr, [0, 4, 7, 11])).to.equal(-36));
+        it("should resolve C-F-A to 15vb-F", () =>
+            expect(findChordRootOffset(cr, [0, 5, 9])).to.equal(5 - 24));
+        it("should resolve Eb-A-D to 5x8vb-Db", () =>
+            expect(findChordRootOffset(cr, [3, 9, 14])).to.equal(1 - 5 * 12));
+    });
+
     describe("#canonicalRationalizer", () => {
         const {canonicalRationalizer: cr} = HarmonicSeries;
 
