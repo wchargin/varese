@@ -74,6 +74,19 @@ describe('HarmonicSeries', () => {
             expect(temper(5)).to.equal(28));
     });
 
+    describe("#findRootOffset", () => {
+        const {findRootOffset, canonicalRationalizer: cr} = HarmonicSeries;
+
+        it("should resolve high-A-to-C to root at 15vb-F", () =>
+            expect(findRootOffset(cr, 9, 12)).to.equal(5 - 24));
+        it("should resolve C-to-high-E to root at 8vb-C", () =>
+            expect(findRootOffset(cr, 12, 28)).to.equal(0));
+        it("should resolve E-to-G to root at 15vb-C", () =>
+            expect(findRootOffset(cr, 4, 7)).to.equal(-24));
+        it("should resolve unison to itself", () =>
+            expect(findRootOffset(cr, 99, 99)).to.equal(99));
+    });
+
     describe("#canonicalRationalizer", () => {
         const {canonicalRationalizer: cr} = HarmonicSeries;
 

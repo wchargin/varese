@@ -85,6 +85,34 @@ export function temper(fundamentalMultiple) {
     return Math.round(temperExact(fundamentalMultiple));
 }
 
+/*
+ * Suppose we have some arbitrary origin point---say, middle C is at 0.
+ * Then an interval can be represented by a pair (a, b)
+ * of integers 'a' and 'b', where a < b,
+ * the lower note is 'a' semitones above the origin,
+ * and the higher note is 'b' semitones above the origin.
+ * This function finds the root of that chord in pitch space.
+ *
+ * For example, consider the minor third from E up to G.
+ * If our origin is middle C, then we would have a = 4 and b = 7.
+ * If you work out the fundamentals, you can find that
+ * the root is the middle C two octaves below the origin.
+ * So, if CR is some canonical rationalizer,
+ * this implies that findRootOffsetExact(CR, 4, 7) should be about -24.
+ */
+export function findRootOffsetExact(rationalizer, basePitch, highPitch) {
+    const semitoneDifference = highPitch - basePitch;
+    const ratio = rationalizer(semitoneDifference);
+    return basePitch - temperExact(ratio.a);
+}
+
+/*
+ * Like 'findRootOffsetExact', but rounds the result to the nearest integer.
+ */
+export function findRootOffset(rationalizer, basePitch, highPitch) {
+    return Math.round(findRootOffsetExact(rationalizer, basePitch, highPitch));
+}
+
 export const canonicalRationalizer = extendRationalizer([
     new Rational(15, 16),
     new Rational(8, 9),
@@ -103,6 +131,9 @@ export default {
     extendRationalizer,
     temperExact,
     temper,
+
+    findRootOffsetExact,
+    findRootOffset,
 
     canonicalRationalizer,
 };
