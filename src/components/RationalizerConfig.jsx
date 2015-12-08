@@ -9,6 +9,16 @@ export default class RationalizerConfig extends Component {
         const {values, defaults, names} = this.props;
         return <div>
             <h3>Configure rationalization</h3>
+            <p>
+            How do you want to map semitone differences to acoustic ratios?
+            You can modify the default mappings by changing the cells below,
+            or reset any cell to its original mapping.
+            </p>
+            <p>
+            For best results, these values should be strictly decreasing,
+            and all between 1.0 (which would be a&nbsp;P0)
+            and 0.5 (which would be a&nbsp;P8).
+            </p>
             <div style={{
                 display: "flex",
                 justifyContent: "flex-start",
