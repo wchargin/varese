@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import Navbar from './Navbar';
+import Page from './Page';
 import ChordComputer from './ChordComputer';
 import RationalizerConfig from './RationalizerConfig';
 
@@ -22,29 +22,26 @@ export default class PitchCalculator extends Component {
     }
 
     render() {
-        return <div>
-            <Navbar here="calculator" />
-            <div className="container">
-                <h1>Var&egrave;se pitch calculator</h1>
-                <ChordComputer
-                    rationalizer={extendRationalizer(this.state.values)}
-                />
-                <RationalizerConfig
-                    values={this.state.values}
-                    defaults={initialValues}
-                    names={names}
-                    onChangeValue={(newValue, index) => {
-                        const {values} = this.state;
-                        this.setState({
-                            values: [
-                                ...values.slice(0, index),
-                                newValue,
-                                ...values.slice(index + 1),
-                            ],
-                        });
-                    }}
-                />
-            </div>
-        </div>;
+        return <Page path="calculator">
+            <h1>Var&egrave;se pitch calculator</h1>
+            <ChordComputer
+                rationalizer={extendRationalizer(this.state.values)}
+            />
+            <RationalizerConfig
+                values={this.state.values}
+                defaults={initialValues}
+                names={names}
+                onChangeValue={(newValue, index) => {
+                    const {values} = this.state;
+                    this.setState({
+                        values: [
+                            ...values.slice(0, index),
+                            newValue,
+                            ...values.slice(index + 1),
+                        ],
+                    });
+                }}
+            />
+        </Page>;
     }
 }
