@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 
 import Page from './../Page';
 import TrichordTree from './TrichordTree';
+import ChordInput from '../ChordInput';
 
 export default class App extends Component {
 
@@ -15,6 +16,10 @@ export default class App extends Component {
     render() {
         return <Page path="tree">
             <h1>Coming soon!</h1>
+            <ChordInput
+                value={this.state.rootChord}
+                onChange={rootChord => this.setState({ rootChord })}
+            />
             <TrichordTree
                 rootChord={this.state.rootChord}
                 levels={4}
