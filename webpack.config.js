@@ -23,7 +23,7 @@ module.exports = {
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                loader: (prod ? '' : 'react-hot!') + 'babel?presets[]=react&presets[]=es2015&cacheDirectory',
+                loader: (prod ? '' : 'react-hot!') + 'babel?presets[]=react&presets[]=es2015&plugins[]=transform-object-rest-spread&cacheDirectory',
             },
             { test: /\.css$/, loader: 'style-loader!css-loader' },
             { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file" },
