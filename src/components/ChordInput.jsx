@@ -23,7 +23,7 @@ export default class ChordInput extends Component {
             this.state.text :
             this._toString(this.props.value);
         return <div className="well">
-            <strong>Enter a chord:</strong>
+            <strong>{this.props.message}</strong>
             {" "}
             <input
                 className="form-control"
@@ -81,4 +81,5 @@ export default class ChordInput extends Component {
 ChordInput.propTypes = {
     value: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
     onChange: PropTypes.func.isRequired,
+    message: PropTypes.string.isRequired,
 }

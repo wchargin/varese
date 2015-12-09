@@ -18,6 +18,7 @@ export default class App extends Component {
             <h1>Coming soon!</h1>
             <ChordInput
                 value={this.state.rootChord}
+                message="Enter a trichord: "
                 onChange={rootChord => this.setState({ rootChord })}
             />
             <TrichordTree

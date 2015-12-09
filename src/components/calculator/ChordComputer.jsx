@@ -30,6 +30,7 @@ export default class ChordComputer extends Component {
             </p>
             <ChordInput
                 value={this.state.chord}
+                message="Enter a chord: "
                 onChange={chord => this.setState({ chord })}
             />
             <ChordOutput
