@@ -6,10 +6,13 @@ import TrichordView from './TrichordView';
 
 export default class TrichordTree extends Component {
     render() {
-        const {rootChord, levels} = this.props;
+        const {rootChord, levels, onClickChord} = this.props;
         const chords = this._generateTree(rootChord, levels);
-        const nodes = chords.map(row =>
-            row.map(chord => <TrichordView notes={chord} />));
+        const nodes = chords.map(row => row.map(chord =>
+            <TrichordView
+                notes={chord}
+                onClick={() => onClickChord(chord)}
+            />));
         return <TreeView elements={nodes} />;
     }
     _iterateRow(previousRow) {
@@ -29,6 +32,7 @@ export default class TrichordTree extends Component {
 TrichordTree.propTypes = {
     rootChord: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
     levels: PropTypes.number,
+    onClickChord: PropTypes.func.isRequired,
 };
 TrichordTree.defaultProps = {
     levels: 3,
