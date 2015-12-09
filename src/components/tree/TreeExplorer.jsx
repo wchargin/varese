@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 
 import Page from './../Page';
 import TrichordTree from './TrichordTree';
+import TreeSettings from './TreeSettings';
 import ChordInput from '../ChordInput';
 
 export default class TreeExplorer extends Component {
@@ -10,6 +11,9 @@ export default class TreeExplorer extends Component {
         super();
         this.state = {
             rootChord: [0, 4, 7],
+            settings: {
+                levels: 4,
+            }
         };
     }
 
@@ -31,9 +35,13 @@ export default class TreeExplorer extends Component {
                 onChange={rootChord => this.setState({ rootChord })}
                 exactly={3}
             />
+            <TreeSettings
+                value={this.state.settings}
+                onChange={settings => this.setState({ settings })}
+            />
             <TrichordTree
                 rootChord={this.state.rootChord}
-                levels={4}
+                levels={this.state.settings.levels}
                 onClickChord={rootChord => this.setState({ rootChord })}
             />
         </Page>;
