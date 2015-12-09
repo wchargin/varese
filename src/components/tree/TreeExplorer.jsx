@@ -4,7 +4,7 @@ import Page from './../Page';
 import TrichordTree from './TrichordTree';
 import ChordInput from '../ChordInput';
 
-export default class App extends Component {
+export default class TreeExplorer extends Component {
 
     constructor() {
         super();
