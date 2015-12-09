@@ -69,11 +69,8 @@ export default class ChordInput extends Component {
             .replace(/^,*/, "")     // leading commas
             .replace(/,,+/g, ",")   // internal commas
             .replace(/,+$/, "");    // trailing commas
-        if (trimmed.length === 0) {
-            return { status: "success", result: [] };
-        }
 
-        const parts = trimmed.split(",");
+        const parts = trimmed.length === 0 ? [] : trimmed.split(",");
         const maybeParsedParts = parts.map(text => ({
             input: text,
             output: PitchNames.parseNameOrPitch(text),
@@ -99,6 +96,20 @@ export default class ChordInput extends Component {
         }
 
         const good = maybeParsedParts.map(x => x.output).sort((a, b) => a - b);
+
+        const {exactly} = this.props;
+        if (exactly !== undefined && good.length !== exactly) {
+            const actual = good.length;
+            const nounActual = actual === 1 ? "one note" : `${actual} notes`;
+            const nounExactly = exactly === 1 ? "one note" : `${exactly} notes`;
+            const error =
+                `It looks like you entered ${nounActual}, ` +
+                `but I was expecting exactly ${nounExactly}.`;
+            return {
+                status: "error",
+                error,
+            };
+        }
         return {
             status: "success",
             result: good,
@@ -109,4 +120,6 @@ ChordInput.propTypes = {
     value: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
     onChange: PropTypes.func.isRequired,
     message: PropTypes.string.isRequired,
+
+    exactly: PropTypes.number,
 }

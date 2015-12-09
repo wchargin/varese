@@ -20,6 +20,7 @@ export default class App extends Component {
                 value={this.state.rootChord}
                 message="Enter a trichord: "
                 onChange={rootChord => this.setState({ rootChord })}
+                exactly={3}
             />
             <TrichordTree
                 rootChord={this.state.rootChord}
