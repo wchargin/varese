@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 
+import HarmonicSeries from '../../HarmonicSeries';
 import PitchNames from '../../PitchNames';
 
 export default class TrichordView extends Component {
@@ -9,6 +10,16 @@ export default class TrichordView extends Component {
         const names = notes.map(x => PitchNames.pitchToName(x, true));
         const noteViews = names.map((name, index) =>
             <strong key={"note-" + index}>{name}</strong>);
+
+        // TODO(william): use the user's existing rationalizer
+        const rootPitch = HarmonicSeries.findChordRootOffset(
+            HarmonicSeries.canonicalRationalizer, notes);
+        const rootName = PitchNames.pitchToName(rootPitch, true);
+        const rootView =
+            <strong
+                key="root"
+                style={{ color: "blue" }}
+            >{rootName}</strong>;
 
         const [d1, d2] = [med - low, high - med];
         const semitonesName = `[${d1}][${d2}]`;
@@ -31,6 +42,7 @@ export default class TrichordView extends Component {
 
         const lines = [
             ...noteViews,
+            rootView,
             <span key="semitones-name">{semitonesName}</span>,
         ];
         const flattenedContents = [].concat.apply([],
