@@ -10,6 +10,7 @@ export default class TrichordTree extends Component {
         super();
         this.state = {
             levels: 4,
+            showRoots: true,
         };
     }
 
@@ -26,11 +27,13 @@ export default class TrichordTree extends Component {
                 notes={chord}
                 onClick={() => onClickChord(chord)}
                 size={size}
+                showRoot={this.state.showRoots}
             />));
         return <div>
             <ViewOptions
-                levels={levels}
+                {...this.state}
                 onSetLevels={levels => this.setState({ levels })}
+                onSetShowRoots={showRoots => this.setState({ showRoots })}
             />
             <TreeView
                 elements={nodes}
@@ -61,19 +64,59 @@ TrichordTree.propTypes = {
 class ViewOptions extends Component {
 
     render() {
-        return <div>
-            <label forName="depth">Tree depth</label>
-            <div className="input-group">
-                <input
-                    ref="levels"
-                    type="range"
-                    id="depth"
-                    min={1}
-                    max={6}
-                    value={this.props.levels}
-                    onChange={() => this.props.onSetLevels(
-                        parseInt(this.refs.levels.value, 10))}
-                />
+        // Bootstrap's inline forms don't work really well with checkboxes.
+        // So we'll use our own table layout instead; no big deal.
+        const row = {style: {display: "table-row"}};
+        const cell = {
+            style: {
+                display: "table-cell",
+                //
+                // marginRight doesn't work on table cells,
+                // and we only want horizontal spacing
+                // so we can't use borderSpacing on the table div.
+                // This should do.
+                paddingRight: 20,
+            },
+        };
+
+        return <div style={{ display: "table", cellSpacing: 10, borderCollapse:"separate" }}>
+            <div {...row}>
+                <label {...cell} htmlFor="depth">Tree depth</label>
+                <label {...cell} htmlFor="show-roots">Show roots?</label>
+            </div>
+            <div {...row}>
+                <div {...cell}>
+                    <input
+                        ref="levels"
+                        type="range"
+                        id="depth"
+                        min={1}
+                        max={6}
+                        value={this.props.levels}
+                        onChange={() => this.props.onSetLevels(
+                            parseInt(this.refs.levels.value, 10))}
+                    />
+                </div>
+                <div {...cell} className="checkbox">
+                    <input
+                        ref="showRoots"
+                        type="checkbox"
+                        id="show-roots"
+                        checked={this.props.showRoots}
+                        onChange={() => this.props.onSetShowRoots(
+                            this.refs.showRoots.checked)}
+                        style={{ marginLeft: 0, marginRight: 20 }}
+                    />
+                    <label
+                        htmlFor="show-roots"
+                        style={{
+                            userSelect: "none",
+                            WebkitUserSelect: "none",
+                        }}
+                    >
+                        {this.props.showRoots ? "Roots shown" : "Roots hidden"}
+                    </label>
+                </div>
             </div>
         </div>;
     }

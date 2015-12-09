@@ -42,11 +42,11 @@ export default class TrichordView extends Component {
 
         const lines = [
             ...noteViews,
-            rootView,
+            this.props.showRoot && rootView,
             <span key="semitones-name">{semitonesName}</span>,
         ];
-        const flattenedContents = [].concat.apply([],
-            lines.map((line, index) => [line, <br key={"br-" + index} />]));
+        const flattenedContents = [].concat.apply([], lines.map((line, idx) =>
+            line && [line, <br key={"br-" + idx} />]));
 
         return this.props.onClick ?
             React.createElement("button",
