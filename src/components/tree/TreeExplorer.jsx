@@ -18,6 +18,10 @@ export default class TreeExplorer extends Component {
     }
 
     render() {
+        const levels = this.state.settings.levels;
+        const size = levels <= 4 ? 3 :
+            levels <= 5 ? 2 :
+            1;
         return <Page path="tree">
             <h1>Chord tree explorer</h1>
             <p>
@@ -41,7 +45,8 @@ export default class TreeExplorer extends Component {
             />
             <TrichordTree
                 rootChord={this.state.rootChord}
-                levels={this.state.settings.levels}
+                levels={levels}
+                size={size}
                 onClickChord={rootChord => this.setState({ rootChord })}
             />
         </Page>;

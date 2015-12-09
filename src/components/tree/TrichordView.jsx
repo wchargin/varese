@@ -15,7 +15,8 @@ export default class TrichordView extends Component {
         const style = {
             display: "inline-block",
             textAlign: "center",
-            padding: 5,
+            padding: 2 * this.props.size,
+            fontSize: 8 + 2 * this.props.size,
         };
         const buttonStyle = {...style};
         const divStyle = {
@@ -24,7 +25,7 @@ export default class TrichordView extends Component {
             border: "thin #e3e3e3 solid",
             borderRadius: 2,
             boxShadow: "inset 0 1px 1px rgba(0,0,0,.05)",
-            padding: 10,
+            padding: 2 * style.padding,
         };
 
         return this.props.onClick ?
@@ -41,4 +42,8 @@ export default class TrichordView extends Component {
 TrichordView.propTypes = {
     notes: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
     onClick: PropTypes.func,
+    size: PropTypes.oneOf([1, 2, 3]),
 };
+TrichordView.defaultProps = {
+    size: 3,
+}
