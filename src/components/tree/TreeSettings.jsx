@@ -16,7 +16,8 @@ export default class TreeSettings extends Component {
                     min={1}
                     max={6}
                     value={this.props.value.levels}
-                    onChange={() => updateIn("levels", this.refs.levels.value)}
+                    onChange={() => updateIn("levels",
+                        parseInt(this.refs.levels.value, 10))}
                 />
             </div>
         </div>;
