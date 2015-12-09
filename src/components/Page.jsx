@@ -13,7 +13,7 @@ export default class Page extends Component {
                     <span className="navbar-brand">Var&egrave;se tools</span>
                     <div className="collapse navbar-collapse">
                         <ul className="nav navbar-nav">
-                            {link("calculator", "Pitch calculator")}
+                            {link("calculator", "Root calculator")}
                             {link("tree", "Tree explorer")}
                         </ul>
                     </div>

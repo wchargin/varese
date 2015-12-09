@@ -37,7 +37,7 @@ export default class PitchCalculator extends Component {
 
     render() {
         return <Page path="calculator">
-            <h1>Var&egrave;se pitch calculator</h1>
+            <h1>Pitch space root calculator</h1>
             <ChordComputer
                 rationalizer={extendRationalizer(this.state.values)}
             />
