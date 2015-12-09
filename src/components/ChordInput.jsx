@@ -8,6 +8,7 @@ export default class ChordInput extends Component {
         super();
         this.state = {
             text: null,
+            error: null,
         };
     }
 
@@ -30,7 +31,7 @@ export default class ChordInput extends Component {
                 ref="input"
                 value={text}
                 onChange={() => this._handleChange()}
-                onBlur={() => this.setState({ text: null })}
+                onBlur={() => this.setState({ text: null, error: null })}
                 style={{
                     color: this._fromString(text).status === "error" ?
                         "red" :
@@ -39,6 +40,9 @@ export default class ChordInput extends Component {
                     width: "unset",
                 }}
             />
+            <span style={{
+                marginLeft: 10,
+            }}>{this.state.error}</span>
         </div>;
     }
 
@@ -47,8 +51,11 @@ export default class ChordInput extends Component {
         this.setState({ text });
 
         const value = this._fromString(text);
-        if (value.result) {
+        if (value.status === "success") {
             this.props.onChange(value.result);
+            this.setState({ error: null });
+        } else {
+            this.setState({ error: value.error });
         }
     }
 
@@ -66,15 +73,35 @@ export default class ChordInput extends Component {
             return { status: "success", result: [] };
         }
 
-        const parts = trimmed.split(",").map(PitchNames.parseNameOrPitch);
-        if (parts.filter(x => x === null).length !== 0) {
-            return { status: "error", error: "some parts of parse failed" };
-        }
-        parts.sort((a, b) => a - b);
+        const parts = trimmed.split(",");
+        const maybeParsedParts = parts.map(text => ({
+            input: text,
+            output: PitchNames.parseNameOrPitch(text),
+        }));
 
+        const badParts = maybeParsedParts.filter(x => x.output === null);
+        if (badParts.length !== 0) {
+            const bad = badParts.map(x => `"${x.input}"`);
+            const singular = bad.length === 1;
+
+            const noun1 = singular ? "token" : "tokens";
+            const verb = singular ? "doesn't" : "don't";
+            const noun2 = singular ? "a valid note" : "valid notes";
+            const list = bad.length === 1 ? bad[0] :
+                bad.length === 2 ? `${bad[0]} and ${bad[1]}` :
+                (bad.slice(0, bad.length - 1).join(", ") + ", and " +
+                    bad[bad.length - 1]);
+
+            return {
+                status: "error",
+                error: `The ${noun1} ${list} ${verb} look like ${noun2}.`,
+            };
+        }
+
+        const good = maybeParsedParts.map(x => x.output).sort((a, b) => a - b);
         return {
             status: "success",
-            result: parts,
+            result: good,
         };
     }
 }
