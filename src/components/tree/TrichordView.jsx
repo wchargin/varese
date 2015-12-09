@@ -5,9 +5,10 @@ import PitchNames from '../../PitchNames';
 export default class TrichordView extends Component {
     render() {
         const {notes} = this.props;
-        const [low, med, high] = notes;
+        const [low, med, high] = notes.sort((a, b) => b - a);
         const names = notes.map(x => PitchNames.pitchToName(x, true));
-        const chordName = names.join(", ");
+        const noteViews = names.map((name, index) =>
+            <strong key={"note-" + index}>{name}</strong>);
 
         const [d1, d2] = [med - low, high - med];
         const semitonesName = `[${d1}][${d2}]`;
@@ -28,15 +29,20 @@ export default class TrichordView extends Component {
             padding: 2 * style.padding,
         };
 
+        const lines = [
+            ...noteViews,
+            <span key="semitones-name">{semitonesName}</span>,
+        ];
+        const flattenedContents = [].concat.apply([],
+            lines.map((line, index) => [line, <br key={"br-" + index} />]));
+
         return this.props.onClick ?
-            <button onClick={this.props.onClick} style={buttonStyle}>
-                <strong>{chordName}</strong><br />
-                <span>{semitonesName}</span>
-            </button> :
-            <div style={divStyle}>
-                <strong>{chordName}</strong><br />
-                <span>{semitonesName}</span>
-            </div>;
+            React.createElement("button",
+                { onClick: this.props.onClick, style: buttonStyle },
+                flattenedContents) :
+            React.createElement("div",
+                { style: divStyle },
+                flattenedContents);
     }
 }
 TrichordView.propTypes = {
