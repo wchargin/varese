@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 
-import {canonicalRationalizer} from '../HarmonicSeries';
-import Rational from '../Rational';
+import {canonicalRationalizer} from '../../HarmonicSeries';
+import Rational from '../../Rational';
 
 export default class RationalizerConfig extends Component {
 

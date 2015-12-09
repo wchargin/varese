@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Router, Route, Link, Redirect} from 'react-router';
 
-import PitchCalculator from './PitchCalculator';
-import TreeExplorer from './TreeExplorer';
+import PitchCalculator from './calculator/PitchCalculator';
+import TreeExplorer from './tree/TreeExplorer';
 
 export default class App extends Component {
     render() {

@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 
-import Page from './Page';
+import Page from './../Page';
 import ChordComputer from './ChordComputer';
 import RationalizerConfig from './RationalizerConfig';
 
-import {extendRationalizer, canonicalRationalizer} from '../HarmonicSeries';
+import {extendRationalizer, canonicalRationalizer} from '../../HarmonicSeries';
 const initialInputs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 const initialValues = initialInputs.map(canonicalRationalizer);
 const names = [

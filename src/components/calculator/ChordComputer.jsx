@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
-import PitchNames from '../PitchNames';
-import {findChordRootOffset} from '../HarmonicSeries';
+import PitchNames from '../../PitchNames';
+import {findChordRootOffset} from '../../HarmonicSeries';
 
 const DEFAULT_CHORD = [3, 7, 10];
 
