@@ -17,16 +17,36 @@ export default class ChordComputer extends Component {
     }
 
     render() {
+        const example = (text, quote = true) =>
+            <span>
+                {quote && "\u201C" /* &ldquo; */}
+                <code style={{
+                    color: "black",
+                    fontFamily: "monospace",
+                }}>{text}</code>
+                {quote && "\u201D" /* &rdquo; */}
+            </span>;
+
         return <div>
             <p>
-            Enter a chord as comma-separated notes,
-            either in scientific pitch notation (like <tt>C#5</tt>)
-            or in a number of semitones above middle&nbsp;C (like <tt>13</tt>).
-            For example, the input <tt>0, 4, 7</tt> corresponds to
-            the middle C&nbsp;major triad,
-            as does <tt>C4, E4, G4</tt>.
-            You can use <tt>b</tt> and <tt>#</tt> for flats and sharps,
-            like <tt>Eb4</tt> or <tt>D###7</tt>.
+            Enter a chord like
+            <ul>
+                <li>
+                    {example("C4, E4, G4")}
+                    {" "}
+                    (using scientific pitch notation);
+                </li>
+                <li>
+                    {example("B#3, Fb4, G4")}
+                    {" "}
+                    (using {example("#", false)} for sharps
+                     and {example("b", false)} and flats); or
+                </li>
+                <li>
+                    {example("0, 4, 7")}{" "}
+                    (indicating semitones above middle&nbsp;C).
+                </li>
+            </ul>
             </p>
             <ChordInput
                 value={this.state.chord}
