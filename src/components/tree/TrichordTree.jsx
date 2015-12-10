@@ -11,6 +11,7 @@ export default class TrichordTree extends Component {
         this.state = {
             levels: 4,
             showRoots: true,
+            showOctaves: true,
         };
     }
 
@@ -28,12 +29,15 @@ export default class TrichordTree extends Component {
                 onClick={() => onClickChord(chord)}
                 size={size}
                 showRoot={this.state.showRoots}
+                showOctave={this.state.showOctaves}
             />));
         return <div>
             <ViewOptions
                 {...this.state}
                 onSetLevels={levels => this.setState({ levels })}
                 onSetShowRoots={showRoots => this.setState({ showRoots })}
+                onSetShowOctaves={showOctaves =>
+                    this.setState({ showOctaves })}
             />
             <TreeView
                 elements={nodes}
@@ -83,6 +87,7 @@ class ViewOptions extends Component {
             <div {...row}>
                 <label {...cell} htmlFor="depth">Tree depth</label>
                 <label {...cell} htmlFor="show-roots">Show roots?</label>
+                <label {...cell} htmlFor="show-octaves">Show octaves?</label>
             </div>
             <div {...row}>
                 <div {...cell}>
@@ -115,6 +120,28 @@ class ViewOptions extends Component {
                         }}
                     >
                         {this.props.showRoots ? "Roots shown" : "Roots hidden"}
+                    </label>
+                </div>
+                <div {...cell} className="checkbox">
+                    <input
+                        ref="showOctaves"
+                        type="checkbox"
+                        id="show-octaves"
+                        checked={this.props.showOctaves}
+                        onChange={() => this.props.onSetShowOctaves(
+                            this.refs.showOctaves.checked)}
+                        style={{ marginLeft: 0, marginRight: 20 }}
+                    />
+                    <label
+                        htmlFor="show-octaves"
+                        style={{
+                            userSelect: "none",
+                            WebkitUserSelect: "none",
+                        }}
+                    >
+                        {this.props.showOctaves ?
+                            "Octaves shown" :
+                            "Octaves hidden"}
                     </label>
                 </div>
             </div>
