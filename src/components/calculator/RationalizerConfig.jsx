@@ -36,6 +36,7 @@ export default class RationalizerConfig extends Component {
                 })}
             </div>
             {this._renderDescendingWarning(values, names)}
+            {this._renderZeroWarning(values, names)}
         </div>;
     }
 
@@ -49,7 +50,7 @@ export default class RationalizerConfig extends Component {
             return null;
         }
 
-        const prefix = bad.length === 1 ? "the interval" : "the intervals";
+        const prefix = bad.length === 1 ? "The interval" : "The intervals";
         const list = bad.length === 1 ? bad[0] :
             bad.length === 2 ? `${bad[0]} and ${bad[1]}` :
             (bad.slice(0, bad.length - 1).join(", ") + ", and " +
@@ -57,6 +58,34 @@ export default class RationalizerConfig extends Component {
         const verb = bad.length === 1 ? "is" : "are";
         return <div className="alert alert-warning" style={{marginTop: 15}}>
             <strong>Warning:</strong> {prefix} {list} {verb} not descending.
+        </div>;
+    }
+
+    _renderZeroWarning(values, names) {
+        const bad = values
+            .map((x, i) => i)
+            .filter(i => values[i].toNumber() === 0)
+            .map(i => names[i]);
+        if (!bad.length) {
+            return null;
+        }
+
+        const noun1 = bad.length === 1 ? "the ratio for" : "the ratios for";
+        const list = bad.length === 1 ? bad[0] :
+            bad.length === 2 ? `${bad[0]} and ${bad[1]}` :
+            (bad.slice(0, bad.length - 1).join(", ") + ", and " +
+                bad[bad.length - 1]);
+        const verb = bad.length === 1 ? "is" : "are";
+        const noun2 = bad.length === 1 ?
+            "this interval" :
+            "one of these intervals";
+        return <div className="alert alert-warning" style={{marginTop: 15}}>
+            <strong>Warning:</strong>
+            {" "}
+            It looks like {noun1} {list} {verb} zero.
+            This is not good; if {noun2} ever appears in a chord,
+            the chord will be impossible to analyze.
+            You should fix that.
         </div>;
     }
 }
