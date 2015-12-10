@@ -46,7 +46,9 @@ class ChordOutput extends Component {
     render() {
         const {rationalizer, chord} = this.props;
         if (chord.length < 1) {
-            return <span>There&rsquo;s no chord there to analyze.</span>;
+            return <div className="alert alert-info">
+                There&rsquo;s no chord there to analyze.
+            </div>;
         } else {
             const maybeOffset = findChordRootOffset(rationalizer, chord);
             if (maybeOffset.status === "success") {
@@ -54,28 +56,32 @@ class ChordOutput extends Component {
                 const noun = offset === 1 ? "semitone" : "semitones";
                 const str = offset.toString().replace(/-/g, "\u2212");
                 const note = PitchNames.pitchToName(offset, true);
-                return <span>
+                return <div className="alert alert-info">
                     The root of that chord is <strong>{note}</strong>,
                     at {str} {noun}.
-                </span>;
+                </div>;
             } else {
                 const e = maybeOffset.error;
                 if (e === "infinite") {
-                    return <span>
-                        Sorry, that chord's too complicated for me to analyze.
+                    return <div className="alert alert-danger">
+                        <strong>Whoops!</strong>
+                        {" "}
+                        That chord's too complicated for me to analyze.
                         In particular, the acoustic ratios are
                         such complicated fractions that
                         your browser gives up on the math.
                         Try another one?
-                    </span>;
+                    </div>;
                 } else if (e === "zero_ratio") {
-                    return <span>
+                    return <div className="alert alert-danger">
+                        <strong>Whoops!</strong>
+                        {" "}
                         It looks like one of the acoustic ratios
                         involved in this chord
                         turns out to be zero.
                         That can't be!
                         Check your rationalization configuration and try again.
-                    </span>;
+                    </div>;
                 } else {
                     throw e;
                 }
