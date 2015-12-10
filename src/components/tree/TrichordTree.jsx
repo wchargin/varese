@@ -14,6 +14,7 @@ export default class TrichordTree extends Component {
             levels: 4,
             showRoots: true,
             showOctaves: true,
+            wide: false,
         };
     }
 
@@ -54,6 +55,22 @@ export default class TrichordTree extends Component {
             </div> :
             null;
 
+        // We'd like to add some padding when it's wide
+        // so it's not flush against the edge.
+        // We could just use 'paddingLeft' and 'paddingRight',
+        // but doing it this way---by modifying the width and position---
+        // has the nice side-effect
+        // that it prevents a horizontal scrollbar from appearing
+        // (it can otherwise appear when there's a vertical scrollbar,
+        // because the "viewport width" includes the vertical scrollbar
+        // for some reason).
+        const widePadding = 20;
+        const wideStyle = this.state.wide ? {
+            position: "relative",
+            width: `calc(100vw - ${2 * widePadding}px)`,
+            left: `calc(-50vw + ${widePadding}px + 50%)`,
+        } : {};
+
         return <div>
             <ViewOptions
                 {...this.state}
@@ -61,12 +78,15 @@ export default class TrichordTree extends Component {
                 onSetShowRoots={showRoots => this.setState({ showRoots })}
                 onSetShowOctaves={showOctaves =>
                     this.setState({ showOctaves })}
+                onSetWide={wide => this.setState({ wide })}
             />
             {defectiveNotice}
-            <TreeView
-                elements={nodes}
-                spacing={2 * size}
-            />;
+            <div style={{...wideStyle, marginBottom: 20}}>
+                <TreeView
+                    elements={nodes}
+                    spacing={2 * size}
+                />
+            </div>
         </div>;
     }
     _iterateRow(previousRow) {
@@ -134,6 +154,7 @@ class ViewOptions extends Component {
                 <label {...cell} htmlFor="depth">Tree depth</label>
                 <label {...cell} htmlFor="showRoots">Show roots?</label>
                 <label {...cell} htmlFor="showOctaves">Show octaves?</label>
+                <label {...cell} htmlFor="fillWindow">Fill window?</label>
             </div>
             <div {...row}>
                 <div {...cell}>
@@ -158,6 +179,11 @@ class ViewOptions extends Component {
                     this.props.showOctaves,
                     this.props.onSetShowOctaves,
                     "Shown", "Hidden")}
+                {makeCheckboxCell(
+                    "fillWindow",
+                    this.props.wide,
+                    this.props.onSetWide,
+                    "Wide", "Inline")}
             </div>
         </div>;
     }
