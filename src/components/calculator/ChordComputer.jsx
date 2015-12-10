@@ -60,13 +60,21 @@ class ChordOutput extends Component {
                 </span>;
             } else {
                 const e = maybeOffset.error;
-                if (e && e.match(/finite/)) {
+                if (e === "infinite") {
                     return <span>
                         Sorry, that chord's too complicated for me to analyze.
                         In particular, the acoustic ratios are
                         such complicated fractions that
                         your browser gives up on the math.
                         Try another one?
+                    </span>;
+                } else if (e === "zero_ratio") {
+                    return <span>
+                        It looks like one of the acoustic ratios
+                        involved in this chord
+                        turns out to be zero.
+                        That can't be!
+                        Check your rationalization configuration and try again.
                     </span>;
                 } else {
                     throw e;

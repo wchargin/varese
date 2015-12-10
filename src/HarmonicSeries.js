@@ -107,6 +107,12 @@ export function findRootOffsetExact(rationalizer, basePitch, highPitch) {
     const semitoneDifference = highPitch - basePitch;
     try {
         const ratio = rationalizer(semitoneDifference);
+        if (ratio.toNumber() === 0) {
+            return {
+                status: "error",
+                error: "zero_ratio",
+            };
+        }
         const result = basePitch - temperExact(ratio.a);
         return { status: "success", result };
     } catch (e) {

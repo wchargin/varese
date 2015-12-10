@@ -81,8 +81,8 @@ describe('HarmonicSeries', () => {
                 status: "success",
                 result,
             });
-        const testBad = (input1, input2, errorText) => () => {
-            const result = findRootOffset(cr, input1, input2);
+        const testBad = (rationalizer, input1, input2, errorText) => () => {
+            const result = findRootOffset(rationalizer, input1, input2);
             expect(result.status).to.equal("error");
             expect(result.error).to.equal(errorText);
         };
@@ -93,7 +93,17 @@ describe('HarmonicSeries', () => {
         it("should resolve unison to itself", testGood(99, 99, 99));
 
         it("should fail when the ratios exponentiate to Infinity",
-            testBad(-3473, 9761, "infinite"));
+            testBad(cr, -3473, 9761, "infinite"));
+
+        const canonicalRatios = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(cr);
+        const badRatios = [
+            ...canonicalRatios.slice(0, 5),
+            new Rational(0, 1),
+            ...canonicalRatios.slice(6),
+        ];
+        const badRationalizer = HarmonicSeries.extendRationalizer(badRatios);
+        it("should fail when one of the ratios is zero",
+            testBad(badRationalizer, 10, 16, "zero_ratio"));
     });
 
     describe("#findChordRootOffset", () => {
