@@ -3,14 +3,23 @@ import React, {Component, PropTypes} from 'react';
 import HarmonicSeries from '../../HarmonicSeries';
 import PitchNames from '../../PitchNames';
 
+import ChordView from '../ChordView';
+
 export default class TrichordView extends Component {
+    constructor() {
+        super();
+        this.state = {
+            hovered: false,
+        };
+    }
+
     render() {
         // TODO(william): make this a parameter to pitchToName
         const maybeTrimOctave = name =>
             this.props.showOctave ? name : name.replace(/\u2212?\d*$/, "");
 
         const {notes} = this.props;
-        const [low, med, high] = notes.sort((a, b) => b - a);
+        const [low, med, high] = [...notes].sort((a, b) => b - a);
         const names = notes.map(x =>
             maybeTrimOctave(PitchNames.pitchToName(x, true)));
         const noteViews = names.map((name, index) =>
@@ -48,13 +57,36 @@ export default class TrichordView extends Component {
         const flattenedContents = [].concat.apply([], lines.map((line, idx) =>
             line && [line, <br key={"br-" + idx} />]));
 
-        return this.props.onClick ?
+        const info = this.props.onClick ?
             <button onClick={this.props.onClick} style={buttonStyle}>
                 {flattenedContents}
             </button> :
             <div style={divStyle}>
                 {flattenedContents}
             </div>;
+        const hoverView = this.state.hovered ?
+            <ChordView notes={notes} /> : null;
+
+        return <div
+            style={{
+                display: "inline-block",
+                position: "relative"
+            }}
+            onMouseEnter={() => this.setState({ hovered: true })}
+            onMouseLeave={() => this.setState({ hovered: false })}
+        >
+            {info}
+            {hoverView &&
+                <div className="well" style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: "100%",
+                    marginLeft: 5,
+                    zIndex: 1,
+                }}>
+                    {hoverView}
+                </div>}
+        </div>;
     }
 
     _renderRootView(notes, maybeTrimOctave) {
