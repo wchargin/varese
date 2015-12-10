@@ -118,6 +118,8 @@ class ViewOptions extends Component {
         const cell = {
             style: {
                 display: "table-cell",
+                verticalAlign: "bottom",
+                paddingBottom: 5,
                 //
                 // marginRight doesn't work on table cells,
                 // and we only want horizontal spacing
@@ -149,7 +151,7 @@ class ViewOptions extends Component {
                 </label>
             </div>;
 
-        return <div style={{ display: "table", cellSpacing: 10, borderCollapse:"separate" }}>
+        return <div style={{ display: "table", marginBottom: 10 }}>
             <div {...row}>
                 <label {...cell} htmlFor="depth">Tree depth</label>
                 <label {...cell} htmlFor="showRoots">Show roots?</label>
