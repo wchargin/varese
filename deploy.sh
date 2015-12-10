@@ -76,7 +76,8 @@ cp -r "$TMPDIR"/* .
 git add "${STAGE[@]}"
 git commit -m "Deploy: $SOURCE_COMMIT"
 
-msg="Please review the deploy output now. Do you want to deploy?"
+echo
+msg="Please review the build output (index.html) now. Do you want to deploy?"
 if [[ "$(prompt "$msg")" == "yes" ]]; then
     git push origin gh-pages
 fi
