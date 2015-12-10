@@ -83,11 +83,33 @@ class ViewOptions extends Component {
             },
         };
 
+        const makeCheckboxCell = (id, checked, onChange, labelYes, labelNo) =>
+            <div {...cell} className="checkbox">
+                <input
+                    ref={id}
+                    type="checkbox"
+                    id={id}
+                    checked={checked}
+                    onChange={() => onChange(this.refs[id].checked)}
+                    style={{ marginLeft: 0, marginRight: 20 }}
+                />
+                <label
+                    htmlFor={id}
+                    style={{
+                        userSelect: "none",
+                        WebkitUserSelect: "none",
+                        color: "#737373",  // Bootstrap's .help-block color
+                    }}
+                >
+                    {checked ? labelYes : labelNo}
+                </label>
+            </div>;
+
         return <div style={{ display: "table", cellSpacing: 10, borderCollapse:"separate" }}>
             <div {...row}>
                 <label {...cell} htmlFor="depth">Tree depth</label>
-                <label {...cell} htmlFor="show-roots">Show roots?</label>
-                <label {...cell} htmlFor="show-octaves">Show octaves?</label>
+                <label {...cell} htmlFor="showRoots">Show roots?</label>
+                <label {...cell} htmlFor="showOctaves">Show octaves?</label>
             </div>
             <div {...row}>
                 <div {...cell}>
@@ -102,48 +124,16 @@ class ViewOptions extends Component {
                             parseInt(this.refs.levels.value, 10))}
                     />
                 </div>
-                <div {...cell} className="checkbox">
-                    <input
-                        ref="showRoots"
-                        type="checkbox"
-                        id="show-roots"
-                        checked={this.props.showRoots}
-                        onChange={() => this.props.onSetShowRoots(
-                            this.refs.showRoots.checked)}
-                        style={{ marginLeft: 0, marginRight: 20 }}
-                    />
-                    <label
-                        htmlFor="show-roots"
-                        style={{
-                            userSelect: "none",
-                            WebkitUserSelect: "none",
-                        }}
-                    >
-                        {this.props.showRoots ? "Roots shown" : "Roots hidden"}
-                    </label>
-                </div>
-                <div {...cell} className="checkbox">
-                    <input
-                        ref="showOctaves"
-                        type="checkbox"
-                        id="show-octaves"
-                        checked={this.props.showOctaves}
-                        onChange={() => this.props.onSetShowOctaves(
-                            this.refs.showOctaves.checked)}
-                        style={{ marginLeft: 0, marginRight: 20 }}
-                    />
-                    <label
-                        htmlFor="show-octaves"
-                        style={{
-                            userSelect: "none",
-                            WebkitUserSelect: "none",
-                        }}
-                    >
-                        {this.props.showOctaves ?
-                            "Octaves shown" :
-                            "Octaves hidden"}
-                    </label>
-                </div>
+                {makeCheckboxCell(
+                    "showRoots",
+                    this.props.showRoots,
+                    this.props.onSetShowRoots,
+                    "Shown", "Hidden")}
+                {makeCheckboxCell(
+                    "showOctaves",
+                    this.props.showOctaves,
+                    this.props.onSetShowOctaves,
+                    "Shown", "Hidden")}
             </div>
         </div>;
     }
