@@ -89,16 +89,18 @@ export default class RationalizerConfig extends Component {
 class AcousticRatioBox extends Component {
 
     render() {
+        const id = "ratio-entry-" + this.props.name;
         return <div style={{
             display: "table-cell",
             width: 60,
             textAlign: "center",
             padding: "0 2px",
         }}>
-            <strong>{this.props.name}</strong><br />
+            <label htmlFor={id}>{this.props.name}</label><br />
             <AcousticRatioEntry
                 value={this.props.value}
                 onChange={this.props.onChange}
+                id={id}
             />
             {!this.props.isDefault &&
                 <button onClick={this.props.onReset}>Reset</button>}
@@ -141,6 +143,7 @@ class AcousticRatioEntry extends Component {
             `${this.props.value.a}:${this.props.value.b}`;
         return <input
             ref="input"
+            id={this.props.id}
             className="form-control"
             value={text}
             onChange={() => this._handleChange()}
@@ -185,4 +188,5 @@ class AcousticRatioEntry extends Component {
 AcousticRatioEntry.propTypes = {
     value: PropTypes.instanceOf(Rational),
     onChange: PropTypes.func.isRequired,
+    id: PropTypes.string.isRequired,
 };
