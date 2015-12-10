@@ -48,14 +48,28 @@ class ChordOutput extends Component {
         if (chord.length < 1) {
             return <span>There&rsquo;s no chord there to analyze.</span>;
         } else {
-            const offset = findChordRootOffset(rationalizer, chord);
-            const noun = offset === 1 ? "semitone" : "semitones";
-            const str = offset.toString().replace(/-/g, "\u2212");
-            const note = PitchNames.pitchToName(offset, true);
-            return <span>
-                The root of that chord is <strong>{note}</strong>,
-                at {str} {noun}.
-            </span>;
+            try {
+                const offset = findChordRootOffset(rationalizer, chord);
+                const noun = offset === 1 ? "semitone" : "semitones";
+                const str = offset.toString().replace(/-/g, "\u2212");
+                const note = PitchNames.pitchToName(offset, true);
+                return <span>
+                    The root of that chord is <strong>{note}</strong>,
+                    at {str} {noun}.
+                </span>;
+            } catch (e) {
+                if (e.message.match(/finite/)) {
+                    return <span>
+                        Sorry, that chord's too complicated for me to analyze.
+                        In particular, the acoustic ratios are
+                        such complicated fractions that
+                        your browser gives up on the math.
+                        Try another one?
+                    </span>;
+                } else {
+                    throw e;
+                }
+            }
         }
     }
 }

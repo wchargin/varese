@@ -16,16 +16,7 @@ export default class TrichordView extends Component {
         const noteViews = names.map((name, index) =>
             <strong key={"note-" + index}>{name}</strong>);
 
-        // TODO(william): use the user's existing rationalizer
-        const rootPitch = HarmonicSeries.findChordRootOffset(
-            HarmonicSeries.canonicalRationalizer, notes);
-        const rootName =
-            maybeTrimOctave(PitchNames.pitchToName(rootPitch, true));
-        const rootView =
-            <strong
-                key="root"
-                style={{ color: "blue" }}
-            >{rootName}</strong>;
+        const rootView = this._renderRootView(notes, maybeTrimOctave);
 
         const [d1, d2] = [med - low, high - med];
         const semitonesName = `[${d1}][${d2}]`;
@@ -61,6 +52,26 @@ export default class TrichordView extends Component {
             React.createElement("div",
                 { style: divStyle },
                 flattenedContents);
+    }
+
+    _renderRootView(notes, maybeTrimOctave) {
+        const createRootView = text =>
+            <strong key="root" style={{ color: "blue" }}>{text}</strong>;
+        try {
+            // TODO(william): use the user's existing rationalizer
+            const rootPitch = HarmonicSeries.findChordRootOffset(
+                HarmonicSeries.canonicalRationalizer, notes);
+            const rootName =
+                maybeTrimOctave(PitchNames.pitchToName(rootPitch, true));
+            return createRootView(rootName);
+        } else {
+            const e = maybeRootPitch.error;
+            if (e.match(/finite/)) {
+                return createRootView("?");
+            } else {
+                throw e;
+            }
+        }
     }
 }
 TrichordView.propTypes = {

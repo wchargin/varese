@@ -1,6 +1,8 @@
 import React, {Component, PropTypes} from 'react';
 
+import HarmonicSeries from '../../HarmonicSeries';
 import Folding from '../../Folding';
+
 import TreeView from './TreeView';
 import TrichordView from './TrichordView';
 
@@ -31,6 +33,32 @@ export default class TrichordTree extends Component {
                 showRoot={this.state.showRoots}
                 showOctave={this.state.showOctaves}
             />));
+
+        const canFindRoots = chords.map(row => row.map(chord => {
+            try {
+                // TODO(william): use the user's existing rationalizer
+                HarmonicSeries.findChordRootOffset(
+                    HarmonicSeries.canonicalRationalizer, chord);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }));
+        const defective = canFindRoots.some(row => row.some(x => !x));
+        const defectiveNotice = defective && this.state.showRoots ?
+            <div className="alert alert-warning" style={{ marginTop: 20 }}>
+                <strong>Note:</strong>
+                {" "}
+                Some of these chords are too complicated to analyze,
+                so we can't find their roots.
+                In particular, the acoustic ratios are
+                such complicated fractions that
+                your browser gives up on the math.
+                These chords are indicated with a question mark
+                in the place where the root should be.
+            </div> :
+            null;
+
         return <div>
             <ViewOptions
                 {...this.state}
@@ -39,6 +67,7 @@ export default class TrichordTree extends Component {
                 onSetShowOctaves={showOctaves =>
                     this.setState({ showOctaves })}
             />
+            {defectiveNotice}
             <TreeView
                 elements={nodes}
                 spacing={2 * size}
