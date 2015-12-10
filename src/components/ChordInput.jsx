@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 
 import PitchNames from '../PitchNames';
+import TextUtils from '../TextUtils';
 
 export default class ChordInput extends Component {
 
@@ -79,15 +80,11 @@ export default class ChordInput extends Component {
         const badParts = maybeParsedParts.filter(x => x.output === null);
         if (badParts.length !== 0) {
             const bad = badParts.map(x => `"${x.input}"`);
-            const singular = bad.length === 1;
 
-            const noun1 = singular ? "token" : "tokens";
-            const verb = singular ? "doesn't" : "don't";
-            const noun2 = singular ? "a valid note" : "valid notes";
-            const list = bad.length === 1 ? bad[0] :
-                bad.length === 2 ? `${bad[0]} and ${bad[1]}` :
-                (bad.slice(0, bad.length - 1).join(", ") + ", and " +
-                    bad[bad.length - 1]);
+            const noun1 = TextUtils.ngettext(bad, "token", "tokens")
+            const verb = TextUtils.ngettext(bad, "doesn't", "don't");
+            const noun2 = TextUtils.ngettext(bad, "a valid note", "valid notes");
+            const list = TextUtils.list(bad);
 
             return {
                 status: "error",
@@ -100,8 +97,8 @@ export default class ChordInput extends Component {
         const {exactly} = this.props;
         if (exactly !== undefined && good.length !== exactly) {
             const actual = good.length;
-            const nounActual = actual === 1 ? "one note" : `${actual} notes`;
-            const nounExactly = exactly === 1 ? "one note" : `${exactly} notes`;
+            const nounActual = TextUtils.quantity(actual, "note", "notes");
+            const nounExactly = TextUtils.quantity(exactly, "note", "notes");
             const error =
                 `It looks like you entered ${nounActual}, ` +
                 `but I was expecting exactly ${nounExactly}.`;
