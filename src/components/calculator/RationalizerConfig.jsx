@@ -55,7 +55,7 @@ export default class RationalizerConfig extends Component {
             (bad.slice(0, bad.length - 1).join(", ") + ", and " +
                 bad[bad.length - 1]);
         const verb = bad.length === 1 ? "is" : "are";
-        return <div className="alert alert-warning">
+        return <div className="alert alert-warning" style={{marginTop: 15}}>
             <strong>Warning:</strong> {prefix} {list} {verb} not descending.
         </div>;
     }
