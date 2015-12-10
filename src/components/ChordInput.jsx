@@ -25,11 +25,12 @@ export default class ChordInput extends Component {
             this.state.text :
             this._toString(this.props.value);
         return <div className="well">
-            <strong>{this.props.message}</strong>
+            <label htmlFor="chord-entry">{this.props.message}</label>
             {" "}
             <input
                 className="form-control"
                 ref="input"
+                id="chord-entry"
                 value={text}
                 onChange={() => this._handleChange()}
                 onBlur={() => this.setState({ text: null, error: null })}
