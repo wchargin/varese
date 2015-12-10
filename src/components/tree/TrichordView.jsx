@@ -18,8 +18,11 @@ export default class TrichordView extends Component {
 
         const rootView = this._renderRootView(notes, maybeTrimOctave);
 
-        const [d1, d2] = [med - low, high - med];
-        const semitonesName = `[${d1}][${d2}]`;
+        const semitones = [med - low, high - med];
+        const semitoneNames = semitones.map(x =>
+            `[${x}]`.replace(/-/, "\u2212"));
+        const semitoneViews = semitoneNames.map((name, index) =>
+            <span key={"semitone-" + index}>{name}</span>);
 
         const style = {
             display: "inline-block",
@@ -40,7 +43,7 @@ export default class TrichordView extends Component {
         const lines = [
             ...noteViews,
             this.props.showRoot && rootView,
-            <span key="semitones-name">{semitonesName}</span>,
+            ...semitoneViews,
         ];
         const flattenedContents = [].concat.apply([], lines.map((line, idx) =>
             line && [line, <br key={"br-" + idx} />]));

@@ -163,7 +163,7 @@ class ViewOptions extends Component {
                         type="range"
                         id="depth"
                         min={1}
-                        max={6}
+                        max={8}
                         value={this.props.levels}
                         onChange={() => this.props.onSetLevels(
                             parseInt(this.refs.levels.value, 10))}
