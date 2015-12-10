@@ -1,18 +1,20 @@
-# Varèse-inspired pitch space tools
+# [Varèse][Varese]-inspired pitch space tools
+
+  [Varese]: https://en.wikipedia.org/wiki/Edgard_Var%C3%A8se
 
 ## What?
 
-The gist of it is that if you throw away your contemporary notations of harmony&mdash;in particular, the notion that equivalence classes of pitches are determined by modding out octaves&mdash;then you get some interesting stuff.
+The gist of it is that if you throw away your contemporary notions of harmony&mdash;in particular, the notion that equivalence classes of pitches are determined by modding out octaves&mdash;then you get some interesting stuff.
 
 ### The tree
 
 One of the core concepts at hand is the notion of infoldings and outfoldings of a chord&mdash;say a trichord (three notes) for simplicity. If you have a trichord, you can *outfold* it by &ldquo;pivoting&rdquo; the middle note about the top note (an *upward outfolding*) or the bottom note (a *downward outfolding*), preserving the interval. So C&ndash;E&ndash;G would upfold to C&ndash;G&ndash;B&flat;, preserving the minor third, or downfold to A&flat;&ndash;C&ndash;G, preserving the major third.
 
-The inverse operation is an infolding: pivot one of the outer notes about the middle note. So C&ndash;E&ndash;G could infold to C&ndash;C&sharp;&ndash;E or E&ndash;G&ndash;G&sharp;. But note only the first of those outfolds back to the original, because only the first one puts the folded pitch in the middle. So we see that it's more useful to infold the pitch that makes a smaller interval, and there's a canonical infolding.
+The inverse operation is an infolding: pivot one of the outer notes about the middle note. So C&ndash;E&ndash;G could infold to C&ndash;C&sharp;&ndash;E or E&ndash;G&ndash;G&sharp;. But note only the first of those outfolds back to the original, because only the first one puts the folded pitch in the middle. So we see that it's more useful to infold the pitch that makes a smaller interval, and there's a *canonical infolding*.
 
 Thus, the trichords form a (complete, infinite) binary tree: left children are downward outfoldings, and right children are upward outfoldings; parents are canonical infoldings.
 
-This is what the tree explorer (`/#/tree`) allows you to explore.
+This is what the tree explorer ([`/#/tree`](http://wchargin.github.io/varese/#/tree)) allows you to explore.
 
 This is closely related to Var&egrave;se's work.
 
@@ -34,15 +36,15 @@ and `chordRoot` gives the root of a chord.
 
 For example, consider the chord C4&ndash;E&flat;4&ndash;F&sharp;4. The root of (C4, E&flat;4) is A&flat;1, and the root of (E&flat;4, F&sharp;4) is B1. The root of (A&flat;1, B1) is E&minus;1. The next iteration would yield the empty list, so we stop here; E&minus;1 is the root of the chord. (Note that the roots get really low really fast: a normal trichord and we're already more than a full octave below the piano!)
 
-If you're paying close attention, you may be wondering how we work with pitches when we really want to be dealing with frequencies&mdash;after all, [they don't always coincide](http://music.stackexchange.com/a/39995/10556)! So how do we convert something like C4&ndash;E4&ndash;G4 to frequency? Simple: we get the user to do it! Specifically, if the user gives us specific acoustic ratios for each of the simple intervals&mdash;e.g., &ldquo;we'll call a minor sixth the ratio of the fifth to the eighth overtones&rdquo;we can extrapolate everything we need from there. (We only need ratios because the actual frequencies don't matter.) Going in the other direction is easy because we can get exact values logarithmically, and they should be mostly consistent with the user-specified rationalizations.
+If you're paying close attention, you may be wondering how we work with pitches when we really want to be dealing with frequencies&mdash;after all, [they don't always coincide](http://music.stackexchange.com/a/39995/10556)! So how do we convert something like C4&ndash;E4&ndash;G4 to frequency? Simple: we get the user to do it! Specifically, if the user gives us specific acoustic ratios for each of the simple intervals&mdash;e.g., &ldquo;we'll call a minor sixth the ratio of the fifth to the eighth overtones&rdquo;&mdash;we can extrapolate everything we need from there. (We only need ratios because the actual frequencies don't matter.) Going in the other direction is easy because we can get exact values logarithmically, and they should be mostly consistent with the user-specified rationalizations.
 
-This is what the pitch calculator (`/`, `/#/calculator`) calculates.
+This is what the pitch calculator ([`/#/calculator`](http://wchargin.github.io/varese/#/calculator)) calculates.
 
 This is mostly a new area of study.
 
 ## Technical overview
 
-The core operations (i.e., the actual calculations and the interesting stuff) is in a thoroughly tested functional core. The UI is a (somewhat) light React wrapper around this. Because it's in React, it's really easy to reason about the data flow.
+The core operations (i.e., the actual calculations and the interesting stuff) are in a thoroughly tested functional core. The UI is a rather light React wrapper around this. Because it's in React, it's really easy to reason about the data flow.
 
 The whole React app is [webpack][]ed into a `bundle.js` file, which is included by the HTML page. The HTML page is tiny, and just provides a `<div id="app"></div>` into which React will render the application.
 
