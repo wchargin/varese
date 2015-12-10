@@ -37,6 +37,13 @@ ensure_clean_working_tree() {
     fi
 }
 
+ensure_no_stopships() {
+    if git grep -n -i "STOPSHIP" -- './*' ':!deploy.sh'; then
+        echo >&2 "Cannot deploy: STOPSHIP annotations remain."
+        exit 1
+    fi
+}
+
 prompt() {
     >&2 printf '%s\n' "$1"
     >&2 printf 'yes/no> '
@@ -57,6 +64,7 @@ if [[ "$(git rev-parse --abbrev-ref HEAD)" != "master" ]]; then
 fi
 
 ensure_clean_working_tree
+ensure_no_stopships
 
 SOURCE_COMMIT="$(git rev-parse HEAD)"
 printf 'Preparing to deploy commit %s.\n' "$SOURCE_COMMIT"
