@@ -71,7 +71,27 @@ export default class TrichordTree extends Component {
             left: `calc(-50vw + ${widePadding}px + 50%)`,
         } : {};
 
+        const infolded = Folding.infoldCanonical(rootChord);
+        //
+        // TODO(william): This equality check depends on
+        // an implementation detail of infoldCanonical;
+        // namely, that it returns an identical array
+        // when there is no infolding.
+        // Fix this by comparing the two arrays for value.
+        const hasInfolding = infolded !== rootChord;
+
         return <div>
+            <div
+                className="button-toolbar"
+                role="toolbar"
+                style={{ marginBottom: 10 }}
+            >
+                <button
+                    className="btn btn-default"
+                    disabled={!hasInfolding}
+                    onClick={() => this.props.onClickChord(infolded)}
+                >Infold root</button>
+            </div>
             <ViewOptions
                 {...this.state}
                 onSetLevels={levels => this.setState({ levels })}
