@@ -3,7 +3,7 @@ import React, {Component, PropTypes} from 'react';
 import HarmonicSeries from '../../HarmonicSeries';
 import PitchNames from '../../PitchNames';
 
-import ChordView from '../ChordView';
+import ChordEngraving from '../ChordEngraving';
 
 export default class TrichordView extends Component {
     constructor() {
@@ -68,7 +68,7 @@ export default class TrichordView extends Component {
                 {flattenedContents}
             </div>;
         const hoverView = this.state.hovered ?
-            <ChordView notes={notes} /> : null;
+            <ChordEngraving notes={notes} /> : null;
 
         return <div
             style={{
