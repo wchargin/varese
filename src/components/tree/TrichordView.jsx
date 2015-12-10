@@ -19,15 +19,18 @@ export default class TrichordView extends Component {
             this.props.showOctave ? name : name.replace(/\u2212?\d*$/, "");
 
         const {notes} = this.props;
-        const [low, med, high] = [...notes].sort((a, b) => b - a);
-        const names = notes.map(x =>
+        const notesAscending  = [...notes].sort((a, b) => a - b);
+        const notesDescending = [...notes].sort((a, b) => b - a);
+
+        const [low, med, high] = notesAscending;
+        const names = notesDescending.map(x =>
             maybeTrimOctave(PitchNames.pitchToName(x, true)));
         const noteViews = names.map((name, index) =>
             <strong key={"note-" + index}>{name}</strong>);
 
-        const rootView = this._renderRootView(notes, maybeTrimOctave);
+        const rootView = this._renderRootView(notesAscending, maybeTrimOctave);
 
-        const semitones = [med - low, high - med];
+        const semitones = [high - med, med - low];
         const semitoneNames = semitones.map(x =>
             `[${x}]`.replace(/-/, "\u2212"));
         const semitoneViews = semitoneNames.map((name, index) =>
