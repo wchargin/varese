@@ -49,12 +49,12 @@ export default class TrichordView extends Component {
             line && [line, <br key={"br-" + idx} />]));
 
         return this.props.onClick ?
-            React.createElement("button",
-                { onClick: this.props.onClick, style: buttonStyle },
-                flattenedContents) :
-            React.createElement("div",
-                { style: divStyle },
-                flattenedContents);
+            <button onClick={this.props.onClick} style={buttonStyle}>
+                {flattenedContents}
+            </button> :
+            <div style={divStyle}>
+                {flattenedContents}
+            </div>;
     }
 
     _renderRootView(notes, maybeTrimOctave) {
