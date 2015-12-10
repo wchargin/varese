@@ -30,6 +30,7 @@ export default class ChordComputer extends Component {
         return <div>
             <p>
             Enter a chord like
+            </p>
             <ul>
                 <li>
                     {example("C4, E4, G4")}
@@ -47,7 +48,6 @@ export default class ChordComputer extends Component {
                     (indicating semitones above middle&nbsp;C).
                 </li>
             </ul>
-            </p>
             <ChordInput
                 value={this.state.chord}
                 message="Enter a chord: "
