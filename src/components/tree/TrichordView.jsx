@@ -57,10 +57,12 @@ export default class TrichordView extends Component {
     _renderRootView(notes, maybeTrimOctave) {
         const createRootView = text =>
             <strong key="root" style={{ color: "blue" }}>{text}</strong>;
-        try {
-            // TODO(william): use the user's existing rationalizer
-            const rootPitch = HarmonicSeries.findChordRootOffset(
-                HarmonicSeries.canonicalRationalizer, notes);
+
+        // TODO(william): use the user's existing rationalizer
+        const maybeRootPitch = HarmonicSeries.findChordRootOffset(
+            HarmonicSeries.canonicalRationalizer, notes);
+        if (maybeRootPitch.status === "success") {
+            const rootPitch = maybeRootPitch.result;
             const rootName =
                 maybeTrimOctave(PitchNames.pitchToName(rootPitch, true));
             return createRootView(rootName);

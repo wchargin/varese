@@ -35,14 +35,9 @@ export default class TrichordTree extends Component {
             />));
 
         const canFindRoots = chords.map(row => row.map(chord => {
-            try {
-                // TODO(william): use the user's existing rationalizer
-                HarmonicSeries.findChordRootOffset(
-                    HarmonicSeries.canonicalRationalizer, chord);
-                return true;
-            } catch (e) {
-                return false;
-            }
+            const result = HarmonicSeries.findChordRootOffset(
+                HarmonicSeries.canonicalRationalizer, chord);
+            return result.status === "success";
         }));
         const defective = canFindRoots.some(row => row.some(x => !x));
         const defectiveNotice = defective && this.state.showRoots ?

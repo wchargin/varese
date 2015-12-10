@@ -99,30 +99,61 @@ export function temper(fundamentalMultiple) {
  * the root is the middle C two octaves below the origin.
  * So, if CR is some canonical rationalizer,
  * this implies that findRootOffsetExact(CR, 4, 7) should be about -24.
+ *
+ * Returns either { status: "success", result: <number> }
+ * or { status: "error", error: "<error code>" }.
  */
 export function findRootOffsetExact(rationalizer, basePitch, highPitch) {
     const semitoneDifference = highPitch - basePitch;
-    const ratio = rationalizer(semitoneDifference);
-    return basePitch - temperExact(ratio.a);
+    try {
+        const ratio = rationalizer(semitoneDifference);
+        const result = basePitch - temperExact(ratio.a);
+        return { status: "success", result };
+    } catch (e) {
+        if (e.message.match(/(numerator|denominator) must be finite/)) {
+            return {
+                status: "error",
+                error: "infinite",
+            };
+        } else {
+            throw e;
+        }
+    }
 }
 
 /*
  * Like 'findRootOffsetExact', but rounds the result to the nearest integer.
  */
 export function findRootOffset(rationalizer, basePitch, highPitch) {
-    return Math.round(findRootOffsetExact(rationalizer, basePitch, highPitch));
+    const exact = findRootOffsetExact(rationalizer, basePitch, highPitch);
+    if (exact.status === "success") {
+        return {
+            ...exact,
+            result: Math.round(exact.result),
+        };
+    } else {
+        return exact;
+    }
 }
 
 export function findChordRootOffset(rationalizer, notes) {
     if (notes.length === 1) {
-        return notes[0];
+        return {
+            status: "success",
+            result: notes[0],
+        };
     }
 
     // Zip with the binary operator on consecutive pairs.
     // (That is, convert [a, b, c, d] to [f(a, b), f(b, c), f(c, d)].)
     const results = new Array(notes.length - 1);
     for (let i = 0; i < results.length; i++) {
-        results[i] = findRootOffset(rationalizer, notes[i], notes[i + 1]);
+        const result = findRootOffset(rationalizer, notes[i], notes[i + 1]);
+        if (result.status === "success") {
+            results[i] = result.result;
+        } else {
+            return result;
+        }
     }
     return findChordRootOffset(rationalizer, results);
 }

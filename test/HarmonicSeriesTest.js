@@ -76,15 +76,24 @@ describe('HarmonicSeries', () => {
 
     describe("#findRootOffset", () => {
         const {findRootOffset, canonicalRationalizer: cr} = HarmonicSeries;
+        const testGood = (input1, input2, result) => () =>
+            expect(findRootOffset(cr, input1, input2)).to.deep.equal({
+                status: "success",
+                result,
+            });
+        const testBad = (input1, input2, errorText) => () => {
+            const result = findRootOffset(cr, input1, input2);
+            expect(result.status).to.equal("error");
+            expect(result.error).to.equal(errorText);
+        };
 
-        it("should resolve high-A-to-C to root at 15vb-F", () =>
-            expect(findRootOffset(cr, 9, 12)).to.equal(5 - 24));
-        it("should resolve C-to-high-E to root at 8vb-C", () =>
-            expect(findRootOffset(cr, 12, 28)).to.equal(0));
-        it("should resolve E-to-G to root at 15vb-C", () =>
-            expect(findRootOffset(cr, 4, 7)).to.equal(-24));
-        it("should resolve unison to itself", () =>
-            expect(findRootOffset(cr, 99, 99)).to.equal(99));
+        it("should resolve high-A-to-C to 15vb-F", testGood(9, 12, -19));
+        it("should resolve C-to-high-E to 8vb-C", testGood(12, 28, 0));
+        it("should resolve E-to-G to 15vb-C", testGood(4, 7, -24));
+        it("should resolve unison to itself", testGood(99, 99, 99));
+
+        it("should fail when the ratios exponentiate to Infinity",
+            testBad(-3473, 9761, "infinite"));
     });
 
     describe("#findChordRootOffset", () => {
@@ -92,20 +101,30 @@ describe('HarmonicSeries', () => {
             findChordRootOffset,
             canonicalRationalizer: cr,
         } = HarmonicSeries;
+        const testGood = (input, result) => () =>
+            expect(findChordRootOffset(cr, input)).to.deep.equal({
+                status: "success",
+                result,
+            });
+        const testBad = (input, errorText) => () => {
+            const result = findRootOffset(cr, input);
+            expect(result.status).to.equal("error");
+            expect(result.error).to.equal(errorText);
+        };
 
-        it("should resolve a single-note \"chord\" to itself", () =>
-            expect(findChordRootOffset(cr, [77])).to.equal(77));
-        it("should resolve a binary chord to just the interval root", () =>
-            expect(findChordRootOffset(cr, [9, 12])).to.equal(5 - 24));
+        it("should resolve a single-note \"chord\" to itself",
+            testGood([77], 77));
+        it("should resolve a binary chord to just the interval root",
+            testGood([9, 12], 5 - 24));
 
-        it("should resolve C-E-G to 15vb-C", () =>
-            expect(findChordRootOffset(cr, [0, 4, 7])).to.equal(-24));
-        it("should resolve C-E-G-B to 22vb-C", () =>
-            expect(findChordRootOffset(cr, [0, 4, 7, 11])).to.equal(-36));
-        it("should resolve C-F-A to 15vb-F", () =>
-            expect(findChordRootOffset(cr, [0, 5, 9])).to.equal(5 - 24));
-        it("should resolve Eb-A-D to 5x8vb-Db", () =>
-            expect(findChordRootOffset(cr, [3, 9, 14])).to.equal(1 - 5 * 12));
+        it("should resolve C-E-G to 15vb-C",
+            testGood([0, 4, 7], -24));
+        it("should resolve C-E-G-B to 22vb-C",
+            testGood([0, 4, 7, 11], -36));
+        it("should resolve C-F-A to 15vb-F",
+            testGood([0, 5, 9], 5 - 24));
+        it("should resolve Eb-A-D to 5x8vb-Db",
+            testGood([3, 9, 14], 1 - 5 * 12));
     });
 
     describe("#canonicalRationalizer", () => {
