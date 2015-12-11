@@ -25,7 +25,7 @@ export default class ChordView extends Component {
             }} />;
         } else {
             return <div style={{ width: this.props.width }}>
-                The notes in this chord are off the piano!
+                The notes in this chord are way off the piano!
             </div>;
         }
     }
