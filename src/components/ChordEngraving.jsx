@@ -17,19 +17,36 @@ import VexFlowUtils from '../VexFlowUtils';
 export default class ChordView extends Component {
 
     render() {
-        return <div ref="outer" style={{
-            padding: 10,
-            borderRadius: 10,
-            display: "inline-block",
-        }} />
+        if (this._shouldRenderNote()) {
+            return <div ref="outer" style={{
+                padding: 10,
+                borderRadius: 10,
+                display: "inline-block",
+            }} />;
+        } else {
+            return <div style={{ width: this.props.width }}>
+                The notes in this chord are off the piano!
+            </div>;
+        }
+    }
+
+    _shouldRenderNote() {
+        const [pianoMin, pianoMax] = [-40, 48];
+        const padding = 20;
+        const [min, max] = [pianoMin - padding, pianoMax + padding];
+        return this.props.notes.every(x => min < x && x < max);
     }
 
     componentDidMount() {
-        this._renderNote();
+        if (this._shouldRenderNote()) {
+            this._renderNote();
+        }
     }
 
     componentDidUpdate() {
-        this._renderNote();
+        if (this._shouldRenderNote()) {
+            this._renderNote();
+        }
     }
 
     _renderNote() {
