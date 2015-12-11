@@ -13,7 +13,41 @@ export default class TrichordView extends Component {
         };
     }
 
+    _withinLimits() {
+        if (!this.props.limits) {
+            return true;
+        }
+        const {notes: unsortedNotes, limits} = this.props;
+        const notes = [...unsortedNotes].sort((a, b) => a - b);
+
+        const span = notes[notes.length - 1] - notes[0];
+        if (limits.minCombinedEnabled && span < limits.minCombined) {
+            return false;
+        }
+        if (limits.maxCombinedEnabled && span > limits.maxCombined) {
+            return false;
+        }
+
+        const deltas = notes.slice(1).map((snd, idx) => snd - notes[idx]);
+        if (limits.minIndividualEnabled && deltas.some(x =>
+                x < limits.minIndividual)) {
+            return false;
+        }
+        if (limits.maxIndividualEnabled && deltas.some(x =>
+                x > limits.maxIndividual)) {
+            return false;
+        }
+
+        return true;
+    }
+
     render() {
+        // If we're not within limits,
+        // we still need to render a component of the right size
+        // so that the grid layout isn't thrown off.
+        // But we'll set its 'visibility' to 'hidden'.
+        const visible = this._withinLimits();
+
         // TODO(william): make this a parameter to pitchToName
         const maybeTrimOctave = name =>
             this.props.showOctave ? name : name.replace(/\u2212?\d*$/, "");
@@ -41,6 +75,7 @@ export default class TrichordView extends Component {
             textAlign: "center",
             padding: 2 * this.props.size,
             fontSize: 8 + 2 * this.props.size,
+            visibility: visible ? "visible" : "hidden",
         };
         const buttonStyle = {...style};
         const divStyle = {
@@ -67,7 +102,7 @@ export default class TrichordView extends Component {
             <div style={divStyle}>
                 {flattenedContents}
             </div>;
-        const hoverView = this.state.hovered ?
+        const hoverView = this.state.hovered && visible ?
             <ChordEngraving notes={notes} /> : null;
 
         return <div
@@ -118,6 +153,18 @@ TrichordView.propTypes = {
     notes: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
     onClick: PropTypes.func,
     size: PropTypes.oneOf([1, 2, 3]),
+
+    // This prop isn't required, but if it's present all the keys should exist.
+    limits: PropTypes.shape({
+        minCombined: PropTypes.number.isRequired,
+        maxCombined: PropTypes.number.isRequired,
+        minIndividual: PropTypes.number.isRequired,
+        maxIndividual: PropTypes.number.isRequired,
+        minCombinedEnabled: PropTypes.bool.isRequired,
+        maxCombinedEnabled: PropTypes.bool.isRequired,
+        minIndividualEnabled: PropTypes.bool.isRequired,
+        maxIndividualEnabled: PropTypes.bool.isRequired,
+    }),
 };
 TrichordView.defaultProps = {
     size: 3,

@@ -44,6 +44,7 @@ export default class TrichordTree extends Component {
                 size={size}
                 showRoot={this.state.showRoots}
                 showOctave={this.state.showOctaves}
+                limits={this.state.limits}
             />));
 
         const canFindRoots = chords.map(row => row.map(chord => {
