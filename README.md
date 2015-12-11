@@ -50,7 +50,7 @@ The whole React app is [webpack][]ed into a `bundle.js` file, which is included 
 
 The UI entry point is `index.jsx`, but you really probably want to start looking at either `PitchCalculator` or `TreeExplorer`.
 
-Confused? Looking for API links? Here's the stack: [React][] and [React Router][] for the UI and routing, [Bootstrap][] (not [React-Bootstrap][]) for the CSS (not JS), [Mocha][] and [Chai][] for the unit testing. If we add global state, we'll certainly use [Redux][] and [React Redux] to stay aboard the declarative hype train.
+Confused? Looking for API links? Here's the stack: [React][] and [React Router][] for the UI and routing, [Bootstrap][] (not [React-Bootstrap][]) for the CSS (not JS), [Mocha][] and [Chai][] for the unit testing. The global state (configuration and settings) is managed through the wonderful [Redux][] and bound to the UI with [React Redux][]. We use [VexFlow][] for engraving chords.
 
   [React]: https://facebook.github.io/react/
   [React Router]: https://github.com/rackt/react-router#readme
@@ -60,6 +60,7 @@ Confused? Looking for API links? Here's the stack: [React][] and [React Router][
   [Chai]: http://chaijs.com/api/bdd/
   [Redux]: https://github.com/rackt/redux
   [React Redux]: https://github.com/rackt/react-redux
+  [VexFlow]: http://www.vexflow.com/
 
 The tool stack includes [webpack][] for the module bundling and [babel][] for the ES2015-and-up desugarings.
 
