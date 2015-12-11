@@ -10,6 +10,10 @@ export function createListener(store) {
 }
 
 export function createRehydrationAction() {
-    // STOPSHIP
-    return Actions.noop();
+    const storedState = LocalStore.get(LOCAL_STORE_KEY, undefined);
+    if (storedState === undefined) {
+        return Actions.noop();
+    } else {
+        return Actions.rehydrate(storedState);
+    }
 }
