@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 
 import HarmonicSeries from '../../HarmonicSeries';
 import Folding from '../../Folding';
+import {arraysEqual} from '../../Utils';
 
 import TreeView from './TreeView';
 import TrichordView from './TrichordView';
@@ -72,13 +73,7 @@ export default class TrichordTree extends Component {
         } : {};
 
         const infolded = Folding.infoldCanonical(rootChord);
-        //
-        // TODO(william): This equality check depends on
-        // an implementation detail of infoldCanonical;
-        // namely, that it returns an identical array
-        // when there is no infolding.
-        // Fix this by comparing the two arrays for value.
-        const hasInfolding = infolded !== rootChord;
+        const hasInfolding = !arraysEqual(infolded, rootChord);
 
         return <div>
             <ViewOptions
