@@ -16,6 +16,16 @@ export default class TrichordTree extends Component {
             showRoots: true,
             showOctaves: true,
             wide: false,
+            limits: {
+                minCombined: 4,
+                maxCombined: 24,
+                minIndividual: 2,
+                maxIndividual: 12,
+                minCombinedEnabled: false,
+                maxCombinedEnabled: false,
+                minIndividualEnabled: false,
+                maxIndividualEnabled: false,
+            },
         };
     }
 
@@ -78,6 +88,24 @@ export default class TrichordTree extends Component {
         const inversion = Folding.invert(rootChord);
         const hasInversion = !arraysEqual(inversion, rootChord);
 
+        const setLimit = (name, value) =>
+            this.setState({
+                limits: {
+                    ...this.state.limits,
+                    [name]: value,
+                },
+            });
+        const limitHandlers = Object.keys(this.state.limits)
+            .reduce((handlersObj, propName) => {
+                const handlerName = "onSet" +
+                    propName.charAt(0).toUpperCase() +
+                    propName.substring(1);
+                return {
+                    ...handlersObj,
+                    [handlerName]: x => setLimit(propName, x),
+                };
+            }, {});
+
         return <div>
             <ViewOptions
                 {...this.state}
@@ -86,6 +114,7 @@ export default class TrichordTree extends Component {
                 onSetShowOctaves={showOctaves =>
                     this.setState({ showOctaves })}
                 onSetWide={wide => this.setState({ wide })}
+                {...limitHandlers}
             />
             {defectiveNotice}
             <div style={{ textAlign: "center", marginBottom: 10 }}>
@@ -177,7 +206,9 @@ class ViewOptions extends Component {
                 </label>
             </div>;
 
-        return <div style={{ display: "table", marginBottom: 10 }}>
+        const table = {style: {display: "table", marginBottom: 10}};
+
+        return <div><div {...table}>
             <div {...row}>
                 <label {...cell} htmlFor="depth">Tree depth</label>
                 <label {...cell} htmlFor="showRoots">Show roots?</label>
@@ -213,7 +244,124 @@ class ViewOptions extends Component {
                     this.props.onSetWide,
                     "Wide", "Inline")}
             </div>
+        </div><div {...table}>
+            <div {...row}>
+                <label {...cell} htmlFor="minIndividual">
+                    Individual limits
+                </label>
+                <label {...cell} htmlFor="minCombined">
+                    Combined limits
+                </label>
+            </div>
+            <div {...row}>
+                <div {...cell}>
+                    <LimitControls
+                        min={this.props.limits.minIndividual}
+                        max={this.props.limits.maxIndividual}
+                        minEnabled={this.props.limits.minIndividualEnabled}
+                        maxEnabled={this.props.limits.maxIndividualEnabled}
+                        onSetMin={this.props.onSetMinIndividual}
+                        onSetMax={this.props.onSetMaxIndividual}
+                        onSetMinEnabled={this.props.onSetMinIndividualEnabled}
+                        onSetMaxEnabled={this.props.onSetMaxIndividualEnabled}
+                        minEnabledLabel="Minimum individual limit enabled"
+                        maxEnabledLabel="Maximum individual limit enabled"
+                        minLabel="Minimum individual limit"
+                        maxLabel="Maximum individual limit"
+                    />
+                </div>
+                <div {...cell}>
+                    <LimitControls
+                        min={this.props.limits.minCombined}
+                        max={this.props.limits.maxCombined}
+                        minEnabled={this.props.limits.minCombinedEnabled}
+                        maxEnabled={this.props.limits.maxCombinedEnabled}
+                        onSetMin={this.props.onSetMinCombined}
+                        onSetMax={this.props.onSetMaxCombined}
+                        onSetMinEnabled={this.props.onSetMinCombinedEnabled}
+                        onSetMaxEnabled={this.props.onSetMaxCombinedEnabled}
+                        minEnabledLabel="Minimum combined limit enabled"
+                        maxEnabledLabel="Maximum combined limit enabled"
+                        minLabel="Minimum combined limit"
+                        maxLabel="Maximum combined limit"
+                    />
+                </div>
+            </div>
+        </div></div>;
+    }
+
+}
+
+class LimitControls extends Component {
+
+    render() {
+        const {props} = this;
+        const {min, max, minEnabled, maxEnabled} = props;
+        const {onSetMin, onSetMax, onSetMinEnabled, onSetMaxEnabled} = props;
+
+        const inputStyle = {
+            display: "inline-block",
+            width: "50%",
+            maxWidth: "5em",
+        };
+
+        return <div className="input-group">
+            <span className="input-group-addon">
+                <input
+                    ref="minEnabled"
+                    type="checkbox"
+                    aria-label={this.props.minEnabledLabel}
+                    checked={minEnabled}
+                    onChange={() =>
+                        onSetMinEnabled(this.refs.minEnabled.checked)}
+                />
+            </span>
+            <input
+                ref="min"
+                style={inputStyle}
+                disabled={!minEnabled}
+                type="number"
+                className="form-control"
+                value={minEnabled ? min : null}
+                aria-label={this.props.minLabel}
+                onChange={() => onSetMin(this.refs.min.valueAsNumber)}
+            />
+            <input
+                ref="max"
+                style={inputStyle}
+                disabled={!maxEnabled}
+                type="number"
+                className="form-control"
+                value={maxEnabled ? max : null}
+                aria-label={this.props.maxLabel}
+                onChange={() => onSetMax(this.refs.max.valueAsNumber)}
+            />
+            <span className="input-group-addon">
+                <input
+                    ref="maxEnabled"
+                    type="checkbox"
+                    aria-label={this.props.maxEnabledLabel}
+                    checked={maxEnabled}
+                    onChange={() =>
+                        onSetMaxEnabled(this.refs.maxEnabled.checked)}
+                />
+            </span>
         </div>;
     }
 
 }
+LimitControls.propTypes = {
+    min: PropTypes.number.isRequired,
+    max: PropTypes.number.isRequired,
+    minEnabled: PropTypes.bool.isRequired,
+    maxEnabled: PropTypes.bool.isRequired,
+    onSetMin: PropTypes.func.isRequired,
+    onSetMax: PropTypes.func.isRequired,
+    onSetMinEnabled: PropTypes.func.isRequired,
+    onSetMaxEnabled: PropTypes.func.isRequired,
+
+    minEnabledLabel: PropTypes.string.isRequired,
+    maxEnabledLabel: PropTypes.string.isRequired,
+    minLabel: PropTypes.string.isRequired,
+    maxLabel: PropTypes.string.isRequired,
+};
