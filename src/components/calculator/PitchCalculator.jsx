@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+
+import * as Actions from '../../Actions';
 
 import Page from './../Page';
 import ChordComputer from './ChordComputer';
 import RationalizerConfig from './RationalizerConfig';
 
 import {extendRationalizer, canonicalRationalizer} from '../../HarmonicSeries';
-import Rational from '../../Rational';
 
-const LOCAL_STORE_KEY = "rationalizer_values";
+// TODO(william): Centralize these somewhere. Maybe a HarmonicData module?
 const initialInputs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 const initialValues = initialInputs.map(canonicalRationalizer);
 const names = [
@@ -16,46 +18,36 @@ const names = [
     "m6", "M6", "m7", "M7"
 ];
 
-/*
- * Given an array of JSON blobs that were serialized from Rationals,
- * reconstruct the Rationals.
- *
- * Rehydrating things that are already rational is a no-op.
- */
-function rehydrate(arr) {
-    return arr.map(x => new Rational(x.a, x.b));
-}
-
-export default class PitchCalculator extends Component {
-
-    constructor() {
-        super();
-        this.state = {
-            values: rehydrate(LocalStore.get(LOCAL_STORE_KEY, initialValues)),
-        };
-    }
+class PitchCalculator extends Component {
 
     render() {
         return <Page path="calculator">
             <h1>Pitch space root calculator</h1>
             <ChordComputer
-                rationalizer={extendRationalizer(this.state.values)}
+                rationalizer={extendRationalizer(this.props.acousticRatios)}
             />
             <RationalizerConfig
-                values={this.state.values}
+                values={this.props.acousticRatios}
                 defaults={initialValues}
                 names={names}
-                onChangeValue={(newValue, index) => {
-                    const {values} = this.state;
-                    const newValues = [
-                        ...values.slice(0, index),
-                        newValue,
-                        ...values.slice(index + 1),
-                    ];
-                    this.setState({ values: newValues });
-                    LocalStore.set(LOCAL_STORE_KEY, newValues);
-                }}
+                onChangeValue={(newValue, index) =>
+                    this.props.onSetAcousticRatio(index, newValue)}
             />
         </Page>;
     }
 }
+
+function mapStateToProps(state) {
+    return {
+        acousticRatios: state.acousticRatios,
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        onSetAcousticRatio: (index, ratio) => dispatch(
+            Actions.setAcousticRatio(index, ratio)),
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PitchCalculator);
