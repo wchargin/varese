@@ -32,7 +32,7 @@ export default class ChordView extends Component {
 
     _shouldRenderNote() {
         const [pianoMin, pianoMax] = [-40, 48];
-        const padding = 20;
+        const padding = 150;
         const [min, max] = [pianoMin - padding, pianoMax + padding];
         return this.props.notes.every(x => min < x && x < max);
     }
@@ -64,11 +64,21 @@ export default class ChordView extends Component {
         const ctx = renderer.getContext();
         const stave = new Vex.Flow.Stave(0, 0, width);
         stave.addClef(clef).setContext(ctx).draw();
+        Vex.Flow.Formatter.FormatAndDraw(ctx, stave, chords);
 
-        const boundingBox = Vex.Flow.Formatter.FormatAndDraw(
-            ctx, stave, chords);
+        // Clear container before adding anything.
+        const container = this.refs.outer;
+        while (container.childNodes.length > 0) {
+            container.removeChild(container.childNodes[0]);
+        }
+        container.appendChild(svgContainer);
 
         const svg = svgContainer.childNodes[0];
+
+        // We can only get the bounding box once the SVG is fully in the DOM;
+        // that is, 'svg' is in 'svgContainer',
+        // and 'svgContainer' is in the mounted ref.
+        const boundingBox = svg.getBBox();
         const padding = 10;
         const halfPadding = padding / 2;
 
@@ -77,25 +87,18 @@ export default class ChordView extends Component {
             halfPadding +
             //
             // This next line seems to get it about right most of the time.
-            Math.max(0, (width - boundingBox.h) * 2 / 3) +
+            Math.max(0, (width - boundingBox.height) * 2 / 3) +
             "px";
-        svg.style.height = Math.max(width, boundingBox.h);
+        svg.style.height = Math.max(width, boundingBox.height);
         svg.style.left = "0px";
         svg.style.width = width + "px";
         svg.style.position = "absolute";
         svg.style.overflow = "visible";
         svgContainer.style.height =
-            Math.max(width, boundingBox.h + padding) + "px";
+            Math.max(width, boundingBox.height + padding) + "px";
         svgContainer.style.width = width + "px";
         svgContainer.style.position = "relative";
         svgContainer.style.display = "inlineBlock";
-
-        // Clear container before adding anything.
-        const container = this.refs.outer;
-        while (container.childNodes.length > 0) {
-            container.removeChild(container.childNodes[0]);
-        }
-        container.appendChild(svgContainer);
     }
 
 }
