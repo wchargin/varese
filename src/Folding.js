@@ -24,8 +24,14 @@ export function infoldCanonical(arr) {
     }
 }
 
+export function invert(arr) {
+    const [low, mid, high] = arr;
+    return [low, low + (high - mid), high];
+}
+
 export default {
     outfoldUp,
     outfoldDown,
     infoldCanonical,
+    invert,
 };

@@ -43,4 +43,17 @@ describe('Folding', () => {
             test([5, 12, 16], [5, 8, 12]));
     });
 
+    describe('#invert', () => {
+        const {invert} = Folding;
+        const test = (input, output) =>
+            () => expect(invert(input)).to.deep.equal(output);
+
+        it("inverts [0, 3, 10] to [0, 7, 10]",
+            test([0, 3, 10], [0, 7, 10]));
+        it("inverts [0, 7, 10] to [0, 3, 10]",
+            test([0, 7, 10], [0, 3, 10]));
+        it("inverts [0, 5, 10] to itself",
+            test([0, 5, 10], [0, 5, 10]));
+    });
+
 });
