@@ -110,4 +110,49 @@ describe('reducer', () => {
                 "maxIndividualEnabled", 10))).to.throw(/unknown limit/));
     });
 
+    describe(':REHYDRATE', () => {
+        it("rehydrates the state, deserializing the Rationals", () => {
+            // The important part of this sample data
+            // is that the Rational objects will have been JSON-serialized.
+            // The rehydration action must deserialize them.
+            const originalData = {
+                acousticRatios: [
+                    new Rational(10, 7),
+                    new Rational(9, 5),
+                    new Rational(3, 2),
+                    new Rational(41, 487),
+                ],
+                treeViewOptions: {
+                    levels: 999,
+                    wide: true,
+                    limits: {
+                        minCombined: 121,
+                    },
+                },
+            };
+            const cycledData = JSON.parse(JSON.stringify(originalData));
+            const newState = reducer(undefined, Actions.rehydrate(cycledData));
+
+            expect(newState).to.deep.equal(originalData);
+
+            // And, just to be very sure...
+            newState.acousticRatios.forEach(obj =>
+                expect(obj).to.be.an.instanceof(Rational));
+        });
+        it("complains when there are no acousticRatios", () => {
+            const badState = {
+                acousticRatios: "whoops",
+                treeViewOptions: {
+                    levels: 999,
+                    wide: true,
+                    limits: {
+                        minCombined: 121,
+                    },
+                },
+            }
+            expect(() => reducer(undefined, Actions.rehydrate(badState)))
+                .to.throw(/acousticRatios/);
+        });
+    });
+
 });

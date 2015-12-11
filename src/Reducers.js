@@ -80,6 +80,20 @@ function setTreeLimitEnabled(state, name, value) {
     return setTreeLimitField(state, `${name}Enabled`, value);
 }
 
+function rehydrate(newState) {
+    const {acousticRatios} = newState;
+    if (!Array.isArray(acousticRatios)) {
+        throw new Error(
+            `expected to find an array of acousticRatios, ` +
+            `but found: ${acousticRatios}`);
+    }
+    const rehydratedRatios = acousticRatios.map(x => new Rational(x.a, x.b));
+    return {
+        ...newState,
+        acousticRatios: rehydratedRatios,
+    };
+}
+
 export default function reducer(state = initialState, action) {
     switch (action.type) {
         case "NOOP":
@@ -98,6 +112,8 @@ export default function reducer(state = initialState, action) {
             return setTreeLimitValue(state, action.limit, action.value);
         case "SET_TREE_LIMIT_ENABLED":
             return setTreeLimitEnabled(state, action.limit, action.enabled);
+        case "REHYDRATE":
+            return rehydrate(action.newState);
         default:
             return state;
     }

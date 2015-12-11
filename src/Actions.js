@@ -55,3 +55,10 @@ export function setTreeLimitEnabled(limit, enabled) {
         enabled,
     };
 }
+
+export function rehydrate(newState) {
+    return {
+        type: "REHYDRATE",
+        newState,
+    };
+}
