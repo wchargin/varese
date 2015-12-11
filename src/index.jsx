@@ -9,7 +9,12 @@ import Reducer from './Reducers';
 import App from './components/App';
 require("./LocalStore");
 
+import * as LocalStoreReduxInterface from './LocalStoreReduxInterface';
+
 const store = createStore(Reducer);
+store.dispatch(LocalStoreReduxInterface.createRehydrationAction());
+store.subscribe(LocalStoreReduxInterface.createListener(store));
+
 const component = <Provider store={store}>
     <App />
 </Provider>;
