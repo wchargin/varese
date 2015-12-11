@@ -81,17 +81,6 @@ export default class TrichordTree extends Component {
         const hasInfolding = infolded !== rootChord;
 
         return <div>
-            <div
-                className="button-toolbar"
-                role="toolbar"
-                style={{ marginBottom: 10 }}
-            >
-                <button
-                    className="btn btn-default"
-                    disabled={!hasInfolding}
-                    onClick={() => this.props.onClickChord(infolded)}
-                >Infold root</button>
-            </div>
             <ViewOptions
                 {...this.state}
                 onSetLevels={levels => this.setState({ levels })}
@@ -101,6 +90,20 @@ export default class TrichordTree extends Component {
                 onSetWide={wide => this.setState({ wide })}
             />
             {defectiveNotice}
+            <div style={{ textAlign: "center", marginBottom: 10 }}>
+                <strong>Root node manipulation:</strong>
+                {" "}
+                <div
+                    className="btn-group"
+                    role="group"
+                >
+                    <button
+                        className="btn btn-default"
+                        disabled={!hasInfolding}
+                        onClick={() => this.props.onClickChord(infolded)}
+                    >Infold</button>
+                </div>
+            </div>
             <div style={{...wideStyle, marginBottom: 20}}>
                 <TreeView
                     elements={nodes}
