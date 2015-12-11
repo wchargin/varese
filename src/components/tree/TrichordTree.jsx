@@ -75,6 +75,9 @@ export default class TrichordTree extends Component {
         const infolded = Folding.infoldCanonical(rootChord);
         const hasInfolding = !arraysEqual(infolded, rootChord);
 
+        const inversion = Folding.invert(rootChord);
+        const hasInversion = !arraysEqual(inversion, rootChord);
+
         return <div>
             <ViewOptions
                 {...this.state}
@@ -97,6 +100,11 @@ export default class TrichordTree extends Component {
                         disabled={!hasInfolding}
                         onClick={() => this.props.onClickChord(infolded)}
                     >Infold</button>
+                    <button
+                        className="btn btn-default"
+                        disabled={!hasInversion}
+                        onClick={() => this.props.onClickChord(inversion)}
+                    >Invert</button>
                 </div>
             </div>
             <div style={{...wideStyle, marginBottom: 20}}>
