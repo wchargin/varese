@@ -45,7 +45,8 @@ export default class TrichordView extends Component {
         // If we're not within limits,
         // we still need to render a component of the right size
         // so that the grid layout isn't thrown off.
-        // But we'll set its 'visibility' to 'hidden'.
+        // But we'll lower the opacity of the main content,
+        // and set the engraving's 'visibility' to 'hidden'.
         const visible = this._withinLimits();
 
         // TODO(william): make this a parameter to pitchToName
@@ -75,7 +76,7 @@ export default class TrichordView extends Component {
             textAlign: "center",
             padding: 2 * this.props.size,
             fontSize: 8 + 2 * this.props.size,
-            visibility: visible ? "visible" : "hidden",
+            opacity: visible ? 1 : 0.2,
         };
         const buttonStyle = {...style};
         const divStyle = {
