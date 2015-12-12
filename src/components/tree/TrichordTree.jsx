@@ -14,7 +14,6 @@ export default class TrichordTree extends Component {
         super();
         this.state = {
             levels: 4,
-            showRoots: true,
             showOctaves: true,
             wide: false,
             limits: {
@@ -44,7 +43,7 @@ export default class TrichordTree extends Component {
                 notes={chord}
                 onClick={() => onClickChord(chord)}
                 size={size}
-                showRoot={this.state.showRoots}
+                showRoot={this.props.viewOptions.showRoots}
                 showOctave={this.state.showOctaves}
                 limits={this.state.limits}
             />));
@@ -85,9 +84,10 @@ export default class TrichordTree extends Component {
 
         return <div>
             <ViewOptions
-                {...this.state}
-                onSetLevels={levels => this.setState({ levels })}
-                onSetShowRoots={showRoots => this.setState({ showRoots })}
+                {...this.props.viewOptions}
+                {...this.state  /* TODO(william): legacy; move to Redux */}
+                onSetLevels={this.props.onSetLevels}
+                onSetShowRoots={this.props.onSetShowRoots}
                 onSetShowOctaves={showOctaves =>
                     this.setState({ showOctaves })}
                 onSetWide={wide => this.setState({ wide })}
@@ -122,7 +122,7 @@ export default class TrichordTree extends Component {
      * Return a list of warnings that explain why any may have failed.
      */
     _renderWarnings(chords, rationalizer) {
-        if (!this.state.showRoots) {
+        if (!this.props.viewOptions.showRoots) {
             return [];
         }
 
@@ -206,6 +206,11 @@ TrichordTree.propTypes = {
     rationalizer: PropTypes.func.isRequired,
     rootChord: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
     onClickChord: PropTypes.func.isRequired,
+
+    viewOptions: PropTypes.shape({
+        showRoots: PropTypes.bool.isRequired,
+    }).isRequired,
+    onSetShowRoots: PropTypes.func.isRequired,
 };
 
 class ViewOptions extends Component {

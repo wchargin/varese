@@ -45,6 +45,9 @@ class TreeExplorer extends Component {
                 rationalizer={extendRationalizer(this.props.acousticRatios)}
                 rootChord={this.state.rootChord}
                 onClickChord={rootChord => this.setState({ rootChord })}
+                //
+                viewOptions={this.props.treeViewOptions}
+                onSetShowRoots={this.props.onSetShowRoots}
             />
             {this.props.rootsVisible &&
                 <RationalizerConfig
@@ -61,6 +64,7 @@ function mapStateToProps(state) {
     return {
         acousticRatios: state.acousticRatios,
         rootsVisible: state.treeViewOptions.showRoots,
+        treeViewOptions: state.treeViewOptions,
     };
 }
 
@@ -68,6 +72,8 @@ function mapDispatchToProps(dispatch) {
     return {
         onSetAcousticRatio: (index, ratio) => dispatch(
             Actions.setAcousticRatio(index, ratio)),
+        onSetShowRoots: showRoots => dispatch(
+            Actions.setTreeShowRoots(showRoots)),
     };
 }
 
