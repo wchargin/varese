@@ -1,6 +1,5 @@
 import React, {Component, PropTypes} from 'react';
 
-import {canonicalRationalizer} from '../../HarmonicData';
 import {findChordRootOffset} from '../../HarmonicSeries';
 
 import Folding from '../../Folding';
@@ -32,7 +31,7 @@ export default class TrichordTree extends Component {
     }
 
     render() {
-        const {rootChord, onClickChord} = this.props;
+        const {rationalizer, rootChord, onClickChord} = this.props;
         const {levels} = this.state;
         const size = levels <= 4 ? 3 :
             levels <= 5 ? 2 :
@@ -41,6 +40,7 @@ export default class TrichordTree extends Component {
         const chords = this._generateTree(rootChord, levels);
         const nodes = chords.map(row => row.map(chord =>
             <TrichordView
+                rationalizer={rationalizer}
                 notes={chord}
                 onClick={() => onClickChord(chord)}
                 size={size}
@@ -49,11 +49,16 @@ export default class TrichordTree extends Component {
                 limits={this.state.limits}
             />));
 
-        const canFindRoots = chords.map(row => row.map(chord => {
-            const result = findChordRootOffset(canonicalRationalizer, chord);
-            return result.status === "success";
-        }));
+        const canFindRoots = chords.map(row => row.map(chord =>
+            findChordRootOffset(rationalizer, chord).status === "success"));
         const defective = canFindRoots.some(row => row.some(x => !x));
+
+        // TODO(william): This message isn't quite accurate anymore;
+        // they could be too complicated or there could be a zero ratio.
+        // Better check to see what the errors actually are
+        // (i.e., instead of just a boolean `canFindChords`,
+        // try to parse all the chords and see what errors you get,
+        // then generate warnings for each type).
         const defectiveNotice = defective && this.state.showRoots ?
             <div className="alert alert-warning" style={{ marginTop: 20 }}>
                 <strong>Note:</strong>
@@ -161,8 +166,8 @@ export default class TrichordTree extends Component {
     }
 }
 TrichordTree.propTypes = {
+    rationalizer: PropTypes.func.isRequired,
     rootChord: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
-    size: PropTypes.oneOf([1, 2, 3]),
     onClickChord: PropTypes.func.isRequired,
 };
 

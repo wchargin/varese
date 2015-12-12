@@ -1,6 +1,5 @@
 import React, {Component, PropTypes} from 'react';
 
-import {canonicalRationalizer} from '../../HarmonicData';
 import {findChordRootOffset} from '../../HarmonicSeries';
 import PitchNames from '../../PitchNames';
 
@@ -133,9 +132,8 @@ export default class TrichordView extends Component {
         const createRootView = text =>
             <strong key="root" style={{ color: "blue" }}>{text}</strong>;
 
-        // TODO(william): use the user's existing rationalizer
         const maybeRootPitch = findChordRootOffset(
-            canonicalRationalizer, notes);
+            this.props.rationalizer, notes);
         if (maybeRootPitch.status === "success") {
             const rootPitch = maybeRootPitch.result;
             const rootName =
@@ -143,7 +141,7 @@ export default class TrichordView extends Component {
             return createRootView(rootName);
         } else {
             const e = maybeRootPitch.error;
-            if (e.match(/finite/)) {
+            if (e.match(/finite/) || e.match(/zero_ratio/)) {
                 return createRootView("?");
             } else {
                 throw e;
@@ -152,6 +150,7 @@ export default class TrichordView extends Component {
     }
 }
 TrichordView.propTypes = {
+    rationalizer: PropTypes.func.isRequired,
     notes: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
     onClick: PropTypes.func,
     size: PropTypes.oneOf([1, 2, 3]),
