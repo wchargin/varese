@@ -94,6 +94,15 @@ export default class ChordView extends Component {
         svg.style.width = width + "px";
         svg.style.position = "absolute";
         svg.style.overflow = "visible";
+
+        // The margin/padding/positioning stuff we're doing here
+        // works optically, and the SVG looks correct,
+        // but apparently it's still pushed pretty far down in the DOM.
+        // This can interfere with pointer events
+        // because the SVG can block the mouse cursor.
+        // We can fix that by just not capturing such events.
+        svg.style.pointerEvents = "none";
+
         svgContainer.style.height =
             Math.max(width, boundingBox.height + padding) + "px";
         svgContainer.style.width = width + "px";
