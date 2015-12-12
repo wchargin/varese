@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 
-import HarmonicSeries from '../../HarmonicSeries';
+import {canonicalRationalizer} from '../../HarmonicData';
+import {findChordRootOffset} from '../../HarmonicSeries';
 import PitchNames from '../../PitchNames';
 
 import ChordEngraving from '../ChordEngraving';
@@ -133,8 +134,8 @@ export default class TrichordView extends Component {
             <strong key="root" style={{ color: "blue" }}>{text}</strong>;
 
         // TODO(william): use the user's existing rationalizer
-        const maybeRootPitch = HarmonicSeries.findChordRootOffset(
-            HarmonicSeries.canonicalRationalizer, notes);
+        const maybeRootPitch = findChordRootOffset(
+            canonicalRationalizer, notes);
         if (maybeRootPitch.status === "success") {
             const rootPitch = maybeRootPitch.result;
             const rootName =

@@ -164,20 +164,6 @@ export function findChordRootOffset(rationalizer, notes) {
     return findChordRootOffset(rationalizer, results);
 }
 
-export const canonicalRationalizer = extendRationalizer([
-    new Rational(15, 16),
-    new Rational(8, 9),
-    new Rational(5, 6),
-    new Rational(4, 5),
-    new Rational(3, 4),
-    new Rational(12, 17),
-    new Rational(2, 3),
-    new Rational(5, 8),
-    new Rational(3, 5),
-    new Rational(5, 9),
-    new Rational(8, 15),
-]);
-
 export default {
     extendRationalizer,
     temperExact,
@@ -187,6 +173,4 @@ export default {
     findRootOffset,
 
     findChordRootOffset,
-
-    canonicalRationalizer,
 };

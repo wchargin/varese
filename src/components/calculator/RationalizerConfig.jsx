@@ -1,13 +1,13 @@
 import React, {Component, PropTypes} from 'react';
 
-import {canonicalRationalizer} from '../../HarmonicSeries';
+import {canonicalValues, intervalNames} from '../../HarmonicData';
 import Rational from '../../Rational';
 import TextUtils from '../../TextUtils';
 
 export default class RationalizerConfig extends Component {
 
     render() {
-        const {values, defaults, names} = this.props;
+        const {values} = this.props;
         return <div>
             <h3>Configure rationalization</h3>
             <p>
@@ -29,24 +29,24 @@ export default class RationalizerConfig extends Component {
                     return <AcousticRatioBox
                         value={value}
                         key={index}
-                        name={names[index]}
-                        isDefault={value.equals(defaults[index])}
+                        name={intervalNames[index]}
+                        isDefault={value.equals(canonicalValues[index])}
                         onChange={newValue => setValueTo(newValue)}
-                        onReset={newValue => setValueTo(defaults[index])}
+                        onReset={() => setValueTo(canonicalValues[index])}
                     />;
                 })}
             </div>
-            {this._renderDescendingWarning(values, names)}
-            {this._renderZeroWarning(values, names)}
+            {this._renderDescendingWarning(values)}
+            {this._renderZeroWarning(values)}
         </div>;
     }
 
-    _renderDescendingWarning(values, names) {
+    _renderDescendingWarning(values) {
         const bad = values
             .slice(0, values.length - 1)
             .map((x, i) => i)
             .filter(i => values[i].toNumber() <= values[i + 1].toNumber())
-            .map(i => `${names[i]}\u2013${names[i + 1]}`);
+            .map(i => `${intervalNames[i]}\u2013${intervalNames[i + 1]}`);
         if (!bad.length) {
             return null;
         }
@@ -60,11 +60,11 @@ export default class RationalizerConfig extends Component {
         </div>;
     }
 
-    _renderZeroWarning(values, names) {
+    _renderZeroWarning(values) {
         const bad = values
             .map((x, i) => i)
             .filter(i => values[i].toNumber() === 0)
-            .map(i => names[i]);
+            .map(i => intervalNames[i]);
         if (!bad.length) {
             return null;
         }

@@ -1,6 +1,8 @@
 import React, {Component, PropTypes} from 'react';
 
-import HarmonicSeries from '../../HarmonicSeries';
+import {canonicalRationalizer} from '../../HarmonicData';
+import {findChordRootOffset} from '../../HarmonicSeries';
+
 import Folding from '../../Folding';
 import {arraysEqual} from '../../Utils';
 
@@ -48,8 +50,7 @@ export default class TrichordTree extends Component {
             />));
 
         const canFindRoots = chords.map(row => row.map(chord => {
-            const result = HarmonicSeries.findChordRootOffset(
-                HarmonicSeries.canonicalRationalizer, chord);
+            const result = findChordRootOffset(canonicalRationalizer, chord);
             return result.status === "success";
         }));
         const defective = canFindRoots.some(row => row.some(x => !x));

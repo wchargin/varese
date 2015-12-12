@@ -1,11 +1,8 @@
-import {canonicalRationalizer} from './HarmonicSeries';
 import Rational from './Rational';
 
-const initialInputs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-const initialRatios = initialInputs.map(canonicalRationalizer);
-
+import {canonicalValues} from './HarmonicData';
 const initialState = {
-    acousticRatios: initialRatios,
+    acousticRatios: canonicalValues,
     treeViewOptions: {
         levels: 4,
         showRoots: true,

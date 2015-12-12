@@ -4,6 +4,13 @@ import {expect} from 'chai';
 import Rational from '../src/Rational';
 import HarmonicSeries from '../src/HarmonicSeries';
 
+// NOTE: This next dependency is implemented in terms of HarmonicSeries!
+// This isn't necessarily a problem, but it is something to be aware of.
+import {
+    canonicalValues,
+    canonicalRationalizer as cr,
+} from '../src/HarmonicData';
+
 describe('HarmonicSeries', () => {
 
     describe("#extendRationalizer", () => {
@@ -75,7 +82,7 @@ describe('HarmonicSeries', () => {
     });
 
     describe("#findRootOffset", () => {
-        const {findRootOffset, canonicalRationalizer: cr} = HarmonicSeries;
+        const {findRootOffset} = HarmonicSeries;
         const testGood = (input1, input2, result) => () =>
             expect(findRootOffset(cr, input1, input2)).to.deep.equal({
                 status: "success",
@@ -95,11 +102,10 @@ describe('HarmonicSeries', () => {
         it("should fail when the ratios exponentiate to Infinity",
             testBad(cr, -3473, 9761, "infinite"));
 
-        const canonicalRatios = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(cr);
         const badRatios = [
-            ...canonicalRatios.slice(0, 5),
+            ...canonicalValues.slice(0, 5),
             new Rational(0, 1),
-            ...canonicalRatios.slice(6),
+            ...canonicalValues.slice(6),
         ];
         const badRationalizer = HarmonicSeries.extendRationalizer(badRatios);
         it("should fail when one of the ratios is zero",
@@ -107,10 +113,7 @@ describe('HarmonicSeries', () => {
     });
 
     describe("#findChordRootOffset", () => {
-        const {
-            findChordRootOffset,
-            canonicalRationalizer: cr,
-        } = HarmonicSeries;
+        const {findChordRootOffset} = HarmonicSeries;
         const testGood = (input, result) => () =>
             expect(findChordRootOffset(cr, input)).to.deep.equal({
                 status: "success",
@@ -137,9 +140,8 @@ describe('HarmonicSeries', () => {
             testGood([3, 9, 14], 1 - 5 * 12));
     });
 
+    // Tested here for now...
     describe("#canonicalRationalizer", () => {
-        const {canonicalRationalizer: cr} = HarmonicSeries;
-
         it("should map the tritone to 12:17", () =>
             expect(cr(6)).to.deep.equal(new Rational(12, 17)));
         it("should map the perfect fifth to 2:3", () =>
