@@ -145,7 +145,7 @@ export default class TrichordTree extends Component {
 
         return [
             errorTypes.finite &&
-                <Warning>
+                <Warning key="finite">
                     <strong>Note:</strong>
                     {" "}
                     Some of these chords are too complicated to analyze,
@@ -157,7 +157,7 @@ export default class TrichordTree extends Component {
                     in the place where the root should be.
                 </Warning>,
             errorTypes.zeroRatio &&
-                <Warning>
+                <Warning key="zero-ratio">
                     <strong>Note:</strong>
                     {" "}
                     Some of these chords involve a semitone difference
