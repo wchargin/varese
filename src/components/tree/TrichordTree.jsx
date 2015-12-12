@@ -1,3 +1,10 @@
+/*
+ * Given a root chord and some view parameters,
+ * render an interactive chord tree.
+ * This involves computing the chords to be rendered
+ * (the number of levels is provided as a view option)
+ * and rendering them all as individual TrichordViews.
+ */
 import React, {Component, PropTypes} from 'react';
 
 import {findChordRootOffset} from '../../HarmonicSeries';
