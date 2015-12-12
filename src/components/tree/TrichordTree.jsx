@@ -7,8 +7,6 @@
  */
 import React, {Component, PropTypes} from 'react';
 
-import {findChordRootOffset} from '../../HarmonicSeries';
-
 import Folding from '../../Folding';
 import {flatten} from '../../Utils';
 

@@ -14,10 +14,6 @@ export default class InvalidRootWarnings extends Component {
             const result = findChordRootOffset(this.props.rationalizer, chord);
             return result.status === "error" ? result.error : null;
         }).filter(x => x !== null);
-        const errorTypes = {
-            finite: errors.some(x => x && x.match(/finite/)),
-            zeroRatio: errors.some(x => x && x.match(/zero_ratio/)),
-        };
 
         const finiteError = errors.some(x => x.match(/finite/)) &&
             <Warning key="finite">
