@@ -20,30 +20,34 @@ export default class TrichordTree extends Component {
     render() {
         const {rationalizer, rootChord, onClickChord} = this.props;
         const {levels} = this.props.viewOptions;
-        const size = levels <= 4 ? 3 :
-            levels <= 5 ? 2 :
-            1;
+
+        const [sizeSmall, sizeMedium, sizeLarge] = [1, 2, 3];
+        const size =
+            levels <= 4 ? sizeLarge :
+            levels <= 5 ? sizeMedium :
+                          sizeSmall;
 
         const chords = this._generateTree(rootChord, levels);
-        const nodes = chords.map((row, rowIndex) => row.map(chord =>
-            <TrichordView
+        const nodes = chords.map((row, rowIndex) => row.map(chord => {
+            // The root note has some special properties:
+            // for example, it's the only editable node,
+            // and it should also always be at full size.
+            // Detecting it is made easy by the fact that
+            // it's also the only node in the first row.
+            const isRoot = rowIndex === 0;
+            return <TrichordView
                 rationalizer={rationalizer}
                 notes={chord}
-                onClick={rowIndex === 0 ?
-                    null :
-                    (() => onClickChord(chord))}
-                size={size}
-                showRoot={this.props.viewOptions.showRoots}
-                showOctave={this.props.viewOptions.showOctaves}
-                limits={this.props.viewOptions.limits}
                 //
-                // We only want the root node to be editable.
-                // This is made easier by the fact that
-                // the root node is the only node in the first row.
-                onChange={rowIndex === 0 ?
-                    (chord => onClickChord(chord)) :
-                    null}
-            />));
+                limits={this.props.viewOptions.limits}
+                showOctave={this.props.viewOptions.showOctaves}
+                showRoot={this.props.viewOptions.showRoots}
+                size={isRoot ? sizeLarge : size}
+                //
+                onClick={isRoot ? null : (() => onClickChord(chord))}
+                onChange={isRoot ? (chord => onClickChord(chord)) : null}
+            />;
+        }));
 
         // We'd like to add some padding when it's wide
         // so it's not flush against the edge.
