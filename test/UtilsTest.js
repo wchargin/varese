@@ -92,4 +92,19 @@ describe('Utils', () => {
                 .to.be.false);
     });
 
+    describe('#flatten', () => {
+        const {flatten} = Utils;
+
+        it("flattens one level of arrays", () =>
+            expect(flatten([[1, 2], [3, 4, 5, 6]]))
+                .to.deep.equal([1, 2, 3, 4, 5, 6]));
+        it("flattens just one level of arrays", () =>
+            expect(flatten([[1, 2], [[3, 4], [5, 6]]]))
+                .to.deep.equal([1, 2, [3, 4], [5, 6]]));
+        it("does nothing to the empty array", () =>
+            expect(flatten([])).to.deep.equal([]));
+        it("collapses the array of the empty array to the empty array", () =>
+            expect(flatten([[]])).to.deep.equal([]));
+    });
+
 });
