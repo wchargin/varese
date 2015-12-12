@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 
 import {findChordRootOffset} from '../../HarmonicSeries';
-import PitchNames from '../../PitchNames';
+import {pitchToName, nameToPitch} from '../../PitchNames';
 import {flatten} from '../../Utils';
 
 import ChordEngraving from '../ChordEngraving';
@@ -56,7 +56,7 @@ export default class TrichordView extends Component {
 
         const [low, med, high] = notesAscending;
         const names = notesDescending.map(x =>
-            PitchNames.pitchToName(x, true, showOctave));
+            pitchToName(x, true, showOctave));
         const noteViews = names.map((name, index) => {
             if (this.props.onChange) {
                 return <SingleNoteInput
@@ -64,9 +64,7 @@ export default class TrichordView extends Component {
                     key={"note-" + index}
                     type="text"
                     displayValue={name}
-                    value={
-                        PitchNames.pitchToName(notesDescending[index], true)
-                    }
+                    value={pitchToName(notesDescending[index], true)}
                     style={{ textAlign: "center" }}
                     onChange={(newPitch, displayText) =>
                         this._handleChange(index, newPitch, displayText)}
@@ -150,8 +148,7 @@ export default class TrichordView extends Component {
         const maybeRootPitch = findChordRootOffset(rationalizer, notes);
         if (maybeRootPitch.status === "success") {
             const rootPitch = maybeRootPitch.result;
-            const rootName =
-                PitchNames.pitchToName(rootPitch, true, showOctave);
+            const rootName = pitchToName(rootPitch, true, showOctave);
             return createRootView(rootName);
         } else {
             const e = maybeRootPitch.error;
@@ -321,7 +318,7 @@ class SingleNoteInput extends Component {
         const text = this.refs.input.value;
         this.setState({ text });
 
-        const value = PitchNames.nameToPitch(text);
+        const value = nameToPitch(text);
         if (value !== null) {
             this.props.onChange(value, text);
         }
