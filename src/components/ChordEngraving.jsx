@@ -46,7 +46,7 @@ export default class ChordView extends Component {
     }
 
     _renderNote() {
-        const {notes, width, clef} = this.props;
+        const {notes, width} = this.props;
         const chord = VexFlowUtils.pitchesToStaveNote(notes);
 
         // VexFlow supports, you know, actual music,
@@ -59,7 +59,7 @@ export default class ChordView extends Component {
             Vex.Flow.Renderer.Backends.SVG);
         const ctx = renderer.getContext();
         const stave = new Vex.Flow.Stave(0, 0, width);
-        stave.addClef(clef).setContext(ctx).draw();
+        stave.addClef("treble").setContext(ctx).draw();
         Vex.Flow.Formatter.FormatAndDraw(ctx, stave, chords);
 
         // Clear container before adding anything.
@@ -104,10 +104,7 @@ ChordView.propTypes = {
 
     // Width of the staff output, in pixels.
     width: PropTypes.number,
-
-    clef: React.PropTypes.oneOf(["treble", "bass"]),
 };
 ChordView.defaultProps = {
     width: 100,
-    clef: "treble",
 };
