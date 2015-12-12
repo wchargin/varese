@@ -79,6 +79,10 @@ function mapDispatchToProps(dispatch) {
             onSetShowOctaves: showOctaves => dispatch(
                 Actions.setTreeShowOctaves(showOctaves)),
             onSetWide: wide => dispatch(Actions.setTreeWide(wide)),
+            onSetLimitValue: (limit, value) => dispatch(
+                Actions.setTreeLimitValue(limit, value)),
+            onSetLimitEnabled: (limit, enabled) => dispatch(
+                Actions.setTreeLimitEnabled(limit, enabled)),
         },
     };
 }

@@ -10,22 +10,6 @@ import TrichordView from './TrichordView';
 
 export default class TrichordTree extends Component {
 
-    constructor() {
-        super();
-        this.state = {
-            limits: {
-                minCombined: 4,
-                maxCombined: 24,
-                minIndividual: 2,
-                maxIndividual: 12,
-                minCombinedEnabled: false,
-                maxCombinedEnabled: false,
-                minIndividualEnabled: false,
-                maxIndividualEnabled: false,
-            },
-        };
-    }
-
     render() {
         const {rationalizer, rootChord, onClickChord} = this.props;
         const {levels} = this.props.viewOptions;
@@ -42,7 +26,7 @@ export default class TrichordTree extends Component {
                 size={size}
                 showRoot={this.props.viewOptions.showRoots}
                 showOctave={this.props.viewOptions.showOctaves}
-                limits={this.state.limits}
+                limits={this.props.viewOptions.limits}
             />));
 
         // We'd like to add some padding when it's wide
@@ -61,33 +45,15 @@ export default class TrichordTree extends Component {
             left: `calc(-50vw + ${widePadding}px + 50%)`,
         } : {};
 
-        const setLimit = (name, value) =>
-            this.setState({
-                limits: {
-                    ...this.state.limits,
-                    [name]: value,
-                },
-            });
-        const limitHandlers = Object.keys(this.state.limits)
-            .reduce((handlersObj, propName) => {
-                const handlerName = "onSet" +
-                    propName.charAt(0).toUpperCase() +
-                    propName.substring(1);
-                return {
-                    ...handlersObj,
-                    [handlerName]: x => setLimit(propName, x),
-                };
-            }, {});
-
         return <div>
             <ViewOptions
                 {...this.props.viewOptions}
-                {...this.state  /* TODO(william): legacy; move to Redux */}
                 onSetLevels={this.props.onSetLevels}
                 onSetShowRoots={this.props.onSetShowRoots}
                 onSetShowOctaves={this.props.onSetShowOctaves}
                 onSetWide={this.props.onSetWide}
-                {...limitHandlers}
+                onSetLimitValue={this.props.onSetLimitValue}
+                onSetLimitEnabled={this.props.onSetLimitEnabled}
             />
             {this._renderWarnings(chords, rationalizer)}
             {this._renderToolbar()}
@@ -259,6 +225,11 @@ class ViewOptions extends Component {
 
         const table = {style: {display: "table", marginBottom: 10}};
 
+        const limitValue = limit =>
+            value => this.props.onSetLimitValue(limit, value);
+        const limitEnabled = limit =>
+            enabled => this.props.onSetLimitEnabled(limit, enabled);
+
         return <div><div {...table}>
             <div {...row}>
                 <label {...cell} htmlFor="depth">Tree depth</label>
@@ -311,10 +282,10 @@ class ViewOptions extends Component {
                         max={this.props.limits.maxIndividual}
                         minEnabled={this.props.limits.minIndividualEnabled}
                         maxEnabled={this.props.limits.maxIndividualEnabled}
-                        onSetMin={this.props.onSetMinIndividual}
-                        onSetMax={this.props.onSetMaxIndividual}
-                        onSetMinEnabled={this.props.onSetMinIndividualEnabled}
-                        onSetMaxEnabled={this.props.onSetMaxIndividualEnabled}
+                        onSetMin={limitValue("minIndividual")}
+                        onSetMax={limitValue("maxIndividual")}
+                        onSetMinEnabled={limitEnabled("minIndividual")}
+                        onSetMaxEnabled={limitEnabled("maxIndividual")}
                         minEnabledLabel="Minimum individual limit enabled"
                         maxEnabledLabel="Maximum individual limit enabled"
                         minLabel="Minimum individual limit"
@@ -327,10 +298,10 @@ class ViewOptions extends Component {
                         max={this.props.limits.maxCombined}
                         minEnabled={this.props.limits.minCombinedEnabled}
                         maxEnabled={this.props.limits.maxCombinedEnabled}
-                        onSetMin={this.props.onSetMinCombined}
-                        onSetMax={this.props.onSetMaxCombined}
-                        onSetMinEnabled={this.props.onSetMinCombinedEnabled}
-                        onSetMaxEnabled={this.props.onSetMaxCombinedEnabled}
+                        onSetMin={limitValue("minCombined")}
+                        onSetMax={limitValue("maxCombined")}
+                        onSetMinEnabled={limitEnabled("minCombined")}
+                        onSetMaxEnabled={limitEnabled("maxCombined")}
                         minEnabledLabel="Minimum combined limit enabled"
                         maxEnabledLabel="Maximum combined limit enabled"
                         minLabel="Minimum combined limit"
