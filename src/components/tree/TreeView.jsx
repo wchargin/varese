@@ -27,7 +27,7 @@ export default class TreeView extends Component {
                     <div key={nodeIndex} style={{
                         display: "table-cell",
                         textAlign: "center",
-                        verticalAlign: "middle",
+                        verticalAlign: "top",
                     }}>{node}</div>)}
             </div>
         </div>;
