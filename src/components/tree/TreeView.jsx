@@ -28,6 +28,7 @@ export default class TreeView extends Component {
                         display: "table-cell",
                         textAlign: "center",
                         verticalAlign: "top",
+                        width: `${100 * Math.pow(0.5, rowIndex)}%`,
                     }}>{node}</div>)}
             </div>
         </div>;
