@@ -18,11 +18,7 @@ export default class ChordView extends Component {
 
     render() {
         if (this._shouldRenderNote()) {
-            return <div ref="outer" style={{
-                padding: 10,
-                borderRadius: 10,
-                display: "inline-block",
-            }} />;
+            return <div ref="outer" style={{ display: "inline-block" }} />;
         } else {
             return <div style={{ width: this.props.width }}>
                 The notes in this chord are way off the piano!
@@ -79,17 +75,9 @@ export default class ChordView extends Component {
         // that is, 'svg' is in 'svgContainer',
         // and 'svgContainer' is in the mounted ref.
         const boundingBox = svg.getBBox();
-        const padding = 10;
-        const halfPadding = padding / 2;
 
-        svg.style.top =
-            -boundingBox.y +
-            halfPadding +
-            //
-            // This next line seems to get it about right most of the time.
-            Math.max(0, (width - boundingBox.height) * 2 / 3) +
-            "px";
-        svg.style.height = Math.max(width, boundingBox.height);
+        svg.style.top = -boundingBox.y + "px";
+        svg.style.height = boundingBox.height;
         svg.style.left = "0px";
         svg.style.width = width + "px";
         svg.style.position = "absolute";
@@ -103,8 +91,7 @@ export default class ChordView extends Component {
         // We can fix that by just not capturing such events.
         svg.style.pointerEvents = "none";
 
-        svgContainer.style.height =
-            Math.max(width, boundingBox.height + padding) + "px";
+        svgContainer.style.height = boundingBox.height + "px";
         svgContainer.style.width = width + "px";
         svgContainer.style.position = "relative";
         svgContainer.style.display = "inlineBlock";
