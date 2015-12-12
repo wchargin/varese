@@ -1,8 +1,8 @@
 import React, {Component, PropTypes} from 'react';
 
-import {canonicalValues, intervalNames} from '../../HarmonicData';
-import Rational from '../../Rational';
-import TextUtils from '../../TextUtils';
+import {canonicalValues, intervalNames} from '../HarmonicData';
+import Rational from '../Rational';
+import TextUtils from '../TextUtils';
 
 export default class RationalizerConfig extends Component {
 

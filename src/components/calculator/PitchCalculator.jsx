@@ -5,7 +5,7 @@ import * as Actions from '../../Actions';
 
 import Page from './../Page';
 import ChordComputer from './ChordComputer';
-import RationalizerConfig from './RationalizerConfig';
+import RationalizerConfig from '../RationalizerConfig';
 
 import {extendRationalizer} from '../../HarmonicSeries';
 
