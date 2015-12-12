@@ -8,7 +8,7 @@ export default class RationalizerConfig extends Component {
 
     render() {
         const {values} = this.props;
-        return <div>
+        return <div style={{ marginBottom: 20 }}>
             <h3>Configure rationalization</h3>
             <p>
             How do you want to map semitone differences to acoustic ratios?

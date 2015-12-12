@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
+import * as Actions from '../../Actions';
+
 import Page from './../Page';
 import TrichordTree from './TrichordTree';
 import ChordInput from '../ChordInput';
+import RationalizerConfig from '../RationalizerConfig';
 
 import {extendRationalizer} from '../../HarmonicSeries';
 
@@ -43,6 +46,12 @@ class TreeExplorer extends Component {
                 rootChord={this.state.rootChord}
                 onClickChord={rootChord => this.setState({ rootChord })}
             />
+            {this.props.rootsVisible &&
+                <RationalizerConfig
+                    values={this.props.acousticRatios}
+                    onChangeValue={(newValue, index) =>
+                        this.props.onSetAcousticRatio(index, newValue)}
+                />}
         </Page>;
     }
 
@@ -51,12 +60,12 @@ class TreeExplorer extends Component {
 function mapStateToProps(state) {
     return {
         acousticRatios: state.acousticRatios,
+        rootsVisible: state.treeViewOptions.showRoots,
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        // We'll need this once we add the rationalization config.
         onSetAcousticRatio: (index, ratio) => dispatch(
             Actions.setAcousticRatio(index, ratio)),
     };
