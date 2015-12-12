@@ -63,7 +63,6 @@ export default class ChordComputer extends Component {
 }
 ChordComputer.propTypes = {
     rationalizer: PropTypes.func.isRequired,
-    chord: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
 };
 
 class ChordOutput extends Component {

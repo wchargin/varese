@@ -174,7 +174,7 @@ TrichordTree.propTypes = {
         showRoots: PropTypes.bool.isRequired,
         showOctaves: PropTypes.bool.isRequired,
         wide: PropTypes.bool.isRequired,
-        limits: {
+        limits: PropTypes.shape({
             minCombined: PropTypes.number.isRequired,
             maxCombined: PropTypes.number.isRequired,
             minIndividual: PropTypes.number.isRequired,
@@ -183,7 +183,7 @@ TrichordTree.propTypes = {
             maxCombinedEnabled: PropTypes.bool.isRequired,
             minIndividualEnabled: PropTypes.bool.isRequired,
             maxIndividualEnabled: PropTypes.bool.isRequired,
-        },
+        }).isRequired,
     }).isRequired,
     onSetLevels: PropTypes.func.isRequired,
     onSetShowRoots: PropTypes.func.isRequired,
@@ -330,7 +330,7 @@ ViewOptions.propTypes = {
     showRoots: PropTypes.bool.isRequired,
     showOctaves: PropTypes.bool.isRequired,
     wide: PropTypes.bool.isRequired,
-    limits: {
+    limits: PropTypes.shape({
         minCombined: PropTypes.number.isRequired,
         maxCombined: PropTypes.number.isRequired,
         minIndividual: PropTypes.number.isRequired,
@@ -339,7 +339,7 @@ ViewOptions.propTypes = {
         maxCombinedEnabled: PropTypes.bool.isRequired,
         minIndividualEnabled: PropTypes.bool.isRequired,
         maxIndividualEnabled: PropTypes.bool.isRequired,
-    },
+    }),
 
     onSetLevels: PropTypes.func.isRequired,
     onSetShowRoots: PropTypes.func.isRequired,
