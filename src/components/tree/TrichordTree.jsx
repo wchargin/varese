@@ -13,9 +13,6 @@ export default class TrichordTree extends Component {
     constructor() {
         super();
         this.state = {
-            levels: 4,
-            showOctaves: true,
-            wide: false,
             limits: {
                 minCombined: 4,
                 maxCombined: 24,
@@ -31,7 +28,7 @@ export default class TrichordTree extends Component {
 
     render() {
         const {rationalizer, rootChord, onClickChord} = this.props;
-        const {levels} = this.state;
+        const {levels} = this.props.viewOptions;
         const size = levels <= 4 ? 3 :
             levels <= 5 ? 2 :
             1;
@@ -44,7 +41,7 @@ export default class TrichordTree extends Component {
                 onClick={() => onClickChord(chord)}
                 size={size}
                 showRoot={this.props.viewOptions.showRoots}
-                showOctave={this.state.showOctaves}
+                showOctave={this.props.viewOptions.showOctaves}
                 limits={this.state.limits}
             />));
 
@@ -58,7 +55,7 @@ export default class TrichordTree extends Component {
         // because the "viewport width" includes the vertical scrollbar
         // for some reason).
         const widePadding = 20;
-        const wideStyle = this.state.wide ? {
+        const wideStyle = this.props.viewOptions.wide ? {
             position: "relative",
             width: `calc(100vw - ${2 * widePadding}px)`,
             left: `calc(-50vw + ${widePadding}px + 50%)`,
@@ -88,9 +85,8 @@ export default class TrichordTree extends Component {
                 {...this.state  /* TODO(william): legacy; move to Redux */}
                 onSetLevels={this.props.onSetLevels}
                 onSetShowRoots={this.props.onSetShowRoots}
-                onSetShowOctaves={showOctaves =>
-                    this.setState({ showOctaves })}
-                onSetWide={wide => this.setState({ wide })}
+                onSetShowOctaves={this.props.onSetShowOctaves}
+                onSetWide={this.props.onSetWide}
                 {...limitHandlers}
             />
             {this._renderWarnings(chords, rationalizer)}
@@ -208,9 +204,15 @@ TrichordTree.propTypes = {
     onClickChord: PropTypes.func.isRequired,
 
     viewOptions: PropTypes.shape({
+        levels: PropTypes.number.isRequired,
         showRoots: PropTypes.bool.isRequired,
+        showOctaves: PropTypes.bool.isRequired,
+        wide: PropTypes.bool.isRequired,
     }).isRequired,
+    onSetLevels: PropTypes.func.isRequired,
     onSetShowRoots: PropTypes.func.isRequired,
+    onSetShowOctaves: PropTypes.func.isRequired,
+    onSetWide: PropTypes.func.isRequired,
 };
 
 class ViewOptions extends Component {
