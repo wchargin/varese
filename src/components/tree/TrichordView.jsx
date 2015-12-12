@@ -130,9 +130,13 @@ export default class TrichordView extends Component {
                 <div className="well" style={{
                     position: "absolute",
                     bottom: "100%",
-                    left: -60,
                     marginBottom: 5,
                     zIndex: 3,
+                    //
+                    // These next two properties center horizontally:
+                    // http://stackoverflow.com/a/23384995
+                    left: "50%",
+                    transform: "translateX(-50%)",
                 }}>
                     {hoverView}
                 </div>}
