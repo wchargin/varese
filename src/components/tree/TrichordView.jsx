@@ -122,7 +122,7 @@ export default class TrichordView extends Component {
                     bottom: "100%",
                     left: -60,
                     marginBottom: 5,
-                    zIndex: 1,
+                    zIndex: 3,
                 }}>
                     {hoverView}
                 </div>}
