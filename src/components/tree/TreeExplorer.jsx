@@ -7,6 +7,7 @@ import Page from './../Page';
 import TrichordTree from './TrichordTree';
 import ChordInput from '../ChordInput';
 import RationalizerConfig from '../RationalizerConfig';
+import ViewOptions from './ViewOptions';
 
 import {extendRationalizer} from '../../HarmonicSeries';
 
@@ -42,13 +43,15 @@ class TreeExplorer extends Component {
                 onChange={rootChord => this.setState({ rootChord })}
                 exactly={3}
             />
+            <ViewOptions
+                {...this.props.treeViewOptions}
+                {...this.props.viewOptionsHandlers}
+            />
             <TrichordTree
                 rationalizer={extendRationalizer(this.props.acousticRatios)}
                 rootChord={this.state.rootChord}
                 onClickChord={rootChord => this.setState({ rootChord })}
-                //
                 viewOptions={this.props.treeViewOptions}
-                {...this.props.viewOptionsHandlers}
             />
             {this.props.rootsVisible &&
                 <RationalizerConfig

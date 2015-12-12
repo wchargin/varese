@@ -6,7 +6,6 @@ import Folding from '../../Folding';
 import {flatten, arraysEqual} from '../../Utils';
 
 import TreeView from './TreeView';
-import ViewOptions from './ViewOptions';
 import TrichordView from './TrichordView';
 
 export default class TrichordTree extends Component {
@@ -47,15 +46,6 @@ export default class TrichordTree extends Component {
         } : {};
 
         return <div>
-            <ViewOptions
-                {...this.props.viewOptions}
-                onSetLevels={this.props.onSetLevels}
-                onSetShowRoots={this.props.onSetShowRoots}
-                onSetShowOctaves={this.props.onSetShowOctaves}
-                onSetWide={this.props.onSetWide}
-                onSetLimitValue={this.props.onSetLimitValue}
-                onSetLimitEnabled={this.props.onSetLimitEnabled}
-            />
             {this._renderWarnings(chords, rationalizer)}
             {this._renderToolbar()}
             <div style={{...wideStyle, marginBottom: 20}}>
@@ -185,10 +175,4 @@ TrichordTree.propTypes = {
             maxIndividualEnabled: PropTypes.bool.isRequired,
         }).isRequired,
     }).isRequired,
-    onSetLevels: PropTypes.func.isRequired,
-    onSetShowRoots: PropTypes.func.isRequired,
-    onSetShowOctaves: PropTypes.func.isRequired,
-    onSetWide: PropTypes.func.isRequired,
-    onSetLimitValue: PropTypes.func.isRequired,
-    onSetLimitEnabled: PropTypes.func.isRequired,
 };
