@@ -49,48 +49,6 @@ export default class TrichordTree extends Component {
                 limits={this.state.limits}
             />));
 
-        const Warning = props =>
-            <div
-                className="alert alert-warning"
-                style={{ marginTop: 20 }}
-                {...props}
-            >{props.children}</div>;
-        const rootFindingErrors = chords.map(row => row.map(chord => {
-            const result = findChordRootOffset(rationalizer, chord);
-            return result.status === "error" ? result.error : null;
-        }));
-        const flattenedErrors = [].concat.apply([], rootFindingErrors);
-        const errorTypes = {
-            finite: flattenedErrors.some(x => x && x.match(/finite/)),
-            zeroRatio: flattenedErrors.some(x => x && x.match(/zero_ratio/)),
-        };
-        const defectiveNotices = this.state.showRoots && [
-            errorTypes.finite &&
-                <Warning>
-                    <strong>Note:</strong>
-                    {" "}
-                    Some of these chords are too complicated to analyze,
-                    so we can't find their roots.
-                    In particular, the acoustic ratios are
-                    such complicated fractions that
-                    your browser gives up on the math.
-                    These chords are indicated with a question mark
-                    in the place where the root should be.
-                </Warning>,
-            errorTypes.zeroRatio &&
-                <Warning>
-                    <strong>Note:</strong>
-                    {" "}
-                    Some of these chords involve a semitone difference
-                    that you've mapped to an acoustic ratio of zero,
-                    so we can't find their roots.
-                    Check your rationalization configuration to fix this.
-                    In the meantime,
-                    these chords are indicated with a question mark
-                    in the place where the root should be.
-                </Warning>,
-        ];
-
         // We'd like to add some padding when it's wide
         // so it's not flush against the edge.
         // We could just use 'paddingLeft' and 'paddingRight',
@@ -106,12 +64,6 @@ export default class TrichordTree extends Component {
             width: `calc(100vw - ${2 * widePadding}px)`,
             left: `calc(-50vw + ${widePadding}px + 50%)`,
         } : {};
-
-        const infolded = Folding.infoldCanonical(rootChord);
-        const hasInfolding = !arraysEqual(infolded, rootChord);
-
-        const inversion = Folding.invert(rootChord);
-        const hasInversion = !arraysEqual(inversion, rootChord);
 
         const setLimit = (name, value) =>
             this.setState({
@@ -141,26 +93,8 @@ export default class TrichordTree extends Component {
                 onSetWide={wide => this.setState({ wide })}
                 {...limitHandlers}
             />
-            {defectiveNotices}
-            <div style={{ textAlign: "center", marginBottom: 10 }}>
-                <strong>Root node manipulation:</strong>
-                {" "}
-                <div
-                    className="btn-group"
-                    role="group"
-                >
-                    <button
-                        className="btn btn-default"
-                        disabled={!hasInfolding}
-                        onClick={() => this.props.onClickChord(infolded)}
-                    >Infold</button>
-                    <button
-                        className="btn btn-default"
-                        disabled={!hasInversion}
-                        onClick={() => this.props.onClickChord(inversion)}
-                    >Invert</button>
-                </div>
-            </div>
+            {this._renderWarnings(chords, rationalizer)}
+            {this._renderToolbar()}
             <div style={{...wideStyle, marginBottom: 20}}>
                 <TreeView
                     elements={nodes}
@@ -182,6 +116,91 @@ export default class TrichordTree extends Component {
         }
         return result;
     }
+
+    /*
+     * Try to find the roots of all the chords that will appear in the tree.
+     * Return a list of warnings that explain why any may have failed.
+     */
+    _renderWarnings(chords, rationalizer) {
+        if (!this.state.showRoots) {
+            return [];
+        }
+
+        const Warning = props =>
+            <div
+                className="alert alert-warning"
+                style={{ marginTop: 20 }}
+                {...props}
+            >{props.children}</div>;
+
+        const errors = chords.map(row => row.map(chord => {
+            const result = findChordRootOffset(rationalizer, chord);
+            return result.status === "error" ? result.error : null;
+        }));
+        const flattenedErrors = [].concat.apply([], errors);
+        const errorTypes = {
+            finite: flattenedErrors.some(x => x && x.match(/finite/)),
+            zeroRatio: flattenedErrors.some(x => x && x.match(/zero_ratio/)),
+        };
+
+        return [
+            errorTypes.finite &&
+                <Warning>
+                    <strong>Note:</strong>
+                    {" "}
+                    Some of these chords are too complicated to analyze,
+                    so we can't find their roots.
+                    In particular, the acoustic ratios are
+                    such complicated fractions that
+                    your browser gives up on the math.
+                    These chords are indicated with a question mark
+                    in the place where the root should be.
+                </Warning>,
+            errorTypes.zeroRatio &&
+                <Warning>
+                    <strong>Note:</strong>
+                    {" "}
+                    Some of these chords involve a semitone difference
+                    that you've mapped to an acoustic ratio of zero,
+                    so we can't find their roots.
+                    Check your rationalization configuration to fix this.
+                    In the meantime,
+                    these chords are indicated with a question mark
+                    in the place where the root should be.
+                </Warning>,
+        ];
+    }
+
+    _renderToolbar() {
+        const {rootChord} = this.props;
+
+        const infolded = Folding.infoldCanonical(rootChord);
+        const hasInfolding = !arraysEqual(infolded, rootChord);
+
+        const inversion = Folding.invert(rootChord);
+        const hasInversion = !arraysEqual(inversion, rootChord);
+
+        return <div style={{ textAlign: "center", marginBottom: 10 }}>
+            <strong>Root node manipulation:</strong>
+            {" "}
+            <div
+                className="btn-group"
+                role="group"
+            >
+                <button
+                    className="btn btn-default"
+                    disabled={!hasInfolding}
+                    onClick={() => this.props.onClickChord(infolded)}
+                >Infold</button>
+                <button
+                    className="btn btn-default"
+                    disabled={!hasInversion}
+                    onClick={() => this.props.onClickChord(inversion)}
+                >Invert</button>
+            </div>
+        </div>;
+    }
+
 }
 TrichordTree.propTypes = {
     rationalizer: PropTypes.func.isRequired,
