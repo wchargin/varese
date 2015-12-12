@@ -49,29 +49,47 @@ export default class TrichordTree extends Component {
                 limits={this.state.limits}
             />));
 
-        const canFindRoots = chords.map(row => row.map(chord =>
-            findChordRootOffset(rationalizer, chord).status === "success"));
-        const defective = canFindRoots.some(row => row.some(x => !x));
-
-        // TODO(william): This message isn't quite accurate anymore;
-        // they could be too complicated or there could be a zero ratio.
-        // Better check to see what the errors actually are
-        // (i.e., instead of just a boolean `canFindChords`,
-        // try to parse all the chords and see what errors you get,
-        // then generate warnings for each type).
-        const defectiveNotice = defective && this.state.showRoots ?
-            <div className="alert alert-warning" style={{ marginTop: 20 }}>
-                <strong>Note:</strong>
-                {" "}
-                Some of these chords are too complicated to analyze,
-                so we can't find their roots.
-                In particular, the acoustic ratios are
-                such complicated fractions that
-                your browser gives up on the math.
-                These chords are indicated with a question mark
-                in the place where the root should be.
-            </div> :
-            null;
+        const Warning = props =>
+            <div
+                className="alert alert-warning"
+                style={{ marginTop: 20 }}
+                {...props}
+            >{props.children}</div>;
+        const rootFindingErrors = chords.map(row => row.map(chord => {
+            const result = findChordRootOffset(rationalizer, chord);
+            return result.status === "error" ? result.error : null;
+        }));
+        const flattenedErrors = [].concat.apply([], rootFindingErrors);
+        const errorTypes = {
+            finite: flattenedErrors.some(x => x && x.match(/finite/)),
+            zeroRatio: flattenedErrors.some(x => x && x.match(/zero_ratio/)),
+        };
+        const defectiveNotices = this.state.showRoots && [
+            errorTypes.finite &&
+                <Warning>
+                    <strong>Note:</strong>
+                    {" "}
+                    Some of these chords are too complicated to analyze,
+                    so we can't find their roots.
+                    In particular, the acoustic ratios are
+                    such complicated fractions that
+                    your browser gives up on the math.
+                    These chords are indicated with a question mark
+                    in the place where the root should be.
+                </Warning>,
+            errorTypes.zeroRatio &&
+                <Warning>
+                    <strong>Note:</strong>
+                    {" "}
+                    Some of these chords involve a semitone difference
+                    that you've mapped to an acoustic ratio of zero,
+                    so we can't find their roots.
+                    Check your rationalization configuration to fix this.
+                    In the meantime,
+                    these chords are indicated with a question mark
+                    in the place where the root should be.
+                </Warning>,
+        ];
 
         // We'd like to add some padding when it's wide
         // so it's not flush against the edge.
@@ -123,7 +141,7 @@ export default class TrichordTree extends Component {
                 onSetWide={wide => this.setState({ wide })}
                 {...limitHandlers}
             />
-            {defectiveNotice}
+            {defectiveNotices}
             <div style={{ textAlign: "center", marginBottom: 10 }}>
                 <strong>Root node manipulation:</strong>
                 {" "}
