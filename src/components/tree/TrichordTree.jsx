@@ -3,7 +3,7 @@ import React, {Component, PropTypes} from 'react';
 import {findChordRootOffset} from '../../HarmonicSeries';
 
 import Folding from '../../Folding';
-import {arraysEqual} from '../../Utils';
+import {flatten, arraysEqual} from '../../Utils';
 
 import TreeView from './TreeView';
 import TrichordView from './TrichordView';
@@ -68,8 +68,7 @@ export default class TrichordTree extends Component {
     _iterateRow(previousRow) {
         const branch = c => [Folding.outfoldDown(c), Folding.outfoldUp(c)];
         const branches = previousRow.map(branch);
-        const flattened = [].concat.apply([], branches);
-        return flattened;
+        return flatten(branches);
     }
     _generateTree(root, depth) {
         const result = [[root]];
@@ -99,7 +98,7 @@ export default class TrichordTree extends Component {
             const result = findChordRootOffset(rationalizer, chord);
             return result.status === "error" ? result.error : null;
         }));
-        const flattenedErrors = [].concat.apply([], errors);
+        const flattenedErrors = flatten(errors);
         const errorTypes = {
             finite: flattenedErrors.some(x => x && x.match(/finite/)),
             zeroRatio: flattenedErrors.some(x => x && x.match(/zero_ratio/)),

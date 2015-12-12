@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 
 import {findChordRootOffset} from '../../HarmonicSeries';
 import PitchNames from '../../PitchNames';
+import {flatten} from '../../Utils';
 
 import ChordEngraving from '../ChordEngraving';
 
@@ -93,7 +94,7 @@ export default class TrichordView extends Component {
             this.props.showRoot && rootView,
             ...semitoneViews,
         ];
-        const flattenedContents = [].concat.apply([], lines.map((line, idx) =>
+        const flattenedContents = flatten(lines.map((line, idx) =>
             line && [line, <br key={"br-" + idx} />]));
 
         const info = this.props.onClick ?
