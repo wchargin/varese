@@ -50,17 +50,13 @@ export default class TrichordView extends Component {
         // and set the engraving's 'visibility' to 'hidden'.
         const visible = this._withinLimits();
 
-        // TODO(william): make this a parameter to pitchToName
-        const maybeTrimOctave = name =>
-            this.props.showOctave ? name : name.replace(/\u2212?\d*$/, "");
-
-        const {notes} = this.props;
+        const {notes, showOctave} = this.props;
         const notesAscending  = [...notes].sort((a, b) => a - b);
         const notesDescending = [...notes].sort((a, b) => b - a);
 
         const [low, med, high] = notesAscending;
         const names = notesDescending.map(x =>
-            maybeTrimOctave(PitchNames.pitchToName(x, true)));
+            PitchNames.pitchToName(x, true, showOctave));
         const noteViews = names.map((name, index) => {
             if (this.props.onChange) {
                 return <SingleNoteInput
@@ -80,7 +76,7 @@ export default class TrichordView extends Component {
             }
         });
 
-        const rootView = this._renderRootView(notesAscending, maybeTrimOctave);
+        const rootView = this._renderRootView(notesAscending);
 
         const semitones = [high - med, med - low];
         const semitoneNames = semitones.map(x =>
@@ -145,16 +141,17 @@ export default class TrichordView extends Component {
         </div>;
     }
 
-    _renderRootView(notes, maybeTrimOctave) {
+    _renderRootView(notes) {
+        const {rationalizer, showOctave} = this.props;
+
         const createRootView = text =>
             <strong key="root" style={{ color: "blue" }}>{text}</strong>;
 
-        const maybeRootPitch = findChordRootOffset(
-            this.props.rationalizer, notes);
+        const maybeRootPitch = findChordRootOffset(rationalizer, notes);
         if (maybeRootPitch.status === "success") {
             const rootPitch = maybeRootPitch.result;
             const rootName =
-                maybeTrimOctave(PitchNames.pitchToName(rootPitch, true));
+                PitchNames.pitchToName(rootPitch, true, showOctave);
             return createRootView(rootName);
         } else {
             const e = maybeRootPitch.error;
