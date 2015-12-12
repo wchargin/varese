@@ -13,14 +13,15 @@ const prettify = (x) => x
  * Output: note name in scientific pitch notation.
  * If pretty = true, use proper sharp and flat symbols.
  */
-export function pitchToName(semitones, pretty = false) {
+export function pitchToName(semitones, pretty = false, showOctaves = true) {
     const octaveOffset = Math.floor(semitones / 12);
     const octaveName = octaveOffset + 4;
 
     const phase1 = semitones % 12;
     const phase = phase1 < 0 ? phase1 + 12 : phase1;
+    const phaseName = baseTable[phase];
 
-    const plain = baseTable[phase] + octaveName;
+    const plain = showOctaves ? phaseName + octaveName : phaseName;
     return pretty ? prettify(plain) : plain;
 }
 

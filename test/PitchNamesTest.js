@@ -26,6 +26,13 @@ describe('PitchNames', () => {
             () => expect(p2n(-4, true)).to.equal("A\u266D3"));
         it("renders a pretty minus sign for C\u22121",
             () => expect(p2n(-60, true)).to.equal("C\u22121"));
+
+        it("renders a C6 without octaves when asked", () =>
+            expect(p2n(24, false, false)).to.equal("C"));
+        it("renders a C-2 without octaves when asked", () =>
+            expect(p2n(-24, false, false)).to.equal("C"));
+        it("renders a pretty F#4 without octaves", () =>
+            expect(p2n(6, true, false)).to.equal("F\u266F"));
     });
 
     describe('#nameToPitch', () => {
