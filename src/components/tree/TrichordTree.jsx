@@ -8,6 +8,7 @@ import {flatten} from '../../Utils';
 import TreeView from './TreeView';
 import TrichordView from './TrichordView';
 import ActionBar from './ActionBar';
+import InvalidRootWarnings from './InvalidRootWarnings';
 
 export default class TrichordTree extends Component {
 
@@ -47,10 +48,13 @@ export default class TrichordTree extends Component {
         } : {};
 
         return <div>
-            {this._renderWarnings(chords, rationalizer)}
             <ActionBar
                 rootChord={rootChord}
                 onSetChord={onClickChord}
+            />
+            <InvalidRootWarnings
+                chords={flatten(chords)}
+                rationalizer={rationalizer}
             />
             <div style={{...wideStyle, marginBottom: 20}}>
                 <TreeView
@@ -60,71 +64,19 @@ export default class TrichordTree extends Component {
             </div>
         </div>;
     }
+
     _iterateRow(previousRow) {
         const branch = c => [Folding.outfoldDown(c), Folding.outfoldUp(c)];
         const branches = previousRow.map(branch);
         return flatten(branches);
     }
+
     _generateTree(root, depth) {
         const result = [[root]];
         for (let i = 1; i < depth; i++) {
             result.push(this._iterateRow(result[result.length - 1]));
         }
         return result;
-    }
-
-    /*
-     * Try to find the roots of all the chords that will appear in the tree.
-     * Return a list of warnings that explain why any may have failed.
-     */
-    _renderWarnings(chords, rationalizer) {
-        if (!this.props.viewOptions.showRoots) {
-            return [];
-        }
-
-        const Warning = props =>
-            <div
-                className="alert alert-warning"
-                style={{ marginTop: 20 }}
-                {...props}
-            >{props.children}</div>;
-
-        const errors = chords.map(row => row.map(chord => {
-            const result = findChordRootOffset(rationalizer, chord);
-            return result.status === "error" ? result.error : null;
-        }));
-        const flattenedErrors = flatten(errors);
-        const errorTypes = {
-            finite: flattenedErrors.some(x => x && x.match(/finite/)),
-            zeroRatio: flattenedErrors.some(x => x && x.match(/zero_ratio/)),
-        };
-
-        return [
-            errorTypes.finite &&
-                <Warning key="finite">
-                    <strong>Note:</strong>
-                    {" "}
-                    Some of these chords are too complicated to analyze,
-                    so we can't find their roots.
-                    In particular, the acoustic ratios are
-                    such complicated fractions that
-                    your browser gives up on the math.
-                    These chords are indicated with a question mark
-                    in the place where the root should be.
-                </Warning>,
-            errorTypes.zeroRatio &&
-                <Warning key="zero-ratio">
-                    <strong>Note:</strong>
-                    {" "}
-                    Some of these chords involve a semitone difference
-                    that you've mapped to an acoustic ratio of zero,
-                    so we can't find their roots.
-                    Check your rationalization configuration to fix this.
-                    In the meantime,
-                    these chords are indicated with a question mark
-                    in the place where the root should be.
-                </Warning>,
-        ];
     }
 
 }
