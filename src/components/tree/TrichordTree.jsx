@@ -27,15 +27,24 @@ export default class TrichordTree extends Component {
             1;
 
         const chords = this._generateTree(rootChord, levels);
-        const nodes = chords.map(row => row.map(chord =>
+        const nodes = chords.map((row, rowIndex) => row.map(chord =>
             <TrichordView
                 rationalizer={rationalizer}
                 notes={chord}
-                onClick={() => onClickChord(chord)}
+                onClick={rowIndex === 0 ?
+                    null :
+                    (() => onClickChord(chord))}
                 size={size}
                 showRoot={this.props.viewOptions.showRoots}
                 showOctave={this.props.viewOptions.showOctaves}
                 limits={this.props.viewOptions.limits}
+                //
+                // We only want the root node to be editable.
+                // This is made easier by the fact that
+                // the root node is the only node in the first row.
+                onChange={rowIndex === 0 ?
+                    (chord => onClickChord(chord)) :
+                    null}
             />));
 
         // We'd like to add some padding when it's wide
