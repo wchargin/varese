@@ -24,8 +24,8 @@ const LocalStore = {
                 return whenUnavailable;
             }
         } catch (e) {
-            // If we had trouble retrieving, like FF's NS_FILE_CORRUPTED
-            // http://stackoverflow.com/questions/18877643/error-in-local-storage-ns-error-file-corrupted-firefox
+            // If we had trouble retrieving, like FF's NS_FILE_CORRUPTED:
+            // http://stackoverflow.com/q/18877643/
         }
         return null;
     },
@@ -42,13 +42,15 @@ const LocalStore = {
             // I'll never go over the limit for this app, right?
             // (yeah, yeah, famous last words)
             if (window.console) {
+                /* eslint-disable no-console */
                 console.warn(e);
+                /* eslint-enabled */
             }
         }
     },
 
-    /**
-     * Delete whatever data was associated with key
+    /*
+     * Delete whatever data was associated with the given key.
      */
     del(key) {
         if (!this.isEnabled()) {
@@ -67,10 +69,10 @@ const LocalStore = {
      * Don't die.
      */
     isEnabled() {
-        var enabled, uid = String(+(new Date));
+        const uid = new String(+new Date());
         try {
             window.sessionStorage[uid] = uid;
-            enabled = (window.sessionStorage[uid] === uid);
+            const enabled = (window.sessionStorage[uid] === uid);
             window.sessionStorage.removeItem(uid);
             return enabled;
         } catch (e) {

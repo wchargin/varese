@@ -174,11 +174,23 @@ TrichordTree.propTypes = {
         showRoots: PropTypes.bool.isRequired,
         showOctaves: PropTypes.bool.isRequired,
         wide: PropTypes.bool.isRequired,
+        limits: {
+            minCombined: PropTypes.number.isRequired,
+            maxCombined: PropTypes.number.isRequired,
+            minIndividual: PropTypes.number.isRequired,
+            maxIndividual: PropTypes.number.isRequired,
+            minCombinedEnabled: PropTypes.bool.isRequired,
+            maxCombinedEnabled: PropTypes.bool.isRequired,
+            minIndividualEnabled: PropTypes.bool.isRequired,
+            maxIndividualEnabled: PropTypes.bool.isRequired,
+        },
     }).isRequired,
     onSetLevels: PropTypes.func.isRequired,
     onSetShowRoots: PropTypes.func.isRequired,
     onSetShowOctaves: PropTypes.func.isRequired,
     onSetWide: PropTypes.func.isRequired,
+    onSetLimitValue: PropTypes.func.isRequired,
+    onSetLimitEnabled: PropTypes.func.isRequired,
 };
 
 class ViewOptions extends Component {
@@ -313,6 +325,29 @@ class ViewOptions extends Component {
     }
 
 }
+ViewOptions.propTypes = {
+    levels: PropTypes.number.isRequired,
+    showRoots: PropTypes.bool.isRequired,
+    showOctaves: PropTypes.bool.isRequired,
+    wide: PropTypes.bool.isRequired,
+    limits: {
+        minCombined: PropTypes.number.isRequired,
+        maxCombined: PropTypes.number.isRequired,
+        minIndividual: PropTypes.number.isRequired,
+        maxIndividual: PropTypes.number.isRequired,
+        minCombinedEnabled: PropTypes.bool.isRequired,
+        maxCombinedEnabled: PropTypes.bool.isRequired,
+        minIndividualEnabled: PropTypes.bool.isRequired,
+        maxIndividualEnabled: PropTypes.bool.isRequired,
+    },
+
+    onSetLevels: PropTypes.func.isRequired,
+    onSetShowRoots: PropTypes.func.isRequired,
+    onSetShowOctaves: PropTypes.func.isRequired,
+    onSetWide: PropTypes.func.isRequired,
+    onSetLimitValue: PropTypes.func.isRequired,
+    onSetLimitEnabled: PropTypes.func.isRequired,
+};
 
 class LimitControls extends Component {
 

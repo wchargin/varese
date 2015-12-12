@@ -119,11 +119,6 @@ describe('HarmonicSeries', () => {
                 status: "success",
                 result,
             });
-        const testBad = (input, errorText) => () => {
-            const result = findRootOffset(cr, input);
-            expect(result.status).to.equal("error");
-            expect(result.error).to.equal(errorText);
-        };
 
         it("should resolve a single-note \"chord\" to itself",
             testGood([77], 77));

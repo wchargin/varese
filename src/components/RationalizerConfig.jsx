@@ -85,6 +85,11 @@ export default class RationalizerConfig extends Component {
         </div>;
     }
 }
+RationalizerConfig.propTypes = {
+    values: PropTypes.arrayOf(
+        PropTypes.instanceOf(Rational).isRequired).isRequired,
+    onChangeValue: PropTypes.func.isRequired,
+};
 
 class AcousticRatioBox extends Component {
 

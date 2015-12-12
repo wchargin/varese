@@ -19,6 +19,7 @@ class TreeExplorer extends Component {
         };
     }
 
+    /* eslint-disable react/prop-types */
     render() {
         return <Page path="tree">
             <h1>Chord tree explorer</h1>
@@ -57,6 +58,7 @@ class TreeExplorer extends Component {
                 />}
         </Page>;
     }
+    /* eslint-enable */
 
 }
 

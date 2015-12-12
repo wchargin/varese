@@ -11,6 +11,7 @@ import {extendRationalizer} from '../../HarmonicSeries';
 
 class PitchCalculator extends Component {
 
+    /* eslint-disable react/prop-types */
     render() {
         return <Page path="calculator">
             <h1>Pitch space root calculator</h1>
@@ -24,6 +25,7 @@ class PitchCalculator extends Component {
             />
         </Page>;
     }
+    /* eslint-enable */
 }
 
 function mapStateToProps(state) {

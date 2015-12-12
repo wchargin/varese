@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 
 import PitchNames from '../../PitchNames';
 import {findChordRootOffset} from '../../HarmonicSeries';
@@ -13,7 +13,7 @@ export default class ChordComputer extends Component {
         super();
         this.state = {
             chord: DEFAULT_CHORD,
-        }
+        };
     }
 
     render() {
@@ -61,6 +61,10 @@ export default class ChordComputer extends Component {
     }
 
 }
+ChordComputer.propTypes = {
+    rationalizer: PropTypes.func.isRequired,
+    chord: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+};
 
 class ChordOutput extends Component {
     render() {
@@ -109,3 +113,7 @@ class ChordOutput extends Component {
         }
     }
 }
+ChordOutput.propTypes = {
+    rationalizer: PropTypes.func.isRequired,
+    chord: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+};

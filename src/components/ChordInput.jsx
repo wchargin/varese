@@ -82,9 +82,10 @@ export default class ChordInput extends Component {
         if (badParts.length !== 0) {
             const bad = badParts.map(x => `"${x.input}"`);
 
-            const noun1 = TextUtils.ngettext(bad, "token", "tokens")
+            const noun1 = TextUtils.ngettext(bad, "token", "tokens");
             const verb = TextUtils.ngettext(bad, "doesn't", "don't");
-            const noun2 = TextUtils.ngettext(bad, "a valid note", "valid notes");
+            const noun2 = TextUtils.ngettext(
+                bad, "a valid note", "valid notes");
             const list = TextUtils.list(bad);
 
             return {
@@ -120,4 +121,4 @@ ChordInput.propTypes = {
     message: PropTypes.string.isRequired,
 
     exactly: PropTypes.number,
-}
+};

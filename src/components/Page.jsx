@@ -26,4 +26,4 @@ export default class Page extends Component {
 Page.propTypes = {
     path: PropTypes.string.isRequired,
     children: PropTypes.node.isRequired,
-}
+};

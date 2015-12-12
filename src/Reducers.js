@@ -49,7 +49,7 @@ function setTreeViewOption(state, name, value) {
         treeViewOptions: {
             ...state.treeViewOptions,
             [name]: value,
-        }
+        },
     };
 }
 
@@ -64,8 +64,8 @@ function setTreeLimitField(state, name, value) {
             limits: {
                 ...state.treeViewOptions.limits,
                 [name]: value,
-            }
-        }
+            },
+        },
     };
 }
 

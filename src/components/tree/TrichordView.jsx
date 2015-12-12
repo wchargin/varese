@@ -109,7 +109,7 @@ export default class TrichordView extends Component {
         return <div
             style={{
                 display: "inline-block",
-                position: "relative"
+                position: "relative",
             }}
             onMouseEnter={() => this.setState({ hovered: true })}
             onMouseLeave={() => this.setState({ hovered: false })}
@@ -155,6 +155,9 @@ TrichordView.propTypes = {
     onClick: PropTypes.func,
     size: PropTypes.oneOf([1, 2, 3]),
 
+    showRoot: PropTypes.bool.isRequired,
+    showOctave: PropTypes.bool.isRequired,
+
     // This prop isn't required, but if it's present all the keys should exist.
     limits: PropTypes.shape({
         minCombined: PropTypes.number.isRequired,
@@ -169,4 +172,4 @@ TrichordView.propTypes = {
 };
 TrichordView.defaultProps = {
     size: 3,
-}
+};

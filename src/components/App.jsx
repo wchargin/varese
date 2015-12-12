@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Router, Route, Link, Redirect} from 'react-router';
+import {Router, Route, Redirect} from 'react-router';
 
 import PitchCalculator from './calculator/PitchCalculator';
 import TreeExplorer from './tree/TreeExplorer';

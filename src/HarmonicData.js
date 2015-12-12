@@ -20,5 +20,5 @@ export const canonicalRationalizer = extendRationalizer(canonicalValues);
 export const intervalNames = [
     "m2", "M2", "m3", "M3",
     "P4", "A4/d5", "P5",
-    "m6", "M6", "m7", "M7"
+    "m6", "M6", "m7", "M7",
 ];
