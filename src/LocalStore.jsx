@@ -69,7 +69,7 @@ const LocalStore = {
      * Don't die.
      */
     isEnabled() {
-        const uid = new String(+new Date());
+        const uid = String(+new Date());
         try {
             window.sessionStorage[uid] = uid;
             const enabled = (window.sessionStorage[uid] === uid);
