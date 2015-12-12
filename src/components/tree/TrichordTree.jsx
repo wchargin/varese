@@ -3,10 +3,11 @@ import React, {Component, PropTypes} from 'react';
 import {findChordRootOffset} from '../../HarmonicSeries';
 
 import Folding from '../../Folding';
-import {flatten, arraysEqual} from '../../Utils';
+import {flatten} from '../../Utils';
 
 import TreeView from './TreeView';
 import TrichordView from './TrichordView';
+import ActionBar from './ActionBar';
 
 export default class TrichordTree extends Component {
 
@@ -47,7 +48,10 @@ export default class TrichordTree extends Component {
 
         return <div>
             {this._renderWarnings(chords, rationalizer)}
-            {this._renderToolbar()}
+            <ActionBar
+                rootChord={rootChord}
+                onSetChord={onClickChord}
+            />
             <div style={{...wideStyle, marginBottom: 20}}>
                 <TreeView
                     elements={nodes}
@@ -121,36 +125,6 @@ export default class TrichordTree extends Component {
                     in the place where the root should be.
                 </Warning>,
         ];
-    }
-
-    _renderToolbar() {
-        const {rootChord} = this.props;
-
-        const infolded = Folding.infoldCanonical(rootChord);
-        const hasInfolding = !arraysEqual(infolded, rootChord);
-
-        const inversion = Folding.invert(rootChord);
-        const hasInversion = !arraysEqual(inversion, rootChord);
-
-        return <div style={{ textAlign: "center", marginBottom: 10 }}>
-            <strong>Root node manipulation:</strong>
-            {" "}
-            <div
-                className="btn-group"
-                role="group"
-            >
-                <button
-                    className="btn btn-default"
-                    disabled={!hasInfolding}
-                    onClick={() => this.props.onClickChord(infolded)}
-                >Infold</button>
-                <button
-                    className="btn btn-default"
-                    disabled={!hasInversion}
-                    onClick={() => this.props.onClickChord(inversion)}
-                >Invert</button>
-            </div>
-        </div>;
     }
 
 }
