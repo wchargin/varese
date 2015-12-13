@@ -67,6 +67,7 @@ export default class TrichordView extends Component {
                     style={{ textAlign: "center" }}
                     onChange={(newPitch, displayText) =>
                         this._handleChange(index, newPitch, displayText)}
+                    onKeyDown={e => this._handleKeyDown(index, e)}
                 />;
             } else {
                 return <strong key={"note-" + index}>{name}</strong>;
@@ -212,6 +213,30 @@ export default class TrichordView extends Component {
         this.props.onChange(notesAscending.map(x => x.note));
     }
 
+    _handleKeyDown(index, e) {
+        // Determine whether we want to move up or down in the chord.
+        // If we press up, we should go to a higher pitch,
+        // which corresponds to moving forward in the chord array.
+        const delta = ({
+            "ArrowUp": +1,
+            "ArrowDown": -1,
+        })[e.key];
+
+        // Ignore other keys.
+        if (delta === undefined) {
+            return;
+        }
+
+        // If we're already at the top note and we press "up",
+        // we just won't have a component to move to.
+        // No problem.
+        // (Same with pressing down at the bottom, of course.)
+        const ref = this.refs["note-" + (index + delta)];
+        if (ref) {
+            ref.focusDOMNode();
+        }
+    }
+
 }
 TrichordView.propTypes = {
     rationalizer: PropTypes.func.isRequired,
@@ -296,6 +321,7 @@ class SingleNoteInput extends Component {
             onChange={() => this._handleChange()}
             onFocus={() => this.setState({ text: this.props.value })}
             onBlur={() => this.setState({ text: null })}
+            onKeyDown={this.props.onKeyDown}
             style={this.props.style}
         />;
     }
@@ -322,6 +348,10 @@ class SingleNoteInput extends Component {
         that.setState({ text: null });
     }
 
+    focusDOMNode() {
+        this.refs.input.focus();
+    }
+
     _handleChange() {
         const text = this.refs.input.value;
         this.setState({ text });
@@ -342,6 +372,8 @@ SingleNoteInput.propTypes = {
     //   * the current text entered by the user,
     //     which might need to be copied to a different element.
     onChange: PropTypes.func.isRequired,
+
+    onKeyDown: PropTypes.func,
 
     style: PropTypes.object,
 };
