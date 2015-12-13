@@ -1,6 +1,6 @@
 /*
- * A toolbar to be displayed near the chord tree explorer,
- * offering operations on the root node.
+ * A toolbar with actions to edit a chord.
+ * This can be attached to editable TrichordViews.
  */
 import React, {Component, PropTypes} from 'react';
 
@@ -10,17 +10,21 @@ import {arraysEqual} from '../../Utils';
 export default class ActionBar extends Component {
 
     render() {
-        const {rootChord, onSetChord} = this.props;
+        const {chord, onSetChord} = this.props;
 
-        const infolded = infoldCanonical(rootChord);
-        const hasInfolding = !arraysEqual(infolded, rootChord);
+        const infolded = infoldCanonical(chord);
+        const hasInfolding = !arraysEqual(infolded, chord);
 
-        const inversion = invert(rootChord);
-        const hasInversion = !arraysEqual(inversion, rootChord);
+        const inversion = invert(chord);
+        const hasInversion = !arraysEqual(inversion, chord);
 
-        return <div style={{ textAlign: "left", marginBottom: 10 }}>
-            <strong>Root node manipulation:</strong>
-            {" "}
+        const style = {
+            textAlign: "center",
+            marginBottom: 10,
+            marginTop: 10,
+        };
+
+        return <div style={style}>
             <div
                 className="btn-group"
                 role="group"
@@ -41,6 +45,6 @@ export default class ActionBar extends Component {
 
 }
 ActionBar.propTypes = {
-    rootChord: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+    chord: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
     onSetChord: PropTypes.func.isRequired,
 };

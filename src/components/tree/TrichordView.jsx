@@ -4,6 +4,7 @@ import {findChordRootOffset} from '../../HarmonicSeries';
 import {pitchToName, nameToPitch} from '../../PitchNames';
 import {flatten} from '../../Utils';
 
+import ActionBar from './ActionBar';
 import ChordEngraving from '../ChordEngraving';
 
 export default class TrichordView extends Component {
@@ -113,6 +114,10 @@ export default class TrichordView extends Component {
             </button> :
             <div style={divStyle}>
                 {flattenedContents}
+                <ActionBar
+                    chord={notes}
+                    onSetChord={this.props.onChange}
+                />
             </div>;
         const hoverView = this.state.hovered && visible ?
             <ChordEngraving notes={notes} /> : null;

@@ -12,7 +12,6 @@ import {flatten} from '../../Utils';
 
 import TreeView from './TreeView';
 import TrichordView from './TrichordView';
-import ActionBar from './ActionBar';
 import InvalidRootWarnings from './InvalidRootWarnings';
 
 export default class TrichordTree extends Component {
@@ -66,10 +65,6 @@ export default class TrichordTree extends Component {
         } : {};
 
         return <div>
-            <ActionBar
-                rootChord={rootChord}
-                onSetChord={onClickChord}
-            />
             <InvalidRootWarnings
                 chords={flatten(chords)}
                 rationalizer={rationalizer}
