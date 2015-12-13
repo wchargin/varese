@@ -125,7 +125,7 @@ export default class TrichordView extends Component {
         >
             {info}
             {hoverView &&
-                <div className="well" style={{
+                <div className="panel panel-default" style={{
                     position: "absolute",
                     bottom: "100%",
                     marginBottom: 5,
@@ -136,7 +136,9 @@ export default class TrichordView extends Component {
                     left: "50%",
                     transform: "translateX(-50%)",
                 }}>
-                    {hoverView}
+                    <div className="panel-body">
+                        {hoverView}
+                    </div>
                 </div>}
         </div>;
     }
