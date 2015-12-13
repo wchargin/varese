@@ -53,10 +53,8 @@ export default class TrichordView extends Component {
 
         const {notes, showOctave} = this.props;
         const notesAscending  = [...notes].sort((a, b) => a - b);
-        const notesDescending = [...notes].sort((a, b) => b - a);
 
-        const [low, med, high] = notesAscending;
-        const names = notesDescending.map(x =>
+        const names = notesAscending.map(x =>
             pitchToName(x, true, showOctave));
         const noteViews = names.map((name, index) => {
             if (this.props.onChange) {
@@ -65,7 +63,7 @@ export default class TrichordView extends Component {
                     key={"note-" + index}
                     type="text"
                     displayValue={name}
-                    value={pitchToName(notesDescending[index], true)}
+                    value={pitchToName(notesAscending[index], true)}
                     style={{ textAlign: "center" }}
                     onChange={(newPitch, displayText) =>
                         this._handleChange(index, newPitch, displayText)}
@@ -77,6 +75,7 @@ export default class TrichordView extends Component {
 
         const rootView = this._renderRootView(notesAscending);
 
+        const [low, med, high] = notesAscending;
         const semitones = [high - med, med - low];
         const semitoneNames = semitones.map(x =>
             `[${x}]`.replace(/-/, "\u2212"));
@@ -101,7 +100,7 @@ export default class TrichordView extends Component {
         };
 
         const lines = [
-            ...noteViews,
+            ...noteViews.slice().reverse(),  // show descending
             this.props.showRoot && rootView,
             ...semitoneViews,
         ];
@@ -170,14 +169,16 @@ export default class TrichordView extends Component {
     }
 
     /*
-     * Okay. The parameters here can get a tad confusing.
-     *   - 'noteIndex' is the index into the *descending* array of notes;
-     *   - 'newNote' is the new value for that note;
+     * Parameters:
+     *   - 'noteIndex' is the index of the note that has changed,
+     *     where the bottom-most note in the chord has index 0;
+     *   - 'newNote' is the new value for that note,
+     *     as a number of semitones above middle C;
      *   - 'displayText' is the text value of the input that changed,
      *     which may need to be copied to a different input box.
      */
     _handleChange(noteIndex, newNote, displayText) {
-        const notes = [...this.props.notes].sort((a, b) => b - a);
+        const {notes} = this.props;
         const newNotes = [
             ...notes.slice(0, noteIndex),
             newNote,
@@ -185,7 +186,7 @@ export default class TrichordView extends Component {
         ];
 
         // Now here comes the tricky part.
-        // We need to sort the notes so the chord is still in the right order,
+        // We need to sort the notes so the chord is still ascending,
         // but if this causes the focus to switch---
         // e.g., you edit the middle note and make it higher than the high note
         // so that further edits to the same "thing"
@@ -196,9 +197,9 @@ export default class TrichordView extends Component {
             note,
             isTarget: thisIndex === oldIndex,
         }));
-        const notesDescending = [...taggedNotes].sort((a, b) =>
-            b.note - a.note);
-        const newIndex = notesDescending.findIndex(note => note.isTarget);
+        const notesAscending = [...taggedNotes].sort((a, b) =>
+            a.note - b.note);
+        const newIndex = notesAscending.findIndex(note => note.isTarget);
 
         // Handle that case where a note's position in the chord has changed.
         if (newIndex !== noteIndex) {
@@ -207,10 +208,8 @@ export default class TrichordView extends Component {
             newRef.takeStateFrom(oldRef, displayText);
         }
 
-        // Finally, the notes actually need to be in ascending order,
-        // and we can discard the tagging information.
-        const notesAscending = [...newNotes].sort((a, b) => a - b);
-        this.props.onChange(notesAscending);
+        // Finally, we can just discard the tagging information.
+        this.props.onChange(notesAscending.map(x => x.note));
     }
 
 }
