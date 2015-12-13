@@ -110,7 +110,9 @@ export default class TrichordView extends Component {
                     onSetChord={this.props.onChange}
                 />
             </div>;
-        const hoverView = this.state.hovered && visible ?
+
+        const hide = !visible && this.props.onClick;
+        const hoverView = this.state.hovered && !hide ?
             <ChordEngraving notes={notes} /> : null;
 
         return <div
