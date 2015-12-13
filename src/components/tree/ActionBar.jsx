@@ -20,7 +20,6 @@ export default class ActionBar extends Component {
 
         const style = {
             textAlign: "center",
-            marginBottom: 10,
             marginTop: 10,
         };
 

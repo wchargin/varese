@@ -90,15 +90,6 @@ export default class TrichordView extends Component {
             fontSize: 8 + 2 * this.props.size,
             opacity: visible ? 1 : 0.2,
         };
-        const buttonStyle = {...style};
-        const divStyle = {
-            ...style,
-            backgroundColor: "#f5f5f5",
-            border: "thin #e3e3e3 solid",
-            borderRadius: 2,
-            boxShadow: "inset 0 1px 1px rgba(0,0,0,.05)",
-            padding: 2 * style.padding,
-        };
 
         const lines = [
             ...noteViews.slice().reverse(),  // show descending
@@ -109,10 +100,10 @@ export default class TrichordView extends Component {
             line && [line, <br key={"br-" + idx} />]));
 
         const info = this.props.onClick ?
-            <button onClick={this.props.onClick} style={buttonStyle}>
+            <button onClick={this.props.onClick} style={style}>
                 {flattenedContents}
             </button> :
-            <div style={divStyle}>
+            <div style={style} className="well">
                 {flattenedContents}
                 <ActionBar
                     chord={notes}
