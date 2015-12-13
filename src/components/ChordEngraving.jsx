@@ -28,8 +28,8 @@ export default class ChordView extends Component {
 
     _shouldRenderNote() {
         const [pianoMin, pianoMax] = [-40, 48];
-        const padding = 150;
-        const [min, max] = [pianoMin - padding, pianoMax + padding];
+        const leeway = 24;
+        const [min, max] = [pianoMin - leeway, pianoMax + leeway];
         return this.props.notes.every(x => min < x && x < max);
     }
 
