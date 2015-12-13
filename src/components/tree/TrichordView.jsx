@@ -64,7 +64,7 @@ export default class TrichordView extends Component {
                     type="text"
                     displayValue={name}
                     value={pitchToName(notesAscending[index], true)}
-                    style={{ textAlign: "center" }}
+                    style={{ textAlign: "center", width: "100%" }}
                     onChange={(newPitch, displayText) =>
                         this._handleChange(index, newPitch, displayText)}
                     onKeyDown={e => this._handleKeyDown(index, e)}
@@ -309,6 +309,7 @@ class SingleNoteInput extends Component {
             ref="input"
             type="text"
             value={text}
+            size={3}
             onChange={() => this._handleChange()}
             onFocus={() => this.setState({ text: this.props.value })}
             onBlur={() => this.setState({ text: null })}
