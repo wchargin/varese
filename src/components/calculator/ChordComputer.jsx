@@ -33,18 +33,25 @@ export default class ChordComputer extends Component {
             </p>
             <ul>
                 <li>
-                    {example("C4, E4, G4")}
+                    {example("C4 E4 G4")}
                     {" "}
                     (using scientific pitch notation);
                 </li>
                 <li>
-                    {example("B#3, Fb4, G4")}
+                    {example("B#3 Fb4 G4")}
                     {" "}
                     (using {example("#", false)} for sharps
-                     and {example("b", false)} and flats); or
+                     and {example("b", false)} and flats);
                 </li>
                 <li>
-                    {example("0, 4, 7")}{" "}
+                    {example("G, C E''")}
+                    {" "}
+                    (using relative pitch notation,
+                    where {example(",", false)} lowers a pitch by an octave
+                    and {example("'", false)} raises a pitch by an octave); or
+                </li>
+                <li>
+                    {example("0 4 7")}{" "}
                     (indicating semitones above middle&nbsp;C).
                 </li>
             </ul>
