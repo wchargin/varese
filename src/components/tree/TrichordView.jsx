@@ -179,7 +179,7 @@ export default class TrichordView extends Component {
 
     _updatePitch(noteIndex, newNote, maybeDisplayText) {
         const displayText = maybeDisplayText === undefined ?
-            pitchToName(newNote, true, this.props.showOctave) :
+            pitchToName(newNote, true, true) :
             maybeDisplayText;
 
         const {notes} = this.props;
