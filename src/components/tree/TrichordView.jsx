@@ -174,6 +174,14 @@ export default class TrichordView extends Component {
      *     which may need to be copied to a different input box.
      */
     _handleChange(noteIndex, newNote, displayText) {
+        this._updatePitch(noteIndex, newNote, displayText);
+    }
+
+    _updatePitch(noteIndex, newNote, maybeDisplayText) {
+        const displayText = maybeDisplayText === undefined ?
+            pitchToName(newNote, true, this.props.showOctave) :
+            maybeDisplayText;
+
         const {notes} = this.props;
         const newNotes = [
             ...notes.slice(0, noteIndex),
@@ -197,11 +205,14 @@ export default class TrichordView extends Component {
             a.note - b.note);
         const newIndex = notesAscending.findIndex(note => note.isTarget);
 
+        const oldRef = this.refs["note-" + oldIndex];
+        const newRef = this.refs["note-" + newIndex];
+
         // Handle that case where a note's position in the chord has changed.
         if (newIndex !== noteIndex) {
-            const oldRef = this.refs["note-" + oldIndex];
-            const newRef = this.refs["note-" + newIndex];
             newRef.takeStateFrom(oldRef, displayText);
+        } else {
+            newRef.setDisplayText(displayText);
         }
 
         // Finally, we can just discard the tagging information.
@@ -209,9 +220,6 @@ export default class TrichordView extends Component {
     }
 
     _handleKeyDown(index, e) {
-        // Determine whether we want to move up or down in the chord.
-        // If we press up, we should go to a higher pitch,
-        // which corresponds to moving forward in the chord array.
         const delta = ({
             "ArrowUp": +1,
             "ArrowDown": -1,
@@ -222,14 +230,7 @@ export default class TrichordView extends Component {
             return;
         }
 
-        // If we're already at the top note and we press "up",
-        // we just won't have a component to move to.
-        // No problem.
-        // (Same with pressing down at the bottom, of course.)
-        const ref = this.refs["note-" + (index + delta)];
-        if (ref) {
-            ref.focusDOMNode();
-        }
+        this._updatePitch(index, this.props.notes[index] + delta);
     }
 
 }
@@ -342,6 +343,10 @@ class SingleNoteInput extends Component {
         // Copy state.
         this.setState({...thatOldState, text});
         that.setState({ text: null });
+    }
+
+    setDisplayText(text) {
+        this.setState({ text });
     }
 
     focusDOMNode() {
