@@ -24,6 +24,8 @@ export default class ChordInput extends Component {
         const text = this.state.text !== null ?
             this.state.text :
             this._toString(this.props.value);
+        const formattedText = text.replace(/\s/g, "\u2002");  // EN SPACE
+
         return <div className="well">
             <label htmlFor="chord-entry">{this.props.message}</label>
             {" "}
@@ -31,7 +33,7 @@ export default class ChordInput extends Component {
                 className="form-control"
                 ref="input"
                 id="chord-entry"
-                value={text}
+                value={formattedText}
                 onChange={() => this._handleChange()}
                 onBlur={() => this.setState({ text: null, error: null })}
                 style={{
