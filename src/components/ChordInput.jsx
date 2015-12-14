@@ -68,7 +68,7 @@ export default class ChordInput extends Component {
     }
 
     _fromString(str) {
-        const trimmed = str.replace(/\s+/g, " ");
+        const trimmed = str.trim().replace(/\s+/g, " ");
 
         const parts = trimmed.length === 0 ? [] : trimmed.split(" ");
         const maybeParsedParts = parts.map(text => ({
