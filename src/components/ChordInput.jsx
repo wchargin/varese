@@ -62,17 +62,13 @@ export default class ChordInput extends Component {
     }
 
     _toString(value) {
-        return value.map(x => PitchNames.pitchToName(x, true)).join(", ");
+        return value.map(x => PitchNames.pitchToName(x, true)).join(" ");
     }
 
     _fromString(str) {
-        const trimmed = str
-            .replace(/\s/g, "")     // internal spaces
-            .replace(/^,*/, "")     // leading commas
-            .replace(/,,+/g, ",")   // internal commas
-            .replace(/,+$/, "");    // trailing commas
+        const trimmed = str.replace(/\s+/g, " ");
 
-        const parts = trimmed.length === 0 ? [] : trimmed.split(",");
+        const parts = trimmed.length === 0 ? [] : trimmed.split(" ");
         const maybeParsedParts = parts.map(text => ({
             input: text,
             output: PitchNames.parseNameOrPitch(text),
