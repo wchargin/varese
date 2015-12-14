@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 
 import {findChordRootOffset} from '../../HarmonicSeries';
-import {pitchToName, nameToPitch} from '../../PitchNames';
+import {pitchToName, parseNameOrPitch} from '../../PitchNames';
 import {flatten} from '../../Utils';
 
 import ActionBar from './ActionBar';
@@ -357,7 +357,7 @@ class SingleNoteInput extends Component {
         const text = this.refs.input.value;
         this.setState({ text });
 
-        const value = nameToPitch(text);
+        const value = parseNameOrPitch(text);
         if (value !== null) {
             this.props.onChange(value, text);
         }
