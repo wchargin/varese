@@ -220,15 +220,17 @@ export default class TrichordView extends Component {
     }
 
     _handleKeyDown(index, e) {
-        const delta = ({
+        const direction = ({
             "ArrowUp": +1,
             "ArrowDown": -1,
         })[e.key];
 
         // Ignore other keys.
-        if (delta === undefined) {
+        if (direction === undefined) {
             return;
         }
+
+        const delta = e.shiftKey ? direction * 12 : direction;
 
         this._updatePitch(index, this.props.notes[index] + delta);
     }
