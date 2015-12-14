@@ -20,8 +20,7 @@ class PitchCalculator extends Component {
             />
             <RationalizerConfig
                 values={this.props.acousticRatios}
-                onChangeValue={(newValue, index) =>
-                    this.props.onSetAcousticRatio(index, newValue)}
+                onChangeValue={this.props.onSetAcousticRatio}
             />
         </Page>;
     }

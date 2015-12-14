@@ -25,7 +25,7 @@ export default class RationalizerConfig extends Component {
                 verticalAlign: "top",
             }}>
                 {values.map((value, index) => {
-                    const setValueTo = v => this.props.onChangeValue(v, index);
+                    const setValueTo = v => this.props.onChangeValue(index, v);
                     return <AcousticRatioBox
                         value={value}
                         key={index}
