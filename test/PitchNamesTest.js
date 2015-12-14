@@ -67,6 +67,30 @@ describe('PitchNames', () => {
         it("allows a really positive note", test("C88",   84 * 12));
     });
 
+    describe("#relativeToPitch", () => {
+        const {relativeToPitch: r2p} = PitchNames;
+        const test = (input, output) => () =>
+            expect(r2p(input)).to.equal(output);
+
+        it("parses C as C4", test("C", 0));
+        it("parses c as C4", test("c", 0));
+        it("parses D' as D5", test("D'", 14));
+
+        it("parses F##''' as G7", test("F##'''", 43));
+        it("parses Bbb,,, as B-flat 2", test("Bb,,,", -26));
+
+        const fssppp = "F\u266F\u266F'''";
+        it(`parses a pretty ${fssppp} as G7`, test(fssppp, 43));
+
+        const bffccc = "B\u266D\u266D,,,";
+        it(`parses a pretty ${bffccc} as A2`, test(bffccc, -27));
+
+        it("fails on C,'", test("C,'", null));
+        it("fails on C',", test("C',", null));
+
+        it("fails on C4", test("C4", null));
+    });
+
     describe('#parseNameOrPitch', () => {
         const {parseNameOrPitch: parse} = PitchNames;
         const test = (input, output) => () =>

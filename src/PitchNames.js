@@ -66,6 +66,36 @@ export function nameToPitch(name) {
 }
 
 /*
+ * Input: a pitch class name followed by ('*|,*),
+ * where a quote indicates raising the octave by one
+ * and a comma indicates lowering the octave by one.
+ * (Everything starts in octave 4.)
+ *
+ * Output: the number of semitones above middle C,
+ * or null if it is not a valid note.
+ *
+ * Example: C is C4; C' is C5; Db,, is Db2.
+ */
+export function relativeToPitch(relativeString) {
+    const pat = /^([A-Ga-g](?:[#\u266F]*|[b\u266D]*))('*|,*)$/;
+    const match = relativeString.match(pat);
+    if (!match) {
+        return null;
+    }
+    const letter = match[1];
+    const modifiers = match[2];
+
+    const modifier = modifiers.charAt(0);
+    const octaveShift =
+        modifier === "'" ? +modifiers.length :
+        modifier === "," ? -modifiers.length :
+        /* undefined; no text given */ 0;
+    const octave = 4 + octaveShift;
+
+    return nameToPitch(`${letter}${octave}`);
+}
+
+/*
  * Input: a string that's either a scientific pitch notation name,
  * like "C4" or "Ab6" or "F\u266F-1",
  * or some number of semitones above middle C,
@@ -91,5 +121,6 @@ export function parseNameOrPitch(nameOrPitch) {
 export default {
     pitchToName,
     nameToPitch,
+    relativeToPitch,
     parseNameOrPitch,
 };
