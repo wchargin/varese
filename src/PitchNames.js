@@ -96,22 +96,27 @@ export function relativeToPitch(relativeString) {
 }
 
 /*
- * Input: a string that's either a scientific pitch notation name,
- * like "C4" or "Ab6" or "F\u266F-1",
- * or some number of semitones above middle C,
- * like "12" or "-23" or "\u221234".
+ * Input: a string that's
+ *   - a scientific pitch notation name, like "C4" or "Ab6" or "F\u266F-1";
+ *   - a relative pitch name, like "C" or "Db'" or "E,,"; or
+ *   - a number of semitones above middle C, like "12" or "-23" or "\u221234".
  *
  * Output: the number of semitones above middle C,
- * or null if the string is not valid in either of the accepted formats.
+ * or null if the string is not valid in any of the accepted formats.
  */
-export function parseNameOrPitch(nameOrPitch) {
-    const asName = nameToPitch(nameOrPitch);
+export function parseNameOrPitch(input) {
+    const asName = nameToPitch(input);
     if (asName !== null) {
         return asName;
     }
 
-    if (nameOrPitch.match(/^(-|\u2212)?\d+$/)) {
-        const plain = nameOrPitch.replace(minus, "-");
+    const asRelative = relativeToPitch(input);
+    if (asRelative !== null) {
+        return asRelative;
+    }
+
+    if (input.match(/^(-|\u2212)?\d+$/)) {
+        const plain = input.replace(minus, "-");
         return parseInt(plain, 10);
     }
 

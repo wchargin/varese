@@ -105,6 +105,10 @@ describe('PitchNames', () => {
 
         it("accepts a pitch like C5", test("C5", 12));
 
+        it("accepts a pitch like C", test("C", 0));
+        it("accepts a pitch like G'", test("G'", 19));
+        it("accepts a pitch like D,", test("D,", -10));
+
         it("rejects a pitch like --12", test("--12", null));
         it("rejects a pitch like +3", test("+3", null));
     });
