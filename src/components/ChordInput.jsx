@@ -43,6 +43,7 @@ export default class ChordInput extends Component {
                     display: "inline-block",
                     width: "unset",
                 }}
+                spellCheck={false}
             />
             <span style={{
                 marginLeft: 10,
