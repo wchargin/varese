@@ -192,6 +192,7 @@ class LimitControls extends Component {
                 style={inputStyle}
                 disabled={!minEnabled}
                 type="number"
+                min={0}
                 className="form-control"
                 value={minEnabled ? min : null}
                 aria-label={this.props.minLabel}
@@ -202,6 +203,7 @@ class LimitControls extends Component {
                 style={inputStyle}
                 disabled={!maxEnabled}
                 type="number"
+                min={0}
                 className="form-control"
                 value={maxEnabled ? max : null}
                 aria-label={this.props.maxLabel}
