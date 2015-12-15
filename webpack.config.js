@@ -57,6 +57,22 @@ function loaders() {
     return base.filter(function(x) { return x; });
 }
 
+function plugins() {
+    var plugins = [];
+    plugins.push(new webpack.DefinePlugin({ '__PROD__': prod }));
+    if (prod) {
+        plugins.push(new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false,
+            },
+        }));
+    }
+    if (!prod) {
+        plugins.push(new webpack.HotModuleReplacementPlugin());
+    }
+    return plugins;
+}
+
 module.exports = {
     devtool: prod ? "source-map" : "eval",
     entry: entry(),
@@ -75,11 +91,5 @@ module.exports = {
         contentBase: './dist',
         hot: !prod,
     },
-    plugins: prod ?
-        [new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false,
-            },
-        })] :
-        [new webpack.HotModuleReplacementPlugin()],
+    plugins: plugins(),
 };
