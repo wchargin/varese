@@ -65,10 +65,10 @@ export default class TrichordTree extends Component {
         } : {};
 
         return <div>
-            <InvalidRootWarnings
+            {this.props.viewOptions.showRoots && <InvalidRootWarnings
                 chords={flatten(chords)}
                 rationalizer={rationalizer}
-            />
+            />}
             <div style={{...wideStyle, marginBottom: 20}}>
                 <TreeView
                     elements={nodes}
