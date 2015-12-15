@@ -3,9 +3,18 @@ import {Link} from 'react-router';
 
 export default class Page extends Component {
     render() {
-        const link = (name, text) =>
+        const link = (name, text, flag) =>
             <li className={name === this.props.path ? "active" : undefined}>
-                <Link to={`/${name}`}>{text}</Link>
+                <Link to={`/${name}`}>
+                    {text}
+                    {flag && <span style={{
+                        color: "red",
+                        fontSize: "smaller",
+                    }}>
+                        {"\u2002"}
+                        {flag.toString().toUpperCase()}
+                    </span>}
+                </Link>
             </li>;
         return <div>
             <nav className="navbar navbar-inverse navbar-static-top">
@@ -15,6 +24,8 @@ export default class Page extends Component {
                         <ul className="nav navbar-nav">
                             {link("calculator", "Root calculator")}
                             {link("tree", "Tree explorer")}
+                            {/* global __PROD__ */ !__PROD__ && link(
+                                "infinite-tree", "Infinite tree", "alpha")}
                         </ul>
                     </div>
                 </div>

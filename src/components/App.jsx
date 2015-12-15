@@ -3,6 +3,7 @@ import {Router, Route, Redirect} from 'react-router';
 
 import PitchCalculator from './calculator/PitchCalculator';
 import TreeExplorer from './tree/TreeExplorer';
+import InfiniteTreeExplorer from './inftree/InfiniteTreeExplorer';
 
 export default class App extends Component {
     render() {
@@ -11,6 +12,7 @@ export default class App extends Component {
                 <Redirect from="/" to="calculator" />
                 <Route path="calculator" component={PitchCalculator} />
                 <Route path="tree" component={TreeExplorer} />
+                <Route path="infinite-tree" component={InfiniteTreeExplorer} />
             </Router>
         </div>;
     }
