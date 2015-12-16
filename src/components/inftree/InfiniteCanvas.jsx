@@ -2,12 +2,31 @@ import React, {Component} from 'react';
 
 export default class InfiniteCanvas extends Component {
 
+    constructor() {
+        super();
+        this.state = {
+            position: {
+                x: 0,
+                y: 0,
+            },
+            dragState: {
+                dragging: false,
+                originalPosition: null,
+                initialMousePosition: null,
+            },
+        };
+    }
+
     render() {
         return <canvas
             ref="canvas"
             width={720}
             height={600}
             style={{ outline: "thin red solid", width: "100%", height: 600 }}
+            //
+            onMouseDown={this._handleMouseDown.bind(this)}
+            onMouseUp={this._handleMouseUp.bind(this)}
+            onMouseMove={this._handleMouseMove.bind(this)}
         >
             <div className="alert alert-danger">
                 <strong>Uh oh!</strong>
@@ -20,11 +39,60 @@ export default class InfiniteCanvas extends Component {
         </canvas>;
     }
 
+    _getRelativeMousePosition(e) {
+        const {left: baseX, top: baseY} = e.target.getBoundingClientRect();
+        return {
+            x: e.clientX - baseX,
+            y: e.clientY - baseY,
+        };
+    }
+
+    _handleMouseDown(e) {
+        this.setState({
+            ...this.state,
+            dragState: {
+                dragging: true,
+                originalPosition: this.state.position,
+                initialMousePosition: this._getRelativeMousePosition(e),
+            },
+        });
+    }
+
+    _handleMouseUp() {
+        this.setState({
+            ...this.state,
+            dragState: {
+                dragging: false,
+                originalPosition: null,
+                initialMousePosition: null,
+            },
+        });
+    }
+
+    _handleMouseMove(e) {
+        const {dragState} = this.state;
+        if (dragState.dragging) {
+            const newMouse = this._getRelativeMousePosition(e);
+            const oldMouse = dragState.initialMousePosition;
+            const deltaX = newMouse.x - oldMouse.x;
+            const deltaY = newMouse.y - oldMouse.y;
+            this.setState({
+                ...this.state,
+                position: {
+                    x: dragState.originalPosition.x + deltaX,
+                    y: dragState.originalPosition.y + deltaY,
+                },
+            });
+        }
+    }
+
     _draw() {
         const {canvas} = this.refs;
         const {width, height} = canvas;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, width, height);
+
+        const {x: offsetX, y: offsetY} = this.state.position;
 
         const startLevel = 1;
         const levels = 4;
@@ -37,7 +105,8 @@ export default class InfiniteCanvas extends Component {
             for (let i = 0; i < nodes; i++) {
                 const centerX = width * (i + 0.5) / nodes;
                 ctx.beginPath();
-                ctx.arc(centerX, centerY, nodeRadius, 0, Math.PI * 2);
+                ctx.arc(centerX + offsetX, centerY + offsetY,
+                    nodeRadius, 0, Math.PI * 2);
                 ctx.fill();
             }
         }
