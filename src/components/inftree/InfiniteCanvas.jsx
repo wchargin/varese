@@ -78,12 +78,19 @@ export default class InfiniteCanvas extends Component {
             const deltaY = newMouse.y - oldMouse.y;
             this.setState({
                 ...this.state,
-                position: {
+                position: this._clampPosition({
                     x: dragState.originalPosition.x + deltaX,
                     y: dragState.originalPosition.y + deltaY,
-                },
+                }),
             });
         }
+    }
+
+    _clampPosition(position) {
+        return {
+            x: position.x,
+            y: Math.min(0, position.y),
+        };
     }
 
     _draw() {
@@ -94,20 +101,27 @@ export default class InfiniteCanvas extends Component {
 
         const {x: offsetX, y: offsetY} = this.state.position;
 
-        const startLevel = 1;
         const levels = 4;
 
-        const nodeRadius = 5;
-        for (let row = 0; row < levels; row++) {
+        const levelSpacing = height / levels;
+        const levelOffset = -offsetY / levelSpacing;
+        const startLevel = Math.max(0, Math.floor(levelOffset));
+        console.log(levelOffset);
+
+        // Draw all the rows that are definitely in view,
+        // plus one more so that it scrolls into view properly
+        // without suddenly appearing.
+        for (let row = 0; row < levels + 1; row++) {
             const level = row + startLevel;
             const nodes = Math.pow(2, level);
-            const centerY = height * (row + 0.5) / levels;
+            const centerY = levelSpacing * (row + 0.5);
             for (let i = 0; i < nodes; i++) {
                 const centerX = width * (i + 0.5) / nodes;
+                const nodeRadius = 5;
                 ctx.beginPath();
-                ctx.arc(centerX + offsetX, centerY + offsetY,
+                ctx.arc(centerX + offsetX, centerY + offsetY % levelSpacing,
                     nodeRadius, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.stroke();
             }
         }
     }
