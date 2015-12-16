@@ -22,12 +22,25 @@ export default class InfiniteCanvas extends Component {
 
     _draw() {
         const {canvas} = this.refs;
+        const {width, height} = canvas;
         const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, width, height);
 
-        ctx.fillRect(0, 16, 75, 2);
-        ctx.font = "12px sans";
-        ctx.fillText("Hello, world!", 0, 14);
+        const startLevel = 1;
+        const levels = 4;
+
+        const nodeRadius = 5;
+        for (let row = 0; row < levels; row++) {
+            const level = row + startLevel;
+            const nodes = Math.pow(2, level);
+            const centerY = height * (row + 0.5) / levels;
+            for (let i = 0; i < nodes; i++) {
+                const centerX = width * (i + 0.5) / nodes;
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, nodeRadius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
     }
 
     _resizeCanvas() {
