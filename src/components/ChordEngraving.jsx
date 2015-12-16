@@ -26,11 +26,15 @@ export default class ChordView extends Component {
         }
     }
 
-    _shouldRenderNote() {
+    static withinRange(notes) {
         const [pianoMin, pianoMax] = [-40, 48];
         const leeway = 24;
         const [min, max] = [pianoMin - leeway, pianoMax + leeway];
-        return this.props.notes.every(x => min < x && x < max);
+        return notes.every(x => min < x && x < max);
+    }
+
+    _shouldRenderNote() {
+        return ChordView.withinRange(this.props.notes);
     }
 
     componentDidMount() {

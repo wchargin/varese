@@ -3,6 +3,7 @@ import React, {Component, PropTypes} from 'react';
 import PitchNames from '../../PitchNames';
 import {findChordRootOffset} from '../../HarmonicSeries';
 
+import ChordEngraving from '../ChordEngraving';
 import ChordInput from '../ChordInput';
 
 const DEFAULT_CHORD = [3, 7, 10];
@@ -86,10 +87,30 @@ class ChordOutput extends Component {
                 const noun = offset === 1 ? "semitone" : "semitones";
                 const str = offset.toString().replace(/-/g, "\u2212");
                 const note = PitchNames.pitchToName(offset, true);
-                return <div className="alert alert-info">
-                    The root of that chord is <strong>{note}</strong>,
-                    at {str} {noun}.
-                </div>;
+
+                if (!ChordEngraving.withinRange(chord)) {
+                    return <div className="alert alert-info">
+                        The root of that chord is <strong>{note}</strong>,
+                        at {str} {noun}.
+                    </div>;
+                } else {
+                    const chordWidth = 100;
+                    const margin = 15;
+                    return <div>
+                        <div style={{
+                            width: `calc(100% - ${chordWidth + margin}px)`,
+                            marginRight: margin,
+                            display: "inline-block",
+                            verticalAlign: "top",
+                        }}>
+                            <div className="alert alert-info">
+                                The root of that chord (shown at right)
+                                is <strong>{note}</strong>, at {str} {noun}.
+                            </div>
+                        </div>
+                        <ChordEngraving notes={chord} width={chordWidth} />
+                    </div>;
+                }
             } else {
                 const e = maybeOffset.error;
                 if (e === "infinite") {
