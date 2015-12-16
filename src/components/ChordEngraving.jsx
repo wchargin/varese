@@ -14,7 +14,7 @@ import VexFlowUtils from '../VexFlowUtils';
  * one intended use of the lifecycle methods
  * is dealing with legacy or external code, which this is.
  */
-export default class ChordView extends Component {
+export default class ChordEngraving extends Component {
 
     render() {
         if (this._shouldRenderNote()) {
@@ -34,7 +34,7 @@ export default class ChordView extends Component {
     }
 
     _shouldRenderNote() {
-        return ChordView.withinRange(this.props.notes);
+        return ChordEngraving.withinRange(this.props.notes);
     }
 
     componentDidMount() {
@@ -102,13 +102,13 @@ export default class ChordView extends Component {
     }
 
 }
-ChordView.propTypes = {
+ChordEngraving.propTypes = {
     // Semitones above middle C.
     notes: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
 
     // Width of the staff output, in pixels.
     width: PropTypes.number,
 };
-ChordView.defaultProps = {
+ChordEngraving.defaultProps = {
     width: 100,
 };
