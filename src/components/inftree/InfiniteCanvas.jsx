@@ -119,6 +119,24 @@ export default class InfiniteCanvas extends Component {
             },
             keysDown: [],  // a list of numeric key codes
         };
+
+        // We attach the following properties to the instance itself
+        // instead of using React's state
+        // because they're orthogonal to the rendering pipeline.
+
+        // An event handler for window.onResize.
+        this._resizeListener = () => {
+            if (this._resizeCanvas()) {
+                this._draw();
+            }
+        };
+
+        // The interval ID used while keys are pressed.
+        // This is set when the user presses a key when none had been pressed
+        // (see _handleKeyDown)
+        // and unset when the user releases the last key
+        // (see _handleKeyUp).
+        this._keyInterval = null;
     }
 
     render() {
@@ -155,12 +173,6 @@ export default class InfiniteCanvas extends Component {
     componentDidMount() {
         this._resizeCanvas();
         this._draw();
-
-        this._resizeListener = () => {
-            if (this._resizeCanvas()) {
-                this._draw();
-            }
-        };
         window.addEventListener('resize', this._resizeListener);
     }
 
@@ -264,7 +276,7 @@ export default class InfiniteCanvas extends Component {
             ...this.state,
             keysDown: [...this.state.keysDown, e.which],
         }, () => {
-            if (!this._keyInterval) {
+            if (this._keyInterval === null) {
                 this._keyInterval = window.setInterval(() => {
                     if (this.state.dragState.dragging) {
                         return;
