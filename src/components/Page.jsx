@@ -9,7 +9,7 @@ export default class Page extends Component {
                     {text}
                     {flag && <span style={{
                         color: "red",
-                        fontSize: "smaller",
+                        fontSize: "75%",
                     }}>
                         {"\u2002"}
                         {flag.toString().toUpperCase()}

@@ -20,7 +20,13 @@ class InfiniteTreeExplorer extends Component {
     /* eslint-disable react/prop-types */
     render() {
         return <Page path="infinite-tree">
-            <h1>Infinite chord tree explorer (alpha)</h1>
+            <h1>
+                Infinite chord tree explorer
+                {" "}
+                <span style={{ color: "red", fontSize: "75%" }}>
+                    {"alpha".toUpperCase()}
+                </span>
+            </h1>
             <ViewOptions
                 {...this.props.treeViewOptions}
                 {...this.props.viewOptionsHandlers}
