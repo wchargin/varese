@@ -84,7 +84,66 @@ export default class NewInfiniteCanvas extends Component {
     }
 
     render() {
-        return <h2>Work in progress!</h2>;
+        return <canvas
+            ref="canvas"
+            width={720}
+            height={600}
+            style={{
+                outline: "thin red solid",
+                width: "100%",
+                height: 600,
+            }}
+        >
+            <div className="alert alert-danger">
+                <strong>Uh oh!</strong>
+                {" "}
+                Looks like your browser doesn't support
+                the <tt>&lt;canvas&gt;</tt> element.
+                Basically, this means we can't show you the infinite tree.
+                Could you try upgrading your browser?
+            </div>
+        </canvas>;
+    }
+
+    componentDidMount() {
+        this._resizeCanvas();
+        this._draw();
+
+        this._resizeListener = () => {
+            if (this._resizeCanvas()) {
+                this._draw();
+            }
+        };
+        window.addEventListener('resize', this._resizeListener);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this._resizeListener);
+    }
+
+    componentDidUpdate() {
+        this._resizeCanvas();
+        this._draw();
+    }
+
+    _resizeCanvas() {
+        const {canvas} = this.refs;
+        const widthString = window.getComputedStyle(canvas).width;
+        const width = parseInt(widthString.match(/(\d+)px/)[1], 10);
+        if (width !== canvas.width) {
+            canvas.width = width;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    _draw() {
+        const {canvas} = this.refs;
+        const {width, height} = canvas;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillRect(10, 10, 20, 20);
     }
 
 }
