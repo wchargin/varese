@@ -1,3 +1,4 @@
+/* DEPRECATED. See NewInfiniteCanvas. */
 import React, {Component} from 'react';
 
 const canvasHeight = 600;
