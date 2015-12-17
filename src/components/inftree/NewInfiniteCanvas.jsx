@@ -156,21 +156,42 @@ export default class NewInfiniteCanvas extends Component {
         };
     }
 
+    /*
+     * Determine the horizontal scaling factor that should be used
+     * when the top of the viewport is at the given y-position.
+     */
+    _getScalingFactor(y) {
+        return Math.pow(2, y / this._getRowDimensions().height);
+    }
+
     _draw() {
         const {canvas} = this.refs;
         const {width, height} = canvas;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, width, height);
 
-        // Temporary proof of concept to test _getRowDimensions;
-        // should draw a slashed rectangle for each row.
         const {width: rowWidth, height: rowHeight} = this._getRowDimensions();
+
+        // Temporary proof of concept to test _getScalingFactor;
+        // each row should be equally divided into some number of dots,
+        // each centered in a virtual viewport.
         for (let row = 0; row < this.props.levels; row++) {
-            ctx.strokeRect(0, row * rowHeight, rowWidth, rowHeight);
-            ctx.beginPath();
-            ctx.moveTo(0, row * rowHeight);
-            ctx.lineTo(rowWidth, (row + 1) * rowHeight);
-            ctx.stroke();
+            const rowTop = row * rowHeight;
+            const rowBottom = rowTop + rowHeight;
+            const rowMid = rowBottom + (rowTop - rowBottom) / 2;
+            const per = this._getScalingFactor(rowTop);
+            const each = rowWidth / per;
+            for (let col = 0; col < each; col++) {
+                const left = each * col;
+                const right = left + each;
+                const mid = left + (right - left) / 2;
+                ctx.beginPath();
+                ctx.arc(mid, rowMid, 5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.rect(left, rowTop, each, this.props.height);
+                ctx.stroke();
+            }
         }
     }
 
