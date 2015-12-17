@@ -164,6 +164,20 @@ export default class NewInfiniteCanvas extends Component {
         return Math.pow(2, y / this._getRowDimensions().height);
     }
 
+    _clampPosition(position) {
+        const {x, y} = position;
+        const rowWidth = this._getRowDimensions().width;
+        const scalingFactor = this._getScalingFactor(y);
+        const viewportWidth = rowWidth / scalingFactor;
+        const range = rowWidth - viewportWidth;
+        const maxX = range / 2;
+        const minX = -maxX;
+        return {
+            x: Math.max(minX, Math.min(x, maxX)),
+            y: Math.max(0, y),
+        };
+    }
+
     _draw() {
         const {canvas} = this.refs;
         const {width, height} = canvas;
@@ -175,6 +189,7 @@ export default class NewInfiniteCanvas extends Component {
         // Temporary proof of concept to test _getScalingFactor;
         // each row should be equally divided into some number of dots,
         // each centered in a virtual viewport.
+        ctx.fillStyle = '#000';
         for (let row = 0; row < this.props.levels; row++) {
             const rowTop = row * rowHeight;
             const rowBottom = rowTop + rowHeight;
@@ -192,6 +207,25 @@ export default class NewInfiniteCanvas extends Component {
                 ctx.rect(left, rowTop, each, this.props.height);
                 ctx.stroke();
             }
+        }
+
+        // Temporary proof of concept to test _clampPosition;
+        // each (fractional) row should have its two extreme viewports shaded.
+        ctx.fillStyle = 'rgba(0, 0, 255, 0.1)';
+        for (let row = 0; row < this.props.levels; row += 0.25) {
+            const rowTop = row * rowHeight;
+            const viewportWidth = rowWidth / this._getScalingFactor(rowTop);
+            const minCenter = this._clampPosition({x: -Infinity, y: rowTop}).x;
+            const maxCenter = this._clampPosition({x: +Infinity, y: rowTop}).x;
+            const offset = rowWidth / 2;
+            ctx.beginPath();
+            ctx.rect(offset + minCenter - viewportWidth / 2, rowTop,
+                viewportWidth, rowHeight);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.rect(offset + maxCenter - viewportWidth / 2, rowTop,
+                viewportWidth, rowHeight);
+            ctx.fill();
         }
     }
 
