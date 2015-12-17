@@ -99,6 +99,7 @@ export default class NewInfiniteCanvas extends Component {
                 originalPosition: null,
                 initialMousePosition: null,
             },
+            keysDown: [],
         };
     }
 
@@ -117,6 +118,10 @@ export default class NewInfiniteCanvas extends Component {
             onMouseMove={this._handleMouseMove.bind(this)}
             onMouseUp={this._handleMouseUp.bind(this)}
             onMouseLeave={this._handleMouseLeave.bind(this)}
+            //
+            onKeyDown={this._handleKeyDown.bind(this)}
+            onKeyUp={this._handleKeyUp.bind(this)}
+            tabIndex={0}
         >
             <div className="alert alert-danger">
                 <strong>Uh oh!</strong>
@@ -209,6 +214,79 @@ export default class NewInfiniteCanvas extends Component {
             x: e.clientX - baseX,
             y: e.clientY - baseY,
         };
+    }
+
+    _getMotionDirection(which) {
+        switch (which) {
+            case 0x57:  // W
+                return { x: 0, y: -1 };
+            case 0x41:  // A
+                return { x: -1, y: 0 };
+            case 0x53:  // S
+                return { x: 0, y: +1 };
+            case 0x44:  // D
+                return { x: +1, y: 0 };
+            default:
+                return null;
+        }
+    }
+
+    _handleKeyDown(e) {
+        if (this._getMotionDirection(e.which) === null) {
+            return;
+        }
+        if (e.repeat) {
+            return;
+        }
+        if (this.state.keysDown.indexOf(e.which) !== -1) {
+            // This can happen if you press the key,
+            // then click and maybe drag a bit while still holding the key,
+            // then release the mouse while holding the key.
+            return;
+        }
+        this.setState({
+            ...this.state,
+            keysDown: [...this.state.keysDown, e.which],
+        }, () => {
+            if (!this._keyInterval) {
+                this._keyInterval = window.setInterval(() => {
+                    if (this.state.dragState.dragging) {
+                        return;
+                    }
+                    const keys = this.state.keysDown;
+                    const deltas = keys.map(k => this._getMotionDirection(k));
+                    const {x: deltaX, y: deltaY} = deltas.reduce(
+                        (acc, d) => ({x: acc.x + d.x, y: acc.y + d.y}),
+                        {x: 0, y: 0});
+
+                    const slowness = 90;  // frames to traverse full canvas
+                    const velocityX = this.refs.canvas.width / slowness;
+                    const velocityY = this.refs.canvas.height / slowness;
+
+                    const newY = Math.max(0, this.state.position.y +
+                        velocityY * deltaY);
+                    const scalingFactor = this._getScalingFactor(newY);
+                    const newX = this.state.position.x +
+                        velocityX * deltaX / scalingFactor;
+                    const finalPosition = this._clampPosition(
+                        { x: newX, y: newY });
+
+                    this.setState({ ...this.state, position: finalPosition });
+                }, 1000 / 60);
+            }
+        });
+    }
+
+    _handleKeyUp(e) {
+        const keysDown = this.state.keysDown.filter(x => x !== e.which);
+        this.setState({
+            ...this.state,
+            keysDown,
+        });
+        if (!keysDown.length) {
+            window.clearInterval(this._keyInterval);
+            this._keyInterval = null;
+        }
     }
 
     _resizeCanvas() {
