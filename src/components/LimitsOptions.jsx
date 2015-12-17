@@ -1,46 +1,29 @@
 import React, {Component, PropTypes} from 'react';
 
+import {Table, Row, Cell, LabelCell} from './SettingsTable';
+
 /*
  * A settings UI for the 'treeViewOptions.limits' state field.
  */
 export default class LimitsOptions extends Component {
 
     render() {
-        // Bootstrap's inline forms don't work really well with checkboxes.
-        // So we'll use our own table layout instead; no big deal.
-        // TODO(william): These are duplicated in tree/ViewOptions.jsx; unify.
-        const table = {style: {display: "table", marginBottom: 10}};
-        const row = {style: {display: "table-row"}};
-        const cell = {
-            style: {
-                display: "table-cell",
-                verticalAlign: "bottom",
-                paddingBottom: 5,
-                //
-                // marginRight doesn't work on table cells,
-                // and we only want horizontal spacing
-                // so we can't use borderSpacing on the table div.
-                // This should do.
-                paddingRight: 20,
-            },
-        };
-
         const limitValue = limit =>
             value => this.props.onSetLimitValue(limit, value);
         const limitEnabled = limit =>
             enabled => this.props.onSetLimitEnabled(limit, enabled);
 
-        return <div {...table}>
-            <div {...row}>
-                <label {...cell} htmlFor="minIndividual">
+        return <Table>
+            <Row>
+                <LabelCell htmlFor="minIndividual">
                     Individual limits
-                </label>
-                <label {...cell} htmlFor="minCombined">
+                </LabelCell>
+                <LabelCell htmlFor="minCombined">
                     Combined limits
-                </label>
-            </div>
-            <div {...row}>
-                <div {...cell}>
+                </LabelCell>
+            </Row>
+            <Row>
+                <Cell>
                     <LimitControls
                         min={this.props.minIndividual}
                         max={this.props.maxIndividual}
@@ -55,8 +38,8 @@ export default class LimitsOptions extends Component {
                         minLabel="Minimum individual limit"
                         maxLabel="Maximum individual limit"
                     />
-                </div>
-                <div {...cell}>
+                </Cell>
+                <Cell>
                     <LimitControls
                         min={this.props.minCombined}
                         max={this.props.maxCombined}
@@ -71,9 +54,9 @@ export default class LimitsOptions extends Component {
                         minLabel="Minimum combined limit"
                         maxLabel="Maximum combined limit"
                     />
-                </div>
-            </div>
-        </div>;
+                </Cell>
+            </Row>
+        </Table>;
     }
 }
 LimitsOptions.propTypes = {
