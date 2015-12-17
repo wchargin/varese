@@ -86,17 +86,17 @@
  *     and the scaling factor is as with the canvas:
  *     that is, (canvas.width, canvas.height) is the bottom-right corner.
  *
- *   - "Extended canvas coordinates" use
- *     the same orientation and scale as the normal canvas coordinates,
+ *   - "Absolute coordinates" use
+ *     the same orientation as the normal canvas coordinates,
  *     but the origin is at the very top-left of the *possible* view,
  *     not the current view.
- *     So if you scroll down by 100 pixels,
- *     the top-left of your viewport will be at coordinates (0, 100).
+ *     That the scale is the same as
+ *     the scale used by the canvas coordinates when y = 0.
  *
  *   - "Idealized coordinates" are the easiest to work with mathematically.
  *     The origin is at the top-center of the tree,
  *     and the basis vectors point to the right and downward.
- *     The scaling factor is the same as the canvas coordinates.
+ *     The scaling factor is the same as the absolute coordinates.
  */
 import React, {Component, PropTypes} from 'react';
 
@@ -389,6 +389,7 @@ export default class NewInfiniteCanvas extends Component {
         const {width: rowWidth, height: rowHeight} = this._getRowDimensions();
         const scalingFactor = this._getScalingFactor(this.state.position.y);
 
+        // Viewport dimensions and position, in absolute coordinates.
         const viewportWidth = rowWidth / scalingFactor;
         const viewportXc = this.state.position.x + rowWidth / 2;
         const viewportXl = viewportXc - viewportWidth / 2;
@@ -399,40 +400,50 @@ export default class NewInfiniteCanvas extends Component {
         // Eventually, these will come from the half-width and half-height
         // of the actual rendered chord display.
         // For now, that display is just a circle, so use its radius.
+        // The first two are in canvas coordinates;
+        // the third is in absolute coordinates.
         const paddingX = radius;
         const paddingY = radius;
+        const absolutePaddingX = paddingX / scalingFactor;
 
-        // The y-position of the top of the top row.
+        // The y-position of the top of the top row, in absolute coordinates.
         const topY = this.state.position.y - rowHeight / 2;
         const rowMin = Math.ceil((topY - paddingY) / rowHeight);
         const rowMax = Math.floor((topY + height + paddingY) / rowHeight);
 
         for (let row = rowMin; row <= rowMax; row++) {
             const absoluteYc = rowHeight * (row + 0.5);
-            const realYc = absoluteYc - this.state.position.y;
+            const canvasYc = absoluteYc - this.state.position.y;
 
+            // We only have to paint the nodes that are in view.
+            // Determine these bounds.
             const nodes = Math.pow(2, row);
-            const absolutePaddingX = paddingX / scalingFactor;
             const colMin = Math.ceil(
                 nodes * (viewportXl - absolutePaddingX) / rowWidth - 0.5);
             const colMax = Math.floor(
                 nodes * (viewportXr + absolutePaddingX) / rowWidth - 0.5);
 
             for (let col = colMin; col <= colMax; col++) {
-                const hue = (row % 16) / 16 * 360;
-                const alpha = Math.pow(0.75, row / 16);
-                ctx.fillStyle = `hsla(${hue}, 100%, 50%, ${alpha})`;
-
+                // We find the offset from the viewport center (OFVC)
+                // in absolute coordinates,
+                // then convert that to canvas coordinates.
                 const absoluteXc = rowWidth * (col + 0.5) / nodes;
-                const absoluteViewportXc = absoluteXc - viewportXc;
-                const relativeXc = absoluteViewportXc / viewportWidth;
-                const realXc = rowWidth / 2 + relativeXc * width;
-
-                ctx.beginPath();
-                ctx.arc(realXc, realYc, radius, 0, 2 * Math.PI);
-                ctx.fill();
+                const absoluteOFVC = absoluteXc - viewportXc;
+                const canvasOFVC = absoluteOFVC * (rowWidth / viewportWidth);
+                const canvasXc = rowWidth / 2 + canvasOFVC;
+                this._drawNode(ctx, row, col, canvasXc, canvasYc);
             }
         }
+    }
+
+    _drawNode(ctx, row, col, x, y) {
+        const radius = 5;
+        const hue = (row % 16) / 16 * 360;
+        const alpha = Math.pow(0.75, row / 16);
+        ctx.fillStyle = `hsla(${hue}, 100%, 50%, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        ctx.fill();
     }
 
 }
