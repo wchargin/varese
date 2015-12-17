@@ -138,12 +138,40 @@ export default class NewInfiniteCanvas extends Component {
         }
     }
 
+    /*
+     * Get the dimensions of any (every) row, in "actual" (canvas) coordinates.
+     * Return value has type { width: number, height: number }.
+     *
+     * The width of each row is just the width of the canvas,
+     * and the height is determined from the `levels` prop
+     * (which specifies the number of levels to display at any given time)
+     * and the height of the canvas.
+     *
+     * WARNING: This function relies on refs. Do not call it from 'render'.
+     */
+    _getRowDimensions() {
+        return {
+            width: this.refs.canvas.width,
+            height: this.props.height / this.props.levels,
+        };
+    }
+
     _draw() {
         const {canvas} = this.refs;
         const {width, height} = canvas;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, width, height);
-        ctx.fillRect(10, 10, 20, 20);
+
+        // Temporary proof of concept to test _getRowDimensions;
+        // should draw a slashed rectangle for each row.
+        const {width: rowWidth, height: rowHeight} = this._getRowDimensions();
+        for (let row = 0; row < this.props.levels; row++) {
+            ctx.strokeRect(0, row * rowHeight, rowWidth, rowHeight);
+            ctx.beginPath();
+            ctx.moveTo(0, row * rowHeight);
+            ctx.lineTo(rowWidth, (row + 1) * rowHeight);
+            ctx.stroke();
+        }
     }
 
 }
