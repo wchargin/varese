@@ -185,6 +185,18 @@ export default class InfiniteCanvas extends Component {
         this._draw();
     }
 
+    _resizeCanvas() {
+        const {canvas} = this.refs;
+        const widthString = window.getComputedStyle(canvas).width;
+        const width = parseInt(widthString.match(/(\d+)px/)[1], 10);
+        if (width !== canvas.width) {
+            canvas.width = width;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     _handleMouseDown(e) {
         this.setState({
             ...this.state,
@@ -240,25 +252,6 @@ export default class InfiniteCanvas extends Component {
         };
     }
 
-    _getMotionDirection(which) {
-        switch (which) {
-            case 0x41:  // A
-            case 0x25:  // Left
-                return { x: -1, y: 0 };
-            case 0x57:  // W
-            case 0x26:  // Up
-                return { x: 0, y: -1 };
-            case 0x44:  // D
-            case 0x27:  // Right
-                return { x: +1, y: 0 };
-            case 0x53:  // S
-            case 0x28:  // Down
-                return { x: 0, y: +1 };
-            default:
-                return null;
-        }
-    }
-
     _handleKeyDown(e) {
         if (this._getMotionDirection(e.which) === null) {
             return;
@@ -290,7 +283,6 @@ export default class InfiniteCanvas extends Component {
                         x: Math.sign(sumDelta.x),
                         y: Math.sign(sumDelta.y),
                     };
-
                     const slowness = 90;  // frames to traverse full canvas
                     const velocityX = this.refs.canvas.width / slowness;
                     const velocityY = this.refs.canvas.height / slowness;
@@ -313,6 +305,35 @@ export default class InfiniteCanvas extends Component {
         if (!keysDown.length) {
             window.clearInterval(this._keyInterval);
             this._keyInterval = null;
+        }
+    }
+
+    /*
+     * Given a numeric key code,
+     * determine whether the associated key represents a movement action.
+     *
+     * If it does, return an object with shape { x: number, y: number },
+     * where each number is either -1, 0, or +1
+     * and indicates the presence and direction of movement along an axis.
+     *
+     * If it doesn't, return null.
+     */
+    _getMotionDirection(which) {
+        switch (which) {
+            case 0x41:  // A
+            case 0x25:  // Left
+                return { x: -1, y: 0 };
+            case 0x57:  // W
+            case 0x26:  // Up
+                return { x: 0, y: -1 };
+            case 0x44:  // D
+            case 0x27:  // Right
+                return { x: +1, y: 0 };
+            case 0x53:  // S
+            case 0x28:  // Down
+                return { x: 0, y: +1 };
+            default:
+                return null;
         }
     }
 
@@ -350,18 +371,6 @@ export default class InfiniteCanvas extends Component {
 
         const finalPosition = { x: finalX, y: finalY };
         this.setState({ ...this.state, position: finalPosition });
-    }
-
-    _resizeCanvas() {
-        const {canvas} = this.refs;
-        const widthString = window.getComputedStyle(canvas).width;
-        const width = parseInt(widthString.match(/(\d+)px/)[1], 10);
-        if (width !== canvas.width) {
-            canvas.width = width;
-            return true;
-        } else {
-            return false;
-        }
     }
 
     /*
