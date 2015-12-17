@@ -73,6 +73,30 @@
  * and you pan by some $x$ pixels *in viewport units*,
  * your actual position should change by $x / v_w$.
  * Happily, that's a reasonably simple calculation to make!
+ *
+ *
+ * COORDINATE SYSTEMS
+ * ------------------
+ *
+ * There are three coordinate systems in use.
+ *
+ *   - "Canvas coordinates" are the actual drawing coordinates of the canvas.
+ *     The origin is at the top-left of the current viewport,
+ *     the basis vectors point to the right and downward,
+ *     and the scaling factor is as with the canvas:
+ *     that is, (canvas.width, canvas.height) is the bottom-right corner.
+ *
+ *   - "Extended canvas coordinates" use
+ *     the same orientation and scale as the normal canvas coordinates,
+ *     but the origin is at the very top-left of the *possible* view,
+ *     not the current view.
+ *     So if you scroll down by 100 pixels,
+ *     the top-left of your viewport will be at coordinates (0, 100).
+ *
+ *   - "Idealized coordinates" are the easiest to work with mathematically.
+ *     The origin is at the top-center of the tree,
+ *     and the basis vectors point to the right and downward.
+ *     The scaling factor is the same as the canvas coordinates.
  */
 import React, {Component, PropTypes} from 'react';
 
@@ -80,26 +104,20 @@ export default class NewInfiniteCanvas extends Component {
 
     constructor() {
         super();
-
-        // In this state object,
-        // the state.position and state.dragState.originalPosition fields
-        // are in our idealized coordinate system,
-        // whose origin is at the top-middle of the canvas
-        // and whose y-axis points downward.
-        //
-        // The initialMousePosition field
-        // is in the actual canvas coordinate system.
         this.state = {
+            // The 'position' field locates the viewport,
+            // which is anchored with top-center gravity
+            // and described in idealized coordinates.
             position: {
                 x: 0,
                 y: 0,
             },
             dragState: {
                 dragging: false,
-                originalPosition: null,
-                initialMousePosition: null,
+                originalPosition: null,     // idealized coordinates
+                initialMousePosition: null, // canvas coordinates
             },
-            keysDown: [],
+            keysDown: [],  // a list of numeric key codes
         };
     }
 
@@ -199,8 +217,8 @@ export default class NewInfiniteCanvas extends Component {
 
     /*
      * Given a MouseEvent (or SyntheticMouseEvent) object,
-     * determine the coordinates in the actual canvas coordinate system.
-     * (Or, more precisely, the actual coordinate system of the event target.)
+     * determine the canvas coordinates of the mouse pointer
+     * (assuming the event target is in fact the canvas).
      */
     _getRelativeMousePosition(e) {
         const {left: baseX, top: baseY} = e.target.getBoundingClientRect();
@@ -282,6 +300,15 @@ export default class NewInfiniteCanvas extends Component {
         }
     }
 
+    /*
+     * Given a starting point and a displacement, move the viewport.
+     *
+     * Both arguments should have shape { x: number, y: number }.
+     * The first is in idealized coordinates,
+     * and should be the value of 'this.state.position' before the pan.
+     * The second is in canvas coordinates,
+     * and indicates the desired vector displacement across the canvas.
+     */
     _pan(originalPosition, canvasDeltaXY) {
         const newY = Math.max(0, originalPosition.y + canvasDeltaXY.y);
         const scalingFactor = this._getScalingFactor(newY);
@@ -304,8 +331,8 @@ export default class NewInfiniteCanvas extends Component {
     }
 
     /*
-     * Get the dimensions of any (every) row, in "actual" (canvas) coordinates.
-     * Return value has type { width: number, height: number }.
+     * Get the dimensions of any (every) row, in canvas coordinates.
+     * Return value has shape { width: number, height: number }.
      *
      * The width of each row is just the width of the canvas,
      * and the height is determined from the `levels` prop
@@ -324,6 +351,12 @@ export default class NewInfiniteCanvas extends Component {
     /*
      * Determine the horizontal scaling factor that should be used
      * when the top of the viewport is at the given y-position.
+     *
+     * This is the scaling-apart factor for the nodes,
+     * and also the compression factor for the viewport;
+     * for example, if the value is 3,
+     * that indicates that the nodes should be spaced 3 times further apart,
+     * and also that the viewport should be a third of its original size.
      */
     _getScalingFactor(y) {
         return Math.pow(2, y / this._getRowDimensions().height);
