@@ -174,13 +174,7 @@ export default class NewInfiniteCanvas extends Component {
             const deltaX = -(newMouse.x - oldMouse.x);
             const deltaY = -(newMouse.y - oldMouse.y);
 
-            const newY = Math.max(0, dragState.originalPosition.y + deltaY);
-
-            const scalingFactor = this._getScalingFactor(newY);
-            const newX = dragState.originalPosition.x + deltaX / scalingFactor;
-
-            const finalPosition = this._clampPosition({ x: newX, y: newY });
-            this.setState({ ...this.state, position: finalPosition });
+            this._pan(dragState.originalPosition, {x: deltaX, y: deltaY});
         }
     }
 
@@ -255,23 +249,22 @@ export default class NewInfiniteCanvas extends Component {
                     }
                     const keys = this.state.keysDown;
                     const deltas = keys.map(k => this._getMotionDirection(k));
-                    const {x: deltaX, y: deltaY} = deltas.reduce(
+                    const sumDelta = deltas.reduce(
                         (acc, d) => ({x: acc.x + d.x, y: acc.y + d.y}),
                         {x: 0, y: 0});
+                    const clampedDelta = {
+                        x: Math.sign(sumDelta.x),
+                        y: Math.sign(sumDelta.y),
+                    };
 
                     const slowness = 90;  // frames to traverse full canvas
                     const velocityX = this.refs.canvas.width / slowness;
                     const velocityY = this.refs.canvas.height / slowness;
-
-                    const newY = Math.max(0, this.state.position.y +
-                        velocityY * deltaY);
-                    const scalingFactor = this._getScalingFactor(newY);
-                    const newX = this.state.position.x +
-                        velocityX * deltaX / scalingFactor;
-                    const finalPosition = this._clampPosition(
-                        { x: newX, y: newY });
-
-                    this.setState({ ...this.state, position: finalPosition });
+                    const finalDeltas = {
+                        x: velocityX * clampedDelta.x,
+                        y: velocityY * clampedDelta.y,
+                    };
+                    this._pan(this.state.position, finalDeltas);
                 }, 1000 / 60);
             }
         });
@@ -287,6 +280,15 @@ export default class NewInfiniteCanvas extends Component {
             window.clearInterval(this._keyInterval);
             this._keyInterval = null;
         }
+    }
+
+    _pan(originalPosition, canvasDeltaXY) {
+        const newY = Math.max(0, originalPosition.y + canvasDeltaXY.y);
+        const scalingFactor = this._getScalingFactor(newY);
+        const newX = originalPosition.x + canvasDeltaXY.x / scalingFactor;
+
+        const finalPosition = this._clampPosition({ x: newX, y: newY });
+        this.setState({ ...this.state, position: finalPosition });
     }
 
     _resizeCanvas() {
