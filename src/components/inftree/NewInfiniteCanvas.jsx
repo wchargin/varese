@@ -74,7 +74,7 @@
  * your actual position should change by $x / v_w$.
  * Happily, that's a reasonably simple calculation to make!
  */
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 
 export default class NewInfiniteCanvas extends Component {
 
@@ -87,11 +87,11 @@ export default class NewInfiniteCanvas extends Component {
         return <canvas
             ref="canvas"
             width={720}
-            height={600}
+            height={this.props.height}
             style={{
                 outline: "thin red solid",
                 width: "100%",
-                height: 600,
+                height: this.props.height,
             }}
         >
             <div className="alert alert-danger">
@@ -147,3 +147,11 @@ export default class NewInfiniteCanvas extends Component {
     }
 
 }
+NewInfiniteCanvas.propTypes = {
+    height: PropTypes.number,
+    levels: PropTypes.number,
+};
+NewInfiniteCanvas.defaultProps = {
+    height: 600,
+    levels: 4,
+};
