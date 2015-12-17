@@ -80,7 +80,26 @@ export default class NewInfiniteCanvas extends Component {
 
     constructor() {
         super();
-        this.state = { };
+
+        // In this state object,
+        // the state.position and state.dragState.originalPosition fields
+        // are in our idealized coordinate system,
+        // whose origin is at the top-middle of the canvas
+        // and whose y-axis points downward.
+        //
+        // The initialMousePosition field
+        // is in the actual canvas coordinate system.
+        this.state = {
+            position: {
+                x: 0,
+                y: 0,
+            },
+            dragState: {
+                dragging: false,
+                originalPosition: null,
+                initialMousePosition: null,
+            },
+        };
     }
 
     render() {
@@ -93,6 +112,11 @@ export default class NewInfiniteCanvas extends Component {
                 width: "100%",
                 height: this.props.height,
             }}
+            //
+            onMouseDown={this._handleMouseDown.bind(this)}
+            onMouseMove={this._handleMouseMove.bind(this)}
+            onMouseUp={this._handleMouseUp.bind(this)}
+            onMouseLeave={this._handleMouseLeave.bind(this)}
         >
             <div className="alert alert-danger">
                 <strong>Uh oh!</strong>
@@ -124,6 +148,67 @@ export default class NewInfiniteCanvas extends Component {
     componentDidUpdate() {
         this._resizeCanvas();
         this._draw();
+    }
+
+    _handleMouseDown(e) {
+        this.setState({
+            ...this.state,
+            dragState: {
+                dragging: true,
+                originalPosition: this.state.position,
+                initialMousePosition: this._getRelativeMousePosition(e),
+            },
+        });
+    }
+
+    _handleMouseMove(e) {
+        const {dragState} = this.state;
+        if (dragState.dragging) {
+            const newMouse = this._getRelativeMousePosition(e);
+            const oldMouse = dragState.initialMousePosition;
+            const deltaX = -(newMouse.x - oldMouse.x);
+            const deltaY = -(newMouse.y - oldMouse.y);
+
+            const newY = Math.max(0, dragState.originalPosition.y + deltaY);
+
+            const scalingFactor = this._getScalingFactor(newY);
+            const newX = dragState.originalPosition.x + deltaX / scalingFactor;
+
+            const finalPosition = this._clampPosition({ x: newX, y: newY });
+            this.setState({ ...this.state, position: finalPosition });
+        }
+    }
+
+    _handleMouseUp() {
+        this._stopDrag();
+    }
+
+    _handleMouseLeave() {
+        this._stopDrag();
+    }
+
+    _stopDrag() {
+        this.setState({
+            ...this.state,
+            dragState: {
+                dragging: false,
+                originalPosition: null,
+                initialMousePosition: null,
+            },
+        });
+    }
+
+    /*
+     * Given a MouseEvent (or SyntheticMouseEvent) object,
+     * determine the coordinates in the actual canvas coordinate system.
+     * (Or, more precisely, the actual coordinate system of the event target.)
+     */
+    _getRelativeMousePosition(e) {
+        const {left: baseX, top: baseY} = e.target.getBoundingClientRect();
+        return {
+            x: e.clientX - baseX,
+            y: e.clientY - baseY,
+        };
     }
 
     _resizeCanvas() {
