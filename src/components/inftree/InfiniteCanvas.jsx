@@ -230,14 +230,18 @@ export default class InfiniteCanvas extends Component {
 
     _getMotionDirection(which) {
         switch (which) {
-            case 0x57:  // W
-                return { x: 0, y: -1 };
             case 0x41:  // A
+            case 0x25:  // Left
                 return { x: -1, y: 0 };
-            case 0x53:  // S
-                return { x: 0, y: +1 };
+            case 0x57:  // W
+            case 0x26:  // Up
+                return { x: 0, y: -1 };
             case 0x44:  // D
+            case 0x27:  // Right
                 return { x: +1, y: 0 };
+            case 0x53:  // S
+            case 0x28:  // Down
+                return { x: 0, y: +1 };
             default:
                 return null;
         }
