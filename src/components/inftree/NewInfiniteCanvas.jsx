@@ -310,11 +310,29 @@ export default class NewInfiniteCanvas extends Component {
      * and indicates the desired vector displacement across the canvas.
      */
     _pan(originalPosition, canvasDeltaXY) {
-        const newY = Math.max(0, originalPosition.y + canvasDeltaXY.y);
-        const scalingFactor = this._getScalingFactor(newY);
-        const newX = originalPosition.x + canvasDeltaXY.x / scalingFactor;
+        const {width: rowWidth, height: rowHeight} = this._getRowDimensions();
 
-        const finalPosition = this._clampPosition({ x: newX, y: newY });
+        // We use some exponential factors 2^row when rendering,
+        // and bizarre things start happening at really high rows.
+        // This seems to happen when we pass Number.MAX_SAFE_INTEGER,
+        // so we'll clamp it there and see what happens!
+        const maxLevel = Math.log2(Number.MAX_SAFE_INTEGER);
+
+        const newY = originalPosition.y + canvasDeltaXY.y;
+        const minY = 0;
+        const maxY = (maxLevel - this.props.levels) * rowHeight;
+        const finalY = Math.max(minY, Math.min(newY, maxY));
+
+        const scalingFactor = this._getScalingFactor(finalY);
+
+        const newX = originalPosition.x + canvasDeltaXY.x / scalingFactor;
+        const viewportWidth = rowWidth / scalingFactor;
+        const rangeX = rowWidth - viewportWidth;
+        const minX = -rangeX / 2;
+        const maxX = +rangeX / 2;
+        const finalX = Math.max(minX, Math.min(newX, maxX));
+
+        const finalPosition = { x: finalX, y: finalY };
         this.setState({ ...this.state, position: finalPosition });
     }
 
@@ -360,20 +378,6 @@ export default class NewInfiniteCanvas extends Component {
      */
     _getScalingFactor(y) {
         return Math.pow(2, y / this._getRowDimensions().height);
-    }
-
-    _clampPosition(position) {
-        const {x, y} = position;
-        const rowWidth = this._getRowDimensions().width;
-        const scalingFactor = this._getScalingFactor(y);
-        const viewportWidth = rowWidth / scalingFactor;
-        const range = rowWidth - viewportWidth;
-        const maxX = range / 2;
-        const minX = -maxX;
-        return {
-            x: Math.max(minX, Math.min(x, maxX)),
-            y: Math.max(0, y),
-        };
     }
 
     _draw() {
