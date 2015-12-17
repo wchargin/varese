@@ -5,7 +5,7 @@ import * as Actions from '../../Actions';
 
 import Page from '../Page';
 
-import InfiniteCanvas from './InfiniteCanvas';
+import InfiniteTrichordTree from './InfiniteTrichordTree';
 import ViewOptions from '../tree/ViewOptions';
 
 class InfiniteTreeExplorer extends Component {
@@ -31,8 +31,8 @@ class InfiniteTreeExplorer extends Component {
                 {...this.props.treeViewOptions}
                 {...this.props.viewOptionsHandlers}
             />
-            <InfiniteCanvas
-                levels={this.props.treeViewOptions.levels}
+            <InfiniteTrichordTree
+                viewOptions={this.props.treeViewOptions}
             />
         </Page>;
     }
