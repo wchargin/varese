@@ -274,23 +274,45 @@ export default class NewInfiniteCanvas extends Component {
 
         const viewportWidth = rowWidth / scalingFactor;
         const viewportXc = this.state.position.x + rowWidth / 2;
+        const viewportXl = viewportXc - viewportWidth / 2;
+        const viewportXr = viewportXc + viewportWidth / 2;
 
-        // TODO(william): Only render visible nodes.
-        for (let row = 0; row < 8; row++) {
-            const nodes = Math.pow(2, row);
+        const radius = 5;
 
+        // Eventually, these will come from the half-width and half-height
+        // of the actual rendered chord display.
+        // For now, that display is just a circle, so use its radius.
+        const paddingX = radius;
+        const paddingY = radius;
+
+        // The y-position of the top of the top row.
+        const topY = this.state.position.y - rowHeight / 2;
+        const rowMin = Math.ceil((topY - paddingY) / rowHeight);
+        const rowMax = Math.floor((topY + height + paddingY) / rowHeight);
+
+        for (let row = rowMin; row <= rowMax; row++) {
             const absoluteYc = rowHeight * (row + 0.5);
             const realYc = absoluteYc - this.state.position.y;
 
-            for (let col = 0; col < nodes; col++) {
-                ctx.fillStyle = `rgba(0, 0, 0, ${Math.pow(0.8, row)})`;
+            const nodes = Math.pow(2, row);
+            const absolutePaddingX = paddingX / scalingFactor;
+            const colMin = Math.ceil(
+                nodes * (viewportXl - absolutePaddingX) / rowWidth - 0.5);
+            const colMax = Math.floor(
+                nodes * (viewportXr + absolutePaddingX) / rowWidth - 0.5);
+
+            for (let col = colMin; col <= colMax; col++) {
+                const hue = (row % 16) / 16 * 360;
+                const alpha = Math.pow(0.75, row / 16);
+                ctx.fillStyle = `hsla(${hue}, 100%, 50%, ${alpha})`;
+
                 const absoluteXc = rowWidth * (col + 0.5) / nodes;
                 const absoluteViewportXc = absoluteXc - viewportXc;
                 const relativeXc = absoluteViewportXc / viewportWidth;
                 const realXc = rowWidth / 2 + relativeXc * width;
 
                 ctx.beginPath();
-                ctx.arc(realXc, realYc, 5, 0, 2 * Math.PI);
+                ctx.arc(realXc, realYc, radius, 0, 2 * Math.PI);
                 ctx.fill();
             }
         }
