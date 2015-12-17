@@ -270,47 +270,29 @@ export default class NewInfiniteCanvas extends Component {
         ctx.clearRect(0, 0, width, height);
 
         const {width: rowWidth, height: rowHeight} = this._getRowDimensions();
+        const scalingFactor = this._getScalingFactor(this.state.position.y);
 
-        // Temporary proof of concept to test _getScalingFactor;
-        // each row should be equally divided into some number of dots,
-        // each centered in a virtual viewport.
-        ctx.fillStyle = '#000';
-        for (let row = 0; row < this.props.levels; row++) {
-            const rowTop = row * rowHeight;
-            const rowBottom = rowTop + rowHeight;
-            const rowMid = rowBottom + (rowTop - rowBottom) / 2;
-            const per = this._getScalingFactor(rowTop);
-            const each = rowWidth / per;
-            for (let col = 0; col < each; col++) {
-                const left = each * col;
-                const right = left + each;
-                const mid = left + (right - left) / 2;
+        const viewportWidth = rowWidth / scalingFactor;
+        const viewportXc = this.state.position.x + rowWidth / 2;
+
+        // TODO(william): Only render visible nodes.
+        for (let row = 0; row < 8; row++) {
+            const nodes = Math.pow(2, row);
+
+            const absoluteYc = rowHeight * (row + 0.5);
+            const realYc = absoluteYc - this.state.position.y;
+
+            for (let col = 0; col < nodes; col++) {
+                ctx.fillStyle = `rgba(0, 0, 0, ${Math.pow(0.8, row)})`;
+                const absoluteXc = rowWidth * (col + 0.5) / nodes;
+                const absoluteViewportXc = absoluteXc - viewportXc;
+                const relativeXc = absoluteViewportXc / viewportWidth;
+                const realXc = rowWidth / 2 + relativeXc * width;
+
                 ctx.beginPath();
-                ctx.arc(mid, rowMid, 5, 0, Math.PI * 2);
+                ctx.arc(realXc, realYc, 5, 0, 2 * Math.PI);
                 ctx.fill();
-                ctx.beginPath();
-                ctx.rect(left, rowTop, each, this.props.height);
-                ctx.stroke();
             }
-        }
-
-        // Temporary proof of concept to test _clampPosition;
-        // each (fractional) row should have its two extreme viewports shaded.
-        ctx.fillStyle = 'rgba(0, 0, 255, 0.1)';
-        for (let row = 0; row < this.props.levels; row += 0.25) {
-            const rowTop = row * rowHeight;
-            const viewportWidth = rowWidth / this._getScalingFactor(rowTop);
-            const minCenter = this._clampPosition({x: -Infinity, y: rowTop}).x;
-            const maxCenter = this._clampPosition({x: +Infinity, y: rowTop}).x;
-            const offset = rowWidth / 2;
-            ctx.beginPath();
-            ctx.rect(offset + minCenter - viewportWidth / 2, rowTop,
-                viewportWidth, rowHeight);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.rect(offset + maxCenter - viewportWidth / 2, rowTop,
-                viewportWidth, rowHeight);
-            ctx.fill();
         }
     }
 
