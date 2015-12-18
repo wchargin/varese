@@ -3,11 +3,11 @@ import {connect} from 'react-redux';
 
 import * as Actions from '../../Actions';
 
-import Page from './../Page';
-import TrichordTree from './TrichordTree';
 import ChordInput from '../ChordInput';
+import Page from './../Page';
 import RationalizerConfig from '../RationalizerConfig';
-import ViewOptions from './ViewOptions';
+import TrichordTree from './TrichordTree';
+import ViewOptions from '../ViewOptions';
 
 import {extendRationalizer} from '../../HarmonicSeries';
 
@@ -44,6 +44,7 @@ class TreeExplorer extends Component {
                 exactly={3}
             />
             <ViewOptions
+                infinite={false}
                 {...this.props.treeViewOptions}
                 {...this.props.viewOptionsHandlers}
             />
@@ -78,6 +79,8 @@ function mapDispatchToProps(dispatch) {
             Actions.setAcousticRatio(index, ratio)),
         viewOptionsHandlers: {
             onSetLevels: levels => dispatch(Actions.setTreeLevels(levels)),
+            onSetInfiniteLevels: levels => dispatch(
+                Actions.setInfiniteTreeLevels(levels)),
             onSetShowRoots: showRoots => dispatch(
                 Actions.setTreeShowRoots(showRoots)),
             onSetShowOctaves: showOctaves => dispatch(
