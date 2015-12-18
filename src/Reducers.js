@@ -4,7 +4,12 @@ import {canonicalValues} from './HarmonicData';
 const initialState = {
     acousticRatios: canonicalValues,
     treeViewOptions: {
-        levels: 4,
+        // There are two different 'levels' properties:
+        // one for the finite tree, and one for the infinite tree.
+        // All the other properties are shared.
+        levels: 4,          // for the finite tree; must be discrete
+        infiniteLevels: 3,  // for the infinite tree; can be real
+        //
         showRoots: true,
         showOctaves: true,
         wide: false,
@@ -99,6 +104,8 @@ export default function reducer(state = initialState, action) {
             return setAcousticRatio(state, action.index, action.ratio);
         case "SET_TREE_LEVELS":
             return setTreeViewOption(state, 'levels', action.levels);
+        case "SET_INFINITE_TREE_LEVELS":
+            return setTreeViewOption(state, 'infiniteLevels', action.levels);
         case "SET_TREE_SHOW_ROOTS":
             return setTreeViewOption(state, 'showRoots', action.showRoots);
         case "SET_TREE_SHOW_OCTAVES":

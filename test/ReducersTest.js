@@ -54,6 +54,13 @@ describe('reducer', () => {
         });
     });
 
+    it(":SET_INFINITE_TREE_LEVELS sets the infinite tree levels",
+        () => [4, 5].forEach(levels =>
+            verifyShapeAnd(
+                state => expect(state.treeViewOptions.infiniteLevels)
+                    .to.equal(levels),
+                reducer(undefined, Actions.setInfiniteTreeLevels(levels)))));
+
     it(":SET_TREE_LEVELS sets the tree levels", () => [5, 6].forEach(levels =>
         verifyShapeAnd(
             state => expect(state.treeViewOptions.levels).to.equal(levels),
