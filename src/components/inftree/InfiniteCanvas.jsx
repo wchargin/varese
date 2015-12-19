@@ -505,8 +505,27 @@ export default class InfiniteCanvas extends Component {
         ctx.strokeStyle = "black";
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.rect(x - width / 2, y, width, height);
+        this._roundRect(ctx, x - width / 2, y, width, height, padding);
         ctx.stroke();
+    }
+
+    /*
+     * Assuming a path has been started on the given context,
+     * draw a rounded rectangle with the given top-left corner and dimensions
+     * and the given border-radius.
+     * (The path is not stroked or filled.)
+     */
+    _roundRect(ctx, x, y, w, h, r) {
+        const p2 = Math.PI / 2;
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.arc(x + w - r, y + r, r, 3 * p2, 0);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.arc(x + w - r, y + h - r, r, 0, p2);
+        ctx.lineTo(x + r, y + h);
+        ctx.arc(x + r, y + h - r, r, p2, 2 * p2);
+        ctx.lineTo(x, y + r);
+        ctx.arc(x + r, y + r, r, 2 * p2, 3 * p2);
     }
 
 }
