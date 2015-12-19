@@ -100,6 +100,8 @@
  */
 import React, {Component, PropTypes} from 'react';
 
+import {positionToSemitones} from '../../TreeSpace';
+
 export default class InfiniteCanvas extends Component {
 
     constructor() {
@@ -457,8 +459,10 @@ export default class InfiniteCanvas extends Component {
 
     _drawNode(ctx, row, col, x, y) {
         // TODO(william): fix dummy values
+        const tree = 1;
+        const semitones = positionToSemitones(tree, row, col);
+        const semitoneNames = semitones.map(x => `[${x}]`);
         const noteNames = ["C4", "E4", "G4"];
-        const semitoneNames = ["[4]", "[7]"];
         const scale = 0.5 + 0.5 * Math.sqrt(1 - y / ctx.canvas.height);
 
         const fontSize = 14 * scale;
