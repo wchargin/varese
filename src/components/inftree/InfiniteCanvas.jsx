@@ -436,9 +436,10 @@ export default class InfiniteCanvas extends Component {
         const rowMin = Math.ceil(topY / rowHeight);
         const rowMax = Math.floor((topY + height) / rowHeight);
 
-        // Paint one extra row in each direction
-        // so that things move into view smoothly.
-        for (let row = Math.max(0, rowMin - 1); row <= rowMax + 1; row++) {
+        // Paint one extra row above so that things move into view smoothly.
+        // We don't need to paint a row below
+        // because everything has top-gravity.
+        for (let row = Math.max(0, rowMin - 1); row <= rowMax; row++) {
             const absoluteYc = rowHeight * (row + 0.5);
             const canvasYc = absoluteYc - this.state.position.y;
 
