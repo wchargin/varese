@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 
+import CustomPropTypes from './CustomPropTypes';
 import {Table, Row, Cell, LabelCell} from './SettingsTable';
 
 /*
@@ -8,10 +9,12 @@ import {Table, Row, Cell, LabelCell} from './SettingsTable';
 export default class LimitsOptions extends Component {
 
     render() {
+        const {values, handlers} = this.props;
+
         const limitValue = limit =>
-            value => this.props.onSetLimitValue(limit, value);
+            value => handlers.onSetLimitValue(limit, value);
         const limitEnabled = limit =>
-            enabled => this.props.onSetLimitEnabled(limit, enabled);
+            enabled => handlers.onSetLimitEnabled(limit, enabled);
 
         return <Table>
             <Row>
@@ -25,10 +28,10 @@ export default class LimitsOptions extends Component {
             <Row>
                 <Cell>
                     <LimitControls
-                        min={this.props.minIndividual}
-                        max={this.props.maxIndividual}
-                        minEnabled={this.props.minIndividualEnabled}
-                        maxEnabled={this.props.maxIndividualEnabled}
+                        min={values.minIndividual}
+                        max={values.maxIndividual}
+                        minEnabled={values.minIndividualEnabled}
+                        maxEnabled={values.maxIndividualEnabled}
                         onSetMin={limitValue("minIndividual")}
                         onSetMax={limitValue("maxIndividual")}
                         onSetMinEnabled={limitEnabled("minIndividual")}
@@ -41,10 +44,10 @@ export default class LimitsOptions extends Component {
                 </Cell>
                 <Cell>
                     <LimitControls
-                        min={this.props.minCombined}
-                        max={this.props.maxCombined}
-                        minEnabled={this.props.minCombinedEnabled}
-                        maxEnabled={this.props.maxCombinedEnabled}
+                        min={values.minCombined}
+                        max={values.maxCombined}
+                        minEnabled={values.minCombinedEnabled}
+                        maxEnabled={values.maxCombinedEnabled}
                         onSetMin={limitValue("minCombined")}
                         onSetMax={limitValue("maxCombined")}
                         onSetMinEnabled={limitEnabled("minCombined")}
@@ -60,17 +63,8 @@ export default class LimitsOptions extends Component {
     }
 }
 LimitsOptions.propTypes = {
-    minCombined: PropTypes.number.isRequired,
-    maxCombined: PropTypes.number.isRequired,
-    minIndividual: PropTypes.number.isRequired,
-    maxIndividual: PropTypes.number.isRequired,
-    minCombinedEnabled: PropTypes.bool.isRequired,
-    maxCombinedEnabled: PropTypes.bool.isRequired,
-    minIndividualEnabled: PropTypes.bool.isRequired,
-    maxIndividualEnabled: PropTypes.bool.isRequired,
-    //
-    onSetLimitValue: PropTypes.func.isRequired,
-    onSetLimitEnabled: PropTypes.func.isRequired,
+    values: CustomPropTypes.limits.isRequired,
+    handlers: CustomPropTypes.limitsHandlers.isRequired,
 };
 
 /*

@@ -69,9 +69,11 @@ export default class ViewOptions extends Component {
                 </Row>
             </Table>
             <LimitsOptions
-                {...values.limits}
-                onSetLimitValue={handlers.onSetLimitValue}
-                onSetLimitEnabled={handlers.onSetLimitEnabled}
+                values={values.limits}
+                handlers={{
+                    onSetLimitValue: handlers.onSetLimitValue,
+                    onSetLimitEnabled: handlers.onSetLimitEnabled,
+                }}
             />
         </div>;
     }

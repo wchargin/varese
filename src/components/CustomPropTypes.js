@@ -12,6 +12,12 @@ export const limitsShape = {
 };
 export const limits = PropTypes.shape(limitsShape);
 
+export const limitsHandlersShape = {
+    onSetLimitValue: PropTypes.func.isRequired,
+    onSetLimitEnabled: PropTypes.func.isRequired,
+};
+export const limitsHandlers = PropTypes.shape(limitsHandlersShape);
+
 export const viewOptionsShape = {
     levels: PropTypes.number.isRequired,
     infiniteLevels: PropTypes.number.isRequired,
@@ -28,14 +34,15 @@ export const viewOptionsHandlersShape = {
     onSetShowRoots: PropTypes.func.isRequired,
     onSetShowOctaves: PropTypes.func.isRequired,
     onSetWide: PropTypes.func.isRequired,
-    onSetLimitValue: PropTypes.func.isRequired,
-    onSetLimitEnabled: PropTypes.func.isRequired,
+    ...limitsHandlersShape,
 };
 export const viewOptionsHandlers = PropTypes.shape(viewOptionsHandlersShape);
 
 export default {
     limitsShape,
     limits,
+    limitsHandlersShape,
+    limitsHandlers,
     viewOptionsShape,
     viewOptions,
     viewOptionsHandlersShape,
