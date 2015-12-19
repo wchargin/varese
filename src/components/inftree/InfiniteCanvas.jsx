@@ -513,8 +513,16 @@ export default class InfiniteCanvas extends Component {
 
         const width = finalState.widestLine + 2 * padding;
         const height = (finalState.textYPosition + padding) - y;
-        ctx.strokeStyle = 'rgb(27, 27, 27)';
-        ctx.fillStyle = 'rgb(245, 245, 245)';
+
+        // HSV is great! But we have to use HSL :(
+        const satHSV = 0.1;
+        const light = 0.5 * (2 - satHSV);
+        const sat = satHSV / (1 - Math.abs(2 * light - 1));
+        const hslString = (h, s, l) =>
+            `hsl(${h * 360}, ${s * 100}%, ${l * 100}%)`;
+        ctx.fillStyle = hslString(row / 16, sat, light);
+        ctx.strokeStyle = hslString(row / 16, sat, 0.25);
+
         ctx.lineWidth = 1;
         ctx.beginPath();
         this._roundRect(ctx, x - width / 2, y, width, height, padding);
