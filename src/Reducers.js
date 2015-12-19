@@ -6,7 +6,7 @@ const initialState = {
     treeViewOptions: {
         // There are two different 'levels' properties:
         // one for the finite tree, and one for the infinite tree.
-        // All the other properties are shared.
+        // All the other properties are shared, unless otherwise noted.
         levels: 4,          // for the finite tree; must be discrete
         infiniteLevels: 3,  // for the infinite tree; can be real
         //
@@ -25,6 +25,10 @@ const initialState = {
             minIndividualEnabled: false,
             maxIndividualEnabled: false,
         },
+        //
+        // These fields are for the infinite tree only.
+        treeNumber: 1,  // the 'n' in "the root has semitones '[n][n]'"
+        rootBass: 0,    // semitones above middle C of the bass note
     },
 };
 
@@ -112,6 +116,10 @@ export default function reducer(state = initialState, action) {
             return setTreeViewOption(state, 'showOctaves', action.showOctaves);
         case "SET_TREE_WIDE":
             return setTreeViewOption(state, 'wide', action.wide);
+        case "SET_TREE_TREE_NUMBER":  // ugh
+            return setTreeViewOption(state, 'treeNumber', action.treeNumber);
+        case "SET_TREE_ROOT_BASS":
+            return setTreeViewOption(state, 'rootBass', action.rootBass);
         case "SET_TREE_LIMIT_VALUE":
             return setTreeLimitValue(state, action.limit, action.value);
         case "SET_TREE_LIMIT_ENABLED":

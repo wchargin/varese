@@ -47,6 +47,20 @@ export function setTreeWide(wide) {
     };
 }
 
+export function setTreeTreeNumber(treeNumber) {
+    return {
+        type: "SET_TREE_TREE_NUMBER",
+        treeNumber,
+    };
+}
+
+export function setTreeRootBass(rootBass) {
+    return {
+        type: "SET_TREE_ROOT_BASS",
+        rootBass,
+    };
+}
+
 export function setTreeLimitValue(limit, value) {
     return {
         type: "SET_TREE_LIMIT_VALUE",

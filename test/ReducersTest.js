@@ -84,6 +84,18 @@ describe('reducer', () => {
                 state => expect(state.treeViewOptions.wide).to.be[flag],
                 reducer(undefined, Actions.setTreeWide(flag)))));
 
+    it(":SET_TREE_TREE_NUMBER sets the 'treeNumber' field", () =>
+        [1, 2, 3].forEach(value =>
+            verifyShapeAnd(
+                state => expect(state.treeViewOptions.treeNumber).to.equal(value),
+                reducer(undefined, Actions.setTreeTreeNumber(value)))));
+
+    it(":SET_TREE_ROOT_BASS sets the 'rootBass' field", () =>
+        [-10, 0, 33].forEach(value =>
+            verifyShapeAnd(
+                state => expect(state.treeViewOptions.rootBass).to.equal(value),
+                reducer(undefined, Actions.setTreeRootBass(value)))));
+
     describe(':SET_TREE_LIMIT_VALUE', () => {
         it("sets a valid limit value", () => {
             [10, 20].forEach(value =>
