@@ -10,6 +10,8 @@ import React, {Component, PropTypes} from 'react';
 import Folding from '../../Folding';
 import {flatten} from '../../Utils';
 
+import CustomPropTypes from '../CustomPropTypes';
+
 import TreeView from './TreeView';
 import TrichordView from './TrichordView';
 import InvalidRootWarnings from './InvalidRootWarnings';
@@ -97,21 +99,5 @@ TrichordTree.propTypes = {
     rationalizer: PropTypes.func.isRequired,
     rootChord: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
     onClickChord: PropTypes.func.isRequired,
-
-    viewOptions: PropTypes.shape({
-        levels: PropTypes.number.isRequired,
-        showRoots: PropTypes.bool.isRequired,
-        showOctaves: PropTypes.bool.isRequired,
-        wide: PropTypes.bool.isRequired,
-        limits: PropTypes.shape({
-            minCombined: PropTypes.number.isRequired,
-            maxCombined: PropTypes.number.isRequired,
-            minIndividual: PropTypes.number.isRequired,
-            maxIndividual: PropTypes.number.isRequired,
-            minCombinedEnabled: PropTypes.bool.isRequired,
-            maxCombinedEnabled: PropTypes.bool.isRequired,
-            minIndividualEnabled: PropTypes.bool.isRequired,
-            maxIndividualEnabled: PropTypes.bool.isRequired,
-        }).isRequired,
-    }).isRequired,
+    viewOptions: CustomPropTypes.viewOptions.isRequired,
 };

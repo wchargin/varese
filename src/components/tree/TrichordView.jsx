@@ -4,6 +4,8 @@ import {findChordRootOffset} from '../../HarmonicSeries';
 import {pitchToName, parseNameOrPitch} from '../../PitchNames';
 import {flatten} from '../../Utils';
 
+import CustomPropTypes from '../CustomPropTypes';
+
 import ActionBar from './ActionBar';
 import ChordEngraving from '../ChordEngraving';
 
@@ -241,24 +243,10 @@ TrichordView.propTypes = {
     notes: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
     onClick: PropTypes.func,
     size: PropTypes.oneOf([1, 2, 3]),
-
-    // If provided, will make this node editable.
-    onChange: PropTypes.func,
-
+    onChange: PropTypes.func,  // if provided, will make this node editable.
     showRoot: PropTypes.bool.isRequired,
     showOctave: PropTypes.bool.isRequired,
-
-    // This prop isn't required, but if it's present all the keys should exist.
-    limits: PropTypes.shape({
-        minCombined: PropTypes.number.isRequired,
-        maxCombined: PropTypes.number.isRequired,
-        minIndividual: PropTypes.number.isRequired,
-        maxIndividual: PropTypes.number.isRequired,
-        minCombinedEnabled: PropTypes.bool.isRequired,
-        maxCombinedEnabled: PropTypes.bool.isRequired,
-        minIndividualEnabled: PropTypes.bool.isRequired,
-        maxIndividualEnabled: PropTypes.bool.isRequired,
-    }),
+    limits: CustomPropTypes.limits,
 };
 TrichordView.defaultProps = {
     size: 3,
