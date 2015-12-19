@@ -68,6 +68,42 @@ export default class ViewOptions extends Component {
                     />
                 </Row>
             </Table>
+            {infinite && <Table>
+                <Row>
+                    <LabelCell htmlFor="treeNumber">Tree number</LabelCell>
+                    <LabelCell htmlFor="rootBass">Root chord bass</LabelCell>
+                </Row>
+                <Row>
+                    <Cell>
+                        <input
+                            ref="treeNumber"
+                            id="treeNumber"
+                            type="number"
+                            className="form-control"
+                            //
+                            min={0}
+                            max={12}
+                            value={values.treeNumber}
+                            onChange={() => handlers.onSetTreeNumber(
+                                parseInt(this.refs.treeNumber.value, 10))}
+                        />
+                    </Cell>
+                    <Cell>
+                        <input
+                            ref="rootBass"
+                            id="rootBass"
+                            type="number"
+                            className="form-control"
+                            //
+                            min={-24}
+                            max={24}
+                            value={values.rootBass}
+                            onChange={() => handlers.onSetRootBass(
+                                parseInt(this.refs.rootBass.value, 10))}
+                        />
+                    </Cell>
+                </Row>
+            </Table>}
             <LimitsOptions
                 values={values.limits}
                 handlers={{

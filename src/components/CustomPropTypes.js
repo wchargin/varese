@@ -23,6 +23,8 @@ export const viewOptions = PropTypes.shape({
     showRoots: PropTypes.bool.isRequired,
     showOctaves: PropTypes.bool.isRequired,
     wide: PropTypes.bool.isRequired,
+    treeNumber: PropTypes.number.isRequired,
+    rootBass: PropTypes.number.isRequired,
     limits: limits.isRequired,
 });
 
@@ -32,6 +34,8 @@ export const viewOptionsHandlers = PropTypes.shape({
     onSetShowRoots: PropTypes.func.isRequired,
     onSetShowOctaves: PropTypes.func.isRequired,
     onSetWide: PropTypes.func.isRequired,
+    onSetTreeNumber: PropTypes.func.isRequired,
+    onSetRootBass: PropTypes.func.isRequired,
     ...limitsHandlersShape,
 });
 

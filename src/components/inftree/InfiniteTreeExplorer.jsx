@@ -62,6 +62,10 @@ function mapDispatchToProps(dispatch) {
             onSetShowOctaves: showOctaves => dispatch(
                 Actions.setTreeShowOctaves(showOctaves)),
             onSetWide: wide => dispatch(Actions.setTreeWide(wide)),
+            onSetTreeNumber: treeNumber => dispatch(
+                Actions.setTreeTreeNumber(treeNumber)),
+            onSetRootBass: rootBass => dispatch(
+                Actions.setTreeRootBass(rootBass)),
             onSetLimitValue: (limit, value) => dispatch(
                 Actions.setTreeLimitValue(limit, value)),
             onSetLimitEnabled: (limit, enabled) => dispatch(
