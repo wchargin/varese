@@ -16,6 +16,8 @@ export default class InfiniteTrichordTree extends Component {
         return <div style={{...wideStyle, marginBottom: 20}}>
             <InfiniteCanvas
                 levels={this.props.viewOptions.infiniteLevels}
+                treeNumber={this.props.viewOptions.treeNumber}
+                rootBass={this.props.viewOptions.rootBass}
             />
         </div>;
     }
