@@ -5,9 +5,9 @@ import * as Actions from '../../Actions';
 
 import ChordInput from '../ChordInput';
 import Page from './../Page';
-import RationalizerConfig from '../RationalizerConfig';
+import RationalizerSettings from '../settings/RationalizerSettings';
 import TrichordTree from './TrichordTree';
-import ViewOptions from '../ViewOptions';
+import ViewOptions from '../settings/ViewOptions';
 
 import {extendRationalizer} from '../../HarmonicSeries';
 
@@ -55,7 +55,7 @@ class TreeExplorer extends Component {
                 viewOptions={this.props.treeViewOptions}
             />
             {this.props.rootsVisible &&
-                <RationalizerConfig
+                <RationalizerSettings
                     values={this.props.acousticRatios}
                     onChangeValue={this.props.onSetAcousticRatio}
                 />}

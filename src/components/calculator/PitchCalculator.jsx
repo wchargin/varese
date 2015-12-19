@@ -5,7 +5,7 @@ import * as Actions from '../../Actions';
 
 import Page from './../Page';
 import ChordComputer from './ChordComputer';
-import RationalizerConfig from '../RationalizerConfig';
+import RationalizerSettings from '../settings/RationalizerSettings';
 
 import {extendRationalizer} from '../../HarmonicSeries';
 
@@ -18,7 +18,7 @@ class PitchCalculator extends Component {
             <ChordComputer
                 rationalizer={extendRationalizer(this.props.acousticRatios)}
             />
-            <RationalizerConfig
+            <RationalizerSettings
                 values={this.props.acousticRatios}
                 onChangeValue={this.props.onSetAcousticRatio}
             />

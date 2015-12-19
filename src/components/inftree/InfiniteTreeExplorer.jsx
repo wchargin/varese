@@ -6,7 +6,7 @@ import * as Actions from '../../Actions';
 import Page from '../Page';
 
 import InfiniteTrichordTree from './InfiniteTrichordTree';
-import ViewOptions from '../ViewOptions';
+import ViewOptions from '../settings/ViewOptions';
 
 class InfiniteTreeExplorer extends Component {
 

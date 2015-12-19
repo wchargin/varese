@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 
-import CustomPropTypes from './CustomPropTypes';
+import CustomPropTypes from '../CustomPropTypes';
 import {Table, Row, Cell, LabelCell} from './SettingsTable';
 
 /*

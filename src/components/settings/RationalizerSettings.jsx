@@ -1,10 +1,10 @@
 import React, {Component, PropTypes} from 'react';
 
-import {canonicalValues, intervalNames} from '../HarmonicData';
-import Rational from '../Rational';
-import TextUtils from '../TextUtils';
+import {canonicalValues, intervalNames} from '../../HarmonicData';
+import Rational from '../../Rational';
+import TextUtils from '../../TextUtils';
 
-export default class RationalizerConfig extends Component {
+export default class RationalizerSettings extends Component {
 
     render() {
         const {values} = this.props;
@@ -85,7 +85,7 @@ export default class RationalizerConfig extends Component {
         </div>;
     }
 }
-RationalizerConfig.propTypes = {
+RationalizerSettings.propTypes = {
     values: PropTypes.arrayOf(
         PropTypes.instanceOf(Rational).isRequired).isRequired,
     onChangeValue: PropTypes.func.isRequired,

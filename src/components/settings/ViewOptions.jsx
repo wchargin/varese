@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 
-import CustomPropTypes from './CustomPropTypes';
+import CustomPropTypes from '../CustomPropTypes';
 import LimitsOptions from './LimitsOptions';
 import {Table, Row, Cell, LabelCell, CheckboxCell} from './SettingsTable';
 
