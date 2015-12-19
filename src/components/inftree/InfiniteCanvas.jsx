@@ -472,40 +472,33 @@ export default class InfiniteCanvas extends Component {
         ctx.font = `${fontSize}px ${fontFamily}`;
         ctx.fillStyle = 'black';
 
+        // Here's our little state schema that we'll keep track of.
         const initialState = {
             lastBaseline: y + padding,
         };
 
-        const orderedNoteNames = noteNames.slice().reverse();
-        const postNotesState = orderedNoteNames.reduce((st, name) => {
-            const baseline = st.lastBaseline + lineHeight;
-            const metrics = ctx.measureText(name);
+        // Define a few reusable action creators
+        // whose return values are actions of type State -> IO State...
+        const advanceBaseline = delta => state => ({
+            ...state,
+            lastBaseline: state.lastBaseline + delta,
+        });
+        const writeLines = texts => state => texts.reduce((state, text) => {
+            const newState = advanceBaseline(lineHeight)(state);
+            const metrics = ctx.measureText(text);
             const tx = x - metrics.width / 2;
-            ctx.fillText(name, tx, baseline);
-            return {
-                ...st,
-              lastBaseline: baseline,
-            };
-        }, initialState);
+            ctx.fillText(text, tx, newState.lastBaseline);
+            return newState;
+        }, state);
 
-        const postSkipState = {
-            ...postNotesState,
-            lastBaseline: postNotesState.lastBaseline + lineHeight / 2,
-        };
-
-        const orderedSemitonesNames = semitoneNames.slice().reverse();
-        const postSemitonesState = orderedSemitonesNames.reduce((st, name) => {
-            const baseline = st.lastBaseline + lineHeight;
-            const metrics = ctx.measureText(name);
-            const tx = x - metrics.width / 2;
-            ctx.fillText(name, tx, baseline);
-            return {
-                ...st,
-                lastBaseline: baseline,
-            };
-        }, postSkipState);
-
-        const finalState = postSemitonesState;
+        // ...then sequence a bunch of them together!
+        const actions = [
+            writeLines(noteNames.slice().reverse()),
+            advanceBaseline(lineHeight / 2),
+            writeLines(semitoneNames.slice().reverse()),
+        ];
+        const finalState = actions.reduce(
+            (state, action) => action(state), initialState);
 
         const width = 75 * scale;
         const height = (finalState.lastBaseline + padding) - y;
