@@ -501,19 +501,6 @@ export default class InfiniteCanvas extends Component {
         ctx.beginPath();
         ctx.rect(x - width / 2, y, width, height);
         ctx.stroke();
-
-        const radius = 5;
-        const hue = (row % 16) / 16 * 360;
-        const alpha = Math.pow(0.75, row / 16);
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.arc(x, y, radius, 0, 2 * Math.PI);
-        ctx.fillStyle = "white";
-        ctx.fill();
-        ctx.fillStyle = `hsla(${hue}, 100%, 50%, ${alpha})`;
-        ctx.strokeStyle = `hsla(${hue}, 100%, 40%, 1)`;
-        ctx.fill();
-        ctx.stroke();
     }
 
 }
