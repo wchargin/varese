@@ -116,8 +116,7 @@ export default class InfiniteCanvas extends Component {
             },
             dragState: {
                 dragging: false,
-                originalPosition: null,     // idealized coordinates
-                initialMousePosition: null, // canvas coordinates
+                lastMousePosition: null, // canvas coordinates
             },
             keysDown: [],  // a list of numeric key codes
         };
@@ -204,8 +203,7 @@ export default class InfiniteCanvas extends Component {
             ...this.state,
             dragState: {
                 dragging: true,
-                originalPosition: this.state.position,
-                initialMousePosition: this._getRelativeMousePosition(e),
+                lastMousePosition: this._getRelativeMousePosition(e),
             },
         });
     }
@@ -214,12 +212,19 @@ export default class InfiniteCanvas extends Component {
         const {dragState} = this.state;
         if (dragState.dragging) {
             const newMouse = this._getRelativeMousePosition(e);
-            const oldMouse = dragState.initialMousePosition;
+            const oldMouse = dragState.lastMousePosition;
             const deltaX = -(newMouse.x - oldMouse.x);
             const deltaY = -(newMouse.y - oldMouse.y);
             const finalPosition =
-                this._pan(dragState.originalPosition, {x: deltaX, y: deltaY});
-            this.setState({...this.state, position: finalPosition});
+                this._pan(this.state.position, {x: deltaX, y: deltaY});
+            this.setState({
+                ...this.state,
+                position: finalPosition,
+                dragState: {
+                    ...dragState,
+                    lastMousePosition: newMouse,
+                },
+            });
         }
     }
 
@@ -236,8 +241,7 @@ export default class InfiniteCanvas extends Component {
             ...this.state,
             dragState: {
                 dragging: false,
-                originalPosition: null,
-                initialMousePosition: null,
+                lastMousePosition: null,
             },
         });
     }
