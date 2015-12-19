@@ -462,13 +462,56 @@ export default class InfiniteCanvas extends Component {
     }
 
     _drawNode(ctx, row, col, x, y) {
+        // TODO(william): fix dummy values
+        const noteNames = ["C4", "E4", "G4"];
+        const semitoneNames = ["[4]", "[7]"];
+        const scale = 0.5 + 0.5 * Math.sqrt(1 - y / ctx.canvas.height);
+
+        const fontSize = 14 * scale;
+        const lineHeight = 1.2 * fontSize;
+        const padding = 5;
+        const fontFamily = '"Helvetica Neue",Helvetica,Arial,sans-serif';
+
+        ctx.font = `${fontSize}px ${fontFamily}`;
+        ctx.fillStyle = 'black';
+
+        let baseline = y + padding + lineHeight;
+        noteNames.slice().reverse().forEach(name => {
+            const metrics = ctx.measureText(name);
+            const tx = x - metrics.width / 2;
+            ctx.fillText(name, tx, baseline);
+            baseline += lineHeight;
+        });
+
+        baseline += lineHeight / 2;
+
+        semitoneNames.slice().reverse().forEach(name => {
+            const metrics = ctx.measureText(name);
+            const tx = x - metrics.width / 2;
+            ctx.fillText(name, tx, baseline);
+            baseline += lineHeight;
+        });
+
+        const width = 75 * scale;
+        const height = (baseline - fontSize + padding) - y;
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.rect(x - width / 2, y, width, height);
+        ctx.stroke();
+
         const radius = 5;
         const hue = (row % 16) / 16 * 360;
         const alpha = Math.pow(0.75, row / 16);
-        ctx.fillStyle = `hsla(${hue}, 100%, 50%, ${alpha})`;
+        ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = "white";
         ctx.fill();
+        ctx.fillStyle = `hsla(${hue}, 100%, 50%, ${alpha})`;
+        ctx.strokeStyle = `hsla(${hue}, 100%, 40%, 1)`;
+        ctx.fill();
+        ctx.stroke();
     }
 
 }
