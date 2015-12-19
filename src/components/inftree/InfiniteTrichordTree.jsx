@@ -23,6 +23,7 @@ export default class InfiniteTrichordTree extends Component {
 InfiniteTrichordTree.propTypes = {
     viewOptions: PropTypes.shape({
         levels: PropTypes.number.isRequired,
+        infiniteLevels: PropTypes.number.isRequired,
         showRoots: PropTypes.bool.isRequired,
         showOctaves: PropTypes.bool.isRequired,
         wide: PropTypes.bool.isRequired,
