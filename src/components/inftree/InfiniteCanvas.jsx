@@ -441,7 +441,7 @@ export default class InfiniteCanvas extends Component {
 
             // Similarly, paint one extra column in each direction.
             for (let col = Math.max(0, colMin - 1);
-                    col <= Math.min(nodes, colMax + 1);
+                    col <= Math.min(nodes - 1, colMax + 1);
                     col++) {
                 // We find the offset from the viewport center (OFVC)
                 // in absolute coordinates,
