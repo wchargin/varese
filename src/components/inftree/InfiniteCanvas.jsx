@@ -114,11 +114,8 @@ export default class InfiniteCanvas extends Component {
                 x: 0,
                 y: 0,
             },
-            dragState: {
-                dragging: false,
-                lastMousePosition: null, // canvas coordinates
-            },
-            keysDown: [],  // a list of numeric key codes
+            lastMouse: null,  // canvas coordinates; null unless dragging
+            keysDown: [],     // a list of numeric key codes
         };
 
         // We attach the following properties to the instance itself
@@ -201,18 +198,14 @@ export default class InfiniteCanvas extends Component {
     _handleMouseDown(e) {
         this.setState({
             ...this.state,
-            dragState: {
-                dragging: true,
-                lastMousePosition: this._getRelativeMousePosition(e),
-            },
+            lastMouse: this._getRelativeMousePosition(e),
         });
     }
 
     _handleMouseMove(e) {
-        const {dragState} = this.state;
-        if (dragState.dragging) {
+        if (this.state.lastMouse) {
             const newMouse = this._getRelativeMousePosition(e);
-            const oldMouse = dragState.lastMousePosition;
+            const oldMouse = this.state.lastMouse;
             const deltaX = -(newMouse.x - oldMouse.x);
             const deltaY = -(newMouse.y - oldMouse.y);
             const finalPosition =
@@ -220,10 +213,7 @@ export default class InfiniteCanvas extends Component {
             this.setState({
                 ...this.state,
                 position: finalPosition,
-                dragState: {
-                    ...dragState,
-                    lastMousePosition: newMouse,
-                },
+                lastMouse: newMouse,
             });
         }
     }
@@ -239,10 +229,7 @@ export default class InfiniteCanvas extends Component {
     _stopDrag() {
         this.setState({
             ...this.state,
-            dragState: {
-                dragging: false,
-                lastMousePosition: null,
-            },
+            lastMouse: null,
         });
     }
 
@@ -278,7 +265,7 @@ export default class InfiniteCanvas extends Component {
         }, () => {
             if (this._keyInterval === null) {
                 this._keyInterval = window.setInterval(() => {
-                    if (this.state.dragState.dragging) {
+                    if (this.state.lastMouse) {
                         return;
                     }
                     const keys = this.state.keysDown;
