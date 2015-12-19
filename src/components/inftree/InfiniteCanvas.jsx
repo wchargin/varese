@@ -217,8 +217,9 @@ export default class InfiniteCanvas extends Component {
             const oldMouse = dragState.initialMousePosition;
             const deltaX = -(newMouse.x - oldMouse.x);
             const deltaY = -(newMouse.y - oldMouse.y);
-
-            this._pan(dragState.originalPosition, {x: deltaX, y: deltaY});
+            const finalPosition =
+                this._pan(dragState.originalPosition, {x: deltaX, y: deltaY});
+            this.setState({...this.state, position: finalPosition});
         }
     }
 
@@ -292,7 +293,9 @@ export default class InfiniteCanvas extends Component {
                         x: velocityX * clampedDelta.x,
                         y: velocityY * clampedDelta.y,
                     };
-                    this._pan(this.state.position, finalDeltas);
+                    const finalPosition =
+                        this._pan(this.state.position, finalDeltas);
+                    this.setState({...this.state, position: finalPosition});
                 }, 1000 / 60);
             }
         });
@@ -340,13 +343,15 @@ export default class InfiniteCanvas extends Component {
     }
 
     /*
-     * Given a starting point and a displacement, move the viewport.
+     * Given a starting point and a displacement, get the new position.
      *
      * Both arguments should have shape { x: number, y: number }.
      * The first is in idealized coordinates,
      * and should be the value of 'this.state.position' before the pan.
      * The second is in canvas coordinates,
      * and indicates the desired vector displacement across the canvas.
+     *
+     * The return value is the new value for 'this.state.position'.
      */
     _pan(originalPosition, canvasDeltaXY) {
         const {width: rowWidth, height: rowHeight} = this._getRowDimensions();
@@ -371,8 +376,7 @@ export default class InfiniteCanvas extends Component {
         const maxX = +rangeX / 2;
         const finalX = Math.max(minX, Math.min(newX, maxX));
 
-        const finalPosition = { x: finalX, y: finalY };
-        this.setState({ ...this.state, position: finalPosition });
+        return { x: finalX, y: finalY };
     }
 
     /*
