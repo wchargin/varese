@@ -422,8 +422,6 @@ export default class InfiniteCanvas extends Component {
         const viewportXl = viewportXc - viewportWidth / 2;
         const viewportXr = viewportXc + viewportWidth / 2;
 
-        const radius = 5;
-
         // The y-position of the top of the top row, in absolute coordinates.
         const topY = this.state.position.y - rowHeight / 2;
         const rowMin = Math.ceil(topY / rowHeight);
