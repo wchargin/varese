@@ -1,3 +1,5 @@
+import {outfoldUp, outfoldDown} from './Folding';
+
 export function positionToPath(row, col, left = 0, right = 1) {
     if (0 > col || col >= Math.pow(2, row)) {
         return null;
@@ -11,23 +13,25 @@ export function positionToPath(row, col, left = 0, right = 1) {
     return result;
 }
 
-// TODO(william): put these in Folding and test them separately
-function outfoldUp(semis) {
-    return [semis[0] + semis[1], semis[1]];
-}
-function outfoldDown(semis) {
-    return [semis[0], semis[0] + semis[1]];
-}
-
-export function positionToSemitones(root, row, col, leftIsDown = true) {
-    const lop = leftIsDown ? outfoldDown : outfoldUp;
-    const rop = leftIsDown ? outfoldUp : outfoldDown;
-    const operations = positionToPath(row, col, lop, rop);
-    const base = [root, root];
-    return operations && operations.reduce((chord, op) => op(chord), base);
+/*
+ * Given
+ *   - the root node of the tree (the 'n' in T(n)),
+ *   - the row and column of a node within the tree,
+ *   - and the pitch of the bass note in the node at (0, 0),
+ * find the pitches in the chord at the given position.
+ *
+ * For example, the tree with root chord [5, 7, 9]
+ * is T(2) with a bass of 5.
+ * So to find the chord at position (11, 13) within that tree,
+ * you could evaluate positionToPitches(2, 11, 13, 5).
+ */
+export function positionToPitches(root, row, col, bass) {
+    const folds = positionToPath(row, col, outfoldDown, outfoldUp);
+    const bassChord = [0, 1, 2].map(n => bass + n * root);
+    return folds && folds.reduce((chord, op) => op(chord), bassChord);
 }
 
 export default {
     positionToPath,
-    positionToSemitones,
+    positionToPitches,
 };

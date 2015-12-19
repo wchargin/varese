@@ -20,18 +20,23 @@ describe('TreeSpace', () => {
         it("returns null when the column is too big", test(3, 8, null));
     });
 
-    describe('#positionToSemitones', () => {
-        const {positionToSemitones} = TreeSpace;
-        const test = (r, a, b, output) => () =>
-            expect(positionToSemitones(r, a, b)).to.deep.equal(output);
+    describe('#positionToPitches', () => {
+        const {positionToPitches} = TreeSpace;
+        const test = (o, r, c, b, output) => () =>
+            expect(positionToPitches(o, r, c, b)).to.deep.equal(output);
 
-        it("finds the root of T(1)", test(1, 0, 0, [1, 1]));
-        it("finds the root of T(7)", test(7, 0, 0, [7, 7]));
-        it("finds [3][4], the LLR child of T(1)", test(1, 3, 1, [4, 3]));
-        it("finds [6][10], the LLR child of T(2)", test(2, 3, 1, [8, 6]));
-        it("finds [15][24], the RLRL child of T(3)", test(3, 4, 10, [15, 24]));
-        it("returns null when the column is too small", test(1, 3, -1, null));
-        it("returns null when the column is too big", test(1, 3, 8, null));
+        it("finds the root of T(1) at C", test(1, 0, 0, 0, [0, 1, 2]));
+        it("finds the root of T(7) at D", test(7, 0, 0, 2, [2, 9, 16]));
+        it("finds [3][4] = [-2, 2, 5], the LLR child of T(1) at C",
+            test(1, 3, 1, 0, [-2, 2, 5]));
+        it("finds [6][10] = [-4, 4, 10], the LLR child of T(2) at C",
+            test(2, 3, 1, 0, [-4, 4, 10]));
+        it("finds [15][24] = [-21, -6, 18], the RLRL child of T(3) at C",
+            test(3, 4, 10, 0, [-21, -6, 18]));
+        it("returns null when the column is too small",
+            test(1, 3, -1, 0, null));
+        it("returns null when the column is too big",
+            test(1, 3, 8, 0, null));
     });
 
 });

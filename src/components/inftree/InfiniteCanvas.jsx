@@ -100,7 +100,7 @@
  */
 import React, {Component, PropTypes} from 'react';
 
-import {positionToSemitones} from '../../TreeSpace';
+import {positionToPitches} from '../../TreeSpace';
 import {pitchToName} from '../../PitchNames';
 
 export default class InfiniteCanvas extends Component {
@@ -448,12 +448,13 @@ export default class InfiniteCanvas extends Component {
     }
 
     _drawNode(ctx, row, col, x, y) {
-        const semitones = positionToSemitones(
-            this.props.treeNumber, row, col);
-        const semitoneNames = semitones.map(x => `[${x}]`);
-
-        const notes = [0, 4, 7];
+        const notes = positionToPitches(
+            this.props.treeNumber, row, col, this.props.rootBass);
         const noteNames = notes.map(x => pitchToName(x, true));
+
+        const [low, mid, high] = notes;
+        const semitones = [mid - low, high - mid];
+        const semitoneNames = semitones.map(x => `[${x}]`);
 
         const scale = 0.5 + 0.5 *
             Math.sqrt(Math.max(0, 1 - y / ctx.canvas.height));
