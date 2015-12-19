@@ -151,6 +151,7 @@ export default class InfiniteCanvas extends Component {
             //
             onMouseDown={this._handleMouseDown.bind(this)}
             onMouseMove={this._handleMouseMove.bind(this)}
+            onWheel={this._handleMouseWheel.bind(this)}
             onMouseUp={this._handleMouseUp.bind(this)}
             onMouseLeave={this._handleMouseLeave.bind(this)}
             //
@@ -216,6 +217,15 @@ export default class InfiniteCanvas extends Component {
                 lastMouse: newMouse,
             });
         }
+    }
+
+    _handleMouseWheel(e) {
+        e.preventDefault();
+        const finalPosition = this._pan({x: e.deltaX, y: e.deltaY});
+        this.setState({
+            ...this.state,
+            position: finalPosition,
+        });
     }
 
     _handleMouseUp() {
