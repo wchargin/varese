@@ -472,25 +472,43 @@ export default class InfiniteCanvas extends Component {
         ctx.font = `${fontSize}px ${fontFamily}`;
         ctx.fillStyle = 'black';
 
-        let baseline = y + padding + lineHeight;
-        noteNames.slice().reverse().forEach(name => {
+        const initialState = {
+            lastBaseline: y + padding,
+        };
+
+        const orderedNoteNames = noteNames.slice().reverse();
+        const postNotesState = orderedNoteNames.reduce((st, name) => {
+            const baseline = st.lastBaseline + lineHeight;
             const metrics = ctx.measureText(name);
             const tx = x - metrics.width / 2;
             ctx.fillText(name, tx, baseline);
-            baseline += lineHeight;
-        });
+            return {
+                ...st,
+              lastBaseline: baseline,
+            };
+        }, initialState);
 
-        baseline += lineHeight / 2;
+        const postSkipState = {
+            ...postNotesState,
+            lastBaseline: postNotesState.lastBaseline + lineHeight / 2,
+        };
 
-        semitoneNames.slice().reverse().forEach(name => {
+        const orderedSemitonesNames = semitoneNames.slice().reverse();
+        const postSemitonesState = orderedSemitonesNames.reduce((st, name) => {
+            const baseline = st.lastBaseline + lineHeight;
             const metrics = ctx.measureText(name);
             const tx = x - metrics.width / 2;
             ctx.fillText(name, tx, baseline);
-            baseline += lineHeight;
-        });
+            return {
+                ...st,
+                lastBaseline: baseline,
+            };
+        }, postSkipState);
+
+        const finalState = postSemitonesState;
 
         const width = 75 * scale;
-        const height = (baseline - fontSize + padding) - y;
+        const height = (finalState.lastBaseline + padding) - y;
         ctx.strokeStyle = "black";
         ctx.lineWidth = 1;
         ctx.beginPath();
