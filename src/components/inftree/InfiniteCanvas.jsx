@@ -497,16 +497,25 @@ export default class InfiniteCanvas extends Component {
             advanceTextYPosition(lineHeight / 2),
             writeLines(semitoneNames.slice().reverse()),
         ];
-        const finalState = actions.reduce(
-            (state, action) => action(state), initialState);
+        const performActions = () =>
+            actions.reduce((state, action) => action(state), initialState);
+        const finalState = performActions();
 
         const width = finalState.widestLine + 2 * padding;
         const height = (finalState.textYPosition + padding) - y;
-        ctx.strokeStyle = "black";
+        ctx.strokeStyle = 'rgb(27, 27, 27)';
+        ctx.fillStyle = 'rgb(245, 245, 245)';
         ctx.lineWidth = 1;
         ctx.beginPath();
         this._roundRect(ctx, x - width / 2, y, width, height, padding);
         ctx.stroke();
+        ctx.fill();
+
+        // Now repaint the text, which we just covered up.
+        // TODO(william): Consider doing this less wastefully.
+        ctx.font = `${fontSize}px ${fontFamily}`;
+        ctx.fillStyle = 'black';
+        performActions();
     }
 
     /*
