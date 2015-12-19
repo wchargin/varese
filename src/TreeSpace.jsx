@@ -11,6 +11,23 @@ export function positionToPath(row, col, left = 0, right = 1) {
     return result;
 }
 
+// TODO(william): put these in Folding and test them separately
+function outfoldUp(semis) {
+    return [semis[0] + semis[1], semis[1]];
+}
+function outfoldDown(semis) {
+    return [semis[0], semis[0] + semis[1]];
+}
+
+export function positionToSemitones(root, row, col, leftIsDown = true) {
+    const lop = leftIsDown ? outfoldDown : outfoldUp;
+    const rop = leftIsDown ? outfoldUp : outfoldDown;
+    const operations = positionToPath(row, col, lop, rop);
+    const base = [root, root];
+    return operations && operations.reduce((chord, op) => op(chord), base);
+}
+
 export default {
     positionToPath,
+    positionToSemitones,
 };
