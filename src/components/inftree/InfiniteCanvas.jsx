@@ -208,8 +208,7 @@ export default class InfiniteCanvas extends Component {
             const oldMouse = this.state.lastMouse;
             const deltaX = -(newMouse.x - oldMouse.x);
             const deltaY = -(newMouse.y - oldMouse.y);
-            const finalPosition =
-                this._pan(this.state.position, {x: deltaX, y: deltaY});
+            const finalPosition = this._pan({x: deltaX, y: deltaY});
             this.setState({
                 ...this.state,
                 position: finalPosition,
@@ -284,8 +283,7 @@ export default class InfiniteCanvas extends Component {
                         x: velocityX * clampedDelta.x,
                         y: velocityY * clampedDelta.y,
                     };
-                    const finalPosition =
-                        this._pan(this.state.position, finalDeltas);
+                    const finalPosition = this._pan(finalDeltas);
                     this.setState({...this.state, position: finalPosition});
                 }, 1000 / 60);
             }
@@ -336,15 +334,13 @@ export default class InfiniteCanvas extends Component {
     /*
      * Given a starting point and a displacement, get the new position.
      *
-     * Both arguments should have shape { x: number, y: number }.
-     * The first is in idealized coordinates,
-     * and should be the value of 'this.state.position' before the pan.
-     * The second is in canvas coordinates,
-     * and indicates the desired vector displacement across the canvas.
+     * The argument should have shape { x: number, y: number },
+     * and should indicate the desired vector displacement across the canvas,
+     * in canvas coordinates.
      *
      * The return value is the new value for 'this.state.position'.
      */
-    _pan(originalPosition, canvasDeltaXY) {
+    _pan(canvasDeltaXY) {
         const {width: rowWidth, height: rowHeight} = this._getRowDimensions();
 
         // We use some exponential factors 2^row when rendering,
@@ -353,14 +349,14 @@ export default class InfiniteCanvas extends Component {
         // so we'll clamp it there and see what happens!
         const maxLevel = Math.log2(Number.MAX_SAFE_INTEGER);
 
-        const newY = originalPosition.y + canvasDeltaXY.y;
+        const newY = this.state.position.y + canvasDeltaXY.y;
         const minY = 0;
         const maxY = (maxLevel - this.props.levels) * rowHeight;
         const finalY = Math.max(minY, Math.min(newY, maxY));
 
         const scalingFactor = this._getScalingFactor(finalY);
 
-        const newX = originalPosition.x + canvasDeltaXY.x / scalingFactor;
+        const newX = this.state.position.x + canvasDeltaXY.x / scalingFactor;
         const viewportWidth = rowWidth / scalingFactor;
         const rangeX = rowWidth - viewportWidth;
         const minX = -rangeX / 2;
