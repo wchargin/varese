@@ -422,33 +422,27 @@ export default class InfiniteCanvas extends Component {
 
         const radius = 5;
 
-        // Eventually, these will come from the half-width and half-height
-        // of the actual rendered chord display.
-        // For now, that display is just a circle, so use its radius.
-        // The first two are in canvas coordinates;
-        // the third is in absolute coordinates.
-        const paddingX = radius;
-        const paddingY = radius;
-        const absolutePaddingX = paddingX / scalingFactor;
-
         // The y-position of the top of the top row, in absolute coordinates.
         const topY = this.state.position.y - rowHeight / 2;
-        const rowMin = Math.ceil((topY - paddingY) / rowHeight);
-        const rowMax = Math.floor((topY + height + paddingY) / rowHeight);
+        const rowMin = Math.ceil(topY / rowHeight);
+        const rowMax = Math.floor((topY + height) / rowHeight);
 
-        for (let row = rowMin; row <= rowMax; row++) {
+        // Paint one extra row in each direction
+        // so that things move into view smoothly.
+        for (let row = Math.max(0, rowMin - 1); row <= rowMax + 1; row++) {
             const absoluteYc = rowHeight * (row + 0.5);
             const canvasYc = absoluteYc - this.state.position.y;
 
             // We only have to paint the nodes that are in view.
             // Determine these bounds.
             const nodes = Math.pow(2, row);
-            const colMin = Math.ceil(
-                nodes * (viewportXl - absolutePaddingX) / rowWidth - 0.5);
-            const colMax = Math.floor(
-                nodes * (viewportXr + absolutePaddingX) / rowWidth - 0.5);
+            const colMin = Math.ceil(nodes * viewportXl / rowWidth - 0.5);
+            const colMax = Math.floor(nodes * viewportXr / rowWidth - 0.5);
 
-            for (let col = colMin; col <= colMax; col++) {
+            // Similarly, paint one extra column in each direction.
+            for (let col = Math.max(0, colMin - 1);
+                    col <= Math.min(nodes, colMax + 1);
+                    col++) {
                 // We find the offset from the viewport center (OFVC)
                 // in absolute coordinates,
                 // then convert that to canvas coordinates.
