@@ -461,7 +461,8 @@ export default class InfiniteCanvas extends Component {
         const semitones = positionToSemitones(tree, row, col);
         const semitoneNames = semitones.map(x => `[${x}]`);
         const noteNames = ["C4", "E4", "G4"];
-        const scale = 0.5 + 0.5 * Math.sqrt(1 - y / ctx.canvas.height);
+        const scale = 0.5 + 0.5 *
+            Math.sqrt(Math.max(0, 1 - y / ctx.canvas.height));
 
         const fontSize = 14 * scale;
         const lineHeight = 1.2 * fontSize;
