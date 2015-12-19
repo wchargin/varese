@@ -45,8 +45,8 @@ class TreeExplorer extends Component {
             />
             <ViewOptions
                 infinite={false}
-                {...this.props.treeViewOptions}
-                {...this.props.viewOptionsHandlers}
+                values={this.props.treeViewOptions}
+                handlers={this.props.viewOptionsHandlers}
             />
             <TrichordTree
                 rationalizer={extendRationalizer(this.props.acousticRatios)}

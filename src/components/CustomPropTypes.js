@@ -22,9 +22,22 @@ export const viewOptionsShape = {
 };
 export const viewOptions = PropTypes.shape(viewOptionsShape);
 
+export const viewOptionsHandlersShape = {
+    onSetInfiniteLevels: PropTypes.func.isRequired,
+    onSetLevels: PropTypes.func.isRequired,
+    onSetShowRoots: PropTypes.func.isRequired,
+    onSetShowOctaves: PropTypes.func.isRequired,
+    onSetWide: PropTypes.func.isRequired,
+    onSetLimitValue: PropTypes.func.isRequired,
+    onSetLimitEnabled: PropTypes.func.isRequired,
+};
+export const viewOptionsHandlers = PropTypes.shape(viewOptionsHandlersShape);
+
 export default {
     limitsShape,
     limits,
     viewOptionsShape,
     viewOptions,
+    viewOptionsHandlersShape,
+    viewOptionsHandlers,
 };

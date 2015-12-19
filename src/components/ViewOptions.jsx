@@ -12,15 +12,17 @@ import {Table, Row, Cell, LabelCell, CheckboxCell} from './SettingsTable';
 export default class ViewOptions extends Component {
 
     render() {
-        const levelStep = this.props.infinite ? 0.05 : 1;
+        const {infinite, values, handlers} = this.props;
+
+        const levelStep = infinite ? 0.05 : 1;
         const levelMin = 1;
-        const levelMax = (this.props.infinite ? 6 : 8);
-        const levelValue = this.props.infinite ?
-            this.props.infiniteLevels :
-            this.props.levels;
-        const levelSetter = this.props.infinite ?
-            this.props.onSetInfiniteLevels :
-            this.props.onSetLevels;
+        const levelMax = (infinite ? 6 : 8);
+        const levelValue = infinite ?
+            values.infiniteLevels :
+            values.levels;
+        const levelSetter = infinite ?
+            handlers.onSetInfiniteLevels :
+            handlers.onSetLevels;
         return <div>
             <Table>
                 <Row>
@@ -45,31 +47,31 @@ export default class ViewOptions extends Component {
                     </Cell>
                     <CheckboxCell
                         id="showRoots"
-                        checked={this.props.showRoots}
-                        onChange={this.props.onSetShowRoots}
+                        checked={values.showRoots}
+                        onChange={handlers.onSetShowRoots}
                         labelYes="Shown"
                         labelNo="Hidden"
                     />
                     <CheckboxCell
                         id="showOctaves"
-                        checked={this.props.showOctaves}
-                        onChange={this.props.onSetShowOctaves}
+                        checked={values.showOctaves}
+                        onChange={handlers.onSetShowOctaves}
                         labelYes="Shown"
                         labelNo="Hidden"
                     />
                     <CheckboxCell
                         id="fillWindow"
-                        checked={this.props.wide}
-                        onChange={this.props.onSetWide}
+                        checked={values.wide}
+                        onChange={handlers.onSetWide}
                         labelYes="Wide"
                         labelNo="Inline"
                     />
                 </Row>
             </Table>
             <LimitsOptions
-                {...this.props.limits}
-                onSetLimitValue={this.props.onSetLimitValue}
-                onSetLimitEnabled={this.props.onSetLimitEnabled}
+                {...values.limits}
+                onSetLimitValue={handlers.onSetLimitValue}
+                onSetLimitEnabled={handlers.onSetLimitEnabled}
             />
         </div>;
     }
@@ -78,19 +80,6 @@ export default class ViewOptions extends Component {
 ViewOptions.propTypes = {
     // false for finite tree, true for infinite tree
     infinite: PropTypes.bool.isRequired,
-    //
-    levels: PropTypes.number.isRequired,
-    infiniteLevels: PropTypes.number.isRequired,
-    showRoots: PropTypes.bool.isRequired,
-    showOctaves: PropTypes.bool.isRequired,
-    wide: PropTypes.bool.isRequired,
-    limits: CustomPropTypes.limits.isRequired,
-    //
-    onSetInfiniteLevels: PropTypes.func.isRequired,
-    onSetLevels: PropTypes.func.isRequired,
-    onSetShowRoots: PropTypes.func.isRequired,
-    onSetShowOctaves: PropTypes.func.isRequired,
-    onSetWide: PropTypes.func.isRequired,
-    onSetLimitValue: PropTypes.func.isRequired,
-    onSetLimitEnabled: PropTypes.func.isRequired,
+    values: CustomPropTypes.viewOptions.isRequired,
+    handlers: CustomPropTypes.viewOptionsHandlers.isRequired,
 };

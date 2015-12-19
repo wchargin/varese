@@ -29,8 +29,8 @@ class InfiniteTreeExplorer extends Component {
             </h1>
             <ViewOptions
                 infinite={true}
-                {...this.props.treeViewOptions}
-                {...this.props.viewOptionsHandlers}
+                values={this.props.treeViewOptions}
+                handlers={this.props.viewOptionsHandlers}
             />
             <InfiniteTrichordTree
                 viewOptions={this.props.treeViewOptions}
