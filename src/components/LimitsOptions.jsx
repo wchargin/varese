@@ -143,8 +143,8 @@ LimitControls.propTypes = {
     onSetMinEnabled: PropTypes.func.isRequired,
     onSetMaxEnabled: PropTypes.func.isRequired,
     //
-    minEnabledLabel: PropTypes.string.isRequired,
-    maxEnabledLabel: PropTypes.string.isRequired,
     minLabel: PropTypes.string.isRequired,
     maxLabel: PropTypes.string.isRequired,
+    minEnabledLabel: PropTypes.string.isRequired,
+    maxEnabledLabel: PropTypes.string.isRequired,
 };
