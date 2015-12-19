@@ -465,20 +465,22 @@ export default class InfiniteCanvas extends Component {
 
         // Here's our little state schema that we'll keep track of.
         const initialState = {
-            lastBaseline: y + padding,
+            textYPosition: y + padding,
             widestLine: -Infinity,
         };
 
         // Define a few reusable action creators
         // whose return values are actions of type State -> IO State...
-        const advanceBaseline = delta => state => ({
+        const advanceTextYPosition = delta => state => ({
             ...state,
-            lastBaseline: state.lastBaseline + delta,
+            textYPosition: state.textYPosition + delta,
         });
         const writeLines = texts => state => texts.reduce((state, text) => {
-            const newState = advanceBaseline(lineHeight)(state);
+            ctx.textAlign = "center";
+            ctx.textBaseline = "top";
+            ctx.fillText(text, x, state.textYPosition);
+            const newState = advanceTextYPosition(lineHeight)(state);
             const lineWidth = ctx.measureText(text).width;
-            ctx.fillText(text, x - lineWidth / 2, newState.lastBaseline);
             return {
                 ...newState,
                 widestLine: Math.max(newState.widestLine, lineWidth),
@@ -488,14 +490,14 @@ export default class InfiniteCanvas extends Component {
         // ...then sequence a bunch of them together!
         const actions = [
             writeLines(noteNames.slice().reverse()),
-            advanceBaseline(lineHeight / 2),
+            advanceTextYPosition(lineHeight / 2),
             writeLines(semitoneNames.slice().reverse()),
         ];
         const finalState = actions.reduce(
             (state, action) => action(state), initialState);
 
         const width = finalState.widestLine + 2 * padding;
-        const height = (finalState.lastBaseline + 2 * padding) - y;
+        const height = (finalState.textYPosition + padding) - y;
         ctx.strokeStyle = "black";
         ctx.lineWidth = 1;
         ctx.beginPath();
