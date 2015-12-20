@@ -6,6 +6,7 @@ import * as Actions from '../../Actions';
 import Page from '../Page';
 
 import InfiniteTrichordTree from './InfiniteTrichordTree';
+import RationalizerSettings from '../settings/RationalizerSettings';
 import ViewOptions from '../settings/ViewOptions';
 
 import {extendRationalizer} from '../../HarmonicSeries';
@@ -38,6 +39,11 @@ class InfiniteTreeExplorer extends Component {
                 rationalizer={extendRationalizer(this.props.acousticRatios)}
                 viewOptions={this.props.treeViewOptions}
             />
+            {this.props.rootsVisible &&
+                <RationalizerSettings
+                    values={this.props.acousticRatios}
+                    onChangeValue={this.props.onSetAcousticRatio}
+                />}
         </Page>;
     }
     /* eslint-enable */
