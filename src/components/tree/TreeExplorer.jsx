@@ -81,6 +81,8 @@ function mapDispatchToProps(dispatch) {
             onSetLevels: levels => dispatch(Actions.setTreeLevels(levels)),
             onSetInfiniteLevels: levels => dispatch(
                 Actions.setInfiniteTreeLevels(levels)),
+            onSetInfiniteHeight: height => dispatch(
+                Actions.setInfiniteTreeHeight(height)),
             onSetShowRoots: showRoots => dispatch(
                 Actions.setTreeShowRoots(showRoots)),
             onSetShowOctaves: showOctaves => dispatch(

@@ -20,6 +20,7 @@ export const limitsHandlers = PropTypes.shape(limitsHandlersShape);
 export const viewOptions = PropTypes.shape({
     levels: PropTypes.number.isRequired,
     infiniteLevels: PropTypes.number.isRequired,
+    infiniteHeight: PropTypes.number.isRequired,
     showRoots: PropTypes.bool.isRequired,
     showOctaves: PropTypes.bool.isRequired,
     wide: PropTypes.bool.isRequired,
@@ -29,8 +30,9 @@ export const viewOptions = PropTypes.shape({
 });
 
 export const viewOptionsHandlers = PropTypes.shape({
-    onSetInfiniteLevels: PropTypes.func.isRequired,
     onSetLevels: PropTypes.func.isRequired,
+    onSetInfiniteLevels: PropTypes.func.isRequired,
+    onSetInfiniteHeight: PropTypes.func.isRequired,
     onSetShowRoots: PropTypes.func.isRequired,
     onSetShowOctaves: PropTypes.func.isRequired,
     onSetWide: PropTypes.func.isRequired,
