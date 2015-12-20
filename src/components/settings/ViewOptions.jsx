@@ -62,6 +62,13 @@ export default class ViewOptions extends Component {
                     />
                 </Row>
             </Table>
+            <LimitsOptions
+                values={values.limits}
+                handlers={{
+                    onSetLimitValue: handlers.onSetLimitValue,
+                    onSetLimitEnabled: handlers.onSetLimitEnabled,
+                }}
+            />
             {infinite && <Table>
                 <Row>
                     <LabelCell htmlFor="depth">Levels shown</LabelCell>
@@ -122,13 +129,6 @@ export default class ViewOptions extends Component {
                     </Cell>
                 </Row>
             </Table>}
-            <LimitsOptions
-                values={values.limits}
-                handlers={{
-                    onSetLimitValue: handlers.onSetLimitValue,
-                    onSetLimitEnabled: handlers.onSetLimitEnabled,
-                }}
-            />
         </div>;
     }
 
