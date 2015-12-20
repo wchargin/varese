@@ -574,7 +574,12 @@ export default class InfiniteCanvas extends Component {
 
         ctx.lineWidth = 1;
         ctx.beginPath();
-        this._roundRect(ctx, x - width / 2, y, width, height, padding);
+        this._roundRect(ctx,
+            Math.round(x - width / 2),
+            Math.round(y),
+            Math.round(width),
+            Math.round(height),
+            padding);
         ctx.stroke();
         ctx.fill();
 
