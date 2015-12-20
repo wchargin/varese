@@ -221,12 +221,12 @@ export default class InfiniteCanvas extends Component {
     }
 
     _handleMouseWheel(e) {
-        // If the user scrolls up, don't fall-through unless we're at the top.
-        // Scrolling is (practically) bottomless, though,
-        // so always capture downscroll events.
-        if (!(e.deltaY < 0 && this.state.position.y <= 0)) {
-            e.preventDefault();
+        // Don't be annoying and grab all the things above yourself!
+        if (document.activeElement !== e.target) {
+            return;
         }
+        e.preventDefault();
+
         const finalPosition = this._pan({x: e.deltaX, y: e.deltaY});
         this.setState({
             ...this.state,
