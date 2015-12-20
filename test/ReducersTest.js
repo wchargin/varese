@@ -131,10 +131,13 @@ describe('reducer', () => {
 
     describe(':REHYDRATE', () => {
         it("rehydrates the state, deserializing the Rationals", () => {
+            const initialState = reducer(undefined, Actions.noop());
+
             // The important part of this sample data
             // is that the Rational objects will have been JSON-serialized.
             // The rehydration action must deserialize them.
             const originalData = {
+                ...initialState,
                 acousticRatios: [
                     new Rational(10, 7),
                     new Rational(9, 5),
@@ -142,9 +145,11 @@ describe('reducer', () => {
                     new Rational(41, 487),
                 ],
                 treeViewOptions: {
+                    ...initialState.treeViewOptions,
                     levels: 999,
                     wide: true,
                     limits: {
+                        ...initialState.treeViewOptions.limits,
                         minCombined: 121,
                     },
                 },
