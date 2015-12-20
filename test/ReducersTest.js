@@ -1,6 +1,8 @@
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 
+import merge from 'merge';
+
 import reducer from '../src/Reducers';
 import Rational from '../src/Rational';
 import * as Actions from '../src/Actions';
@@ -177,6 +179,48 @@ describe('reducer', () => {
             expect(() => reducer(undefined, Actions.rehydrate(badState)))
                 .to.throw(/acousticRatios/);
         });
+
+        it("upgrades your state to be forward-compatible", () => {
+            // Fake an initial state with some extra stuff.
+            const state0 = merge.recursive(true,  // clone
+                reducer(undefined, Actions.noop()));
+            state0.somePropToRemove = "original";
+
+            // This test assumes the following properties all exist,
+            // otherwise it's useless;
+            // if this fails because the schema changed,
+            // just pick some other dummy properties.
+            expect(state0.treeViewOptions.levels).to.be.ok;
+            expect(state0.treeViewOptions.limits).to.be.ok;
+            expect(state0.treeViewOptions.limits.minCombined).to.be.ok;
+            expect(state0.treeViewOptions.limits.maxCombined).to.be.ok;
+
+            // Fake a rehydrated state from an "old version"
+            // with some fields missing;
+            // they should be added back in when we rehydrate.
+            const state1 = merge.recursive(true, state0);
+            delete state1.somePropToRemove;
+            delete state1.treeViewOptions.limits.minCombined;
+            state1.treeViewOptions.limits.maxCombined = 77;
+            state1.treeViewOptions.levels = 1;
+            state1.anotherBrandNewThing = "wahoo";
+
+            // Now try to rehydrate that state.
+            const state2 = reducer(state0, Actions.rehydrate(state1));
+
+            // Make sure the changed things stayed.
+            expect(state2.treeViewOptions.levels).to.equal(1);
+            expect(state2.treeViewOptions.limits.maxCombined).to.equal(77);
+            expect(state2.anotherBrandNewThing).to.equal("wahoo");
+
+            // Make sure the new top-level thing was added.
+            expect(state2.somePropToRemove).to.equal(state0.somePropToRemove);
+
+            // Make sure the "new" (i.e., undeleted) sub-level thing was added.
+            expect(state2.treeViewOptions.limits.minCombined).to.equal(
+                state0.treeViewOptions.limits.minCombined);
+        });
+
     });
 
 });

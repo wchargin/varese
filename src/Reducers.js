@@ -1,5 +1,7 @@
 import Rational from './Rational';
 
+import merge from 'merge';
+
 import {canonicalValues} from './HarmonicData';
 const initialState = {
     acousticRatios: canonicalValues,
@@ -86,18 +88,20 @@ function setTreeLimitEnabled(state, name, value) {
     return setTreeLimitField(state, `${name}Enabled`, value);
 }
 
-function rehydrate(newState) {
-    const {acousticRatios} = newState;
+function rehydrate(state, dehydrated) {
+    const {acousticRatios} = dehydrated;
     if (!Array.isArray(acousticRatios)) {
         throw new Error(
             `expected to find an array of acousticRatios, ` +
             `but found: ${acousticRatios}`);
     }
     const rehydratedRatios = acousticRatios.map(x => new Rational(x.a, x.b));
-    return {
-        ...newState,
-        acousticRatios: rehydratedRatios,
-    };
+
+    // First, do a deep merge to copy over all the properties...
+    const deep = merge.recursive(true, state, dehydrated);
+
+    // ...then shallow-merge on the rehydrated ratios to keep their prototypes.
+    return merge(deep, {acousticRatios: rehydratedRatios});
 }
 
 export default function reducer(state = initialState, action) {
@@ -125,7 +129,7 @@ export default function reducer(state = initialState, action) {
         case "SET_TREE_LIMIT_ENABLED":
             return setTreeLimitEnabled(state, action.limit, action.enabled);
         case "REHYDRATE":
-            return rehydrate(action.newState);
+            return rehydrate(state, action.newState);
         default:
             return state;
     }
