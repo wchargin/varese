@@ -177,12 +177,12 @@ export default class InfiniteCanvas extends Component {
         return <canvas
             ref="canvas"
             width={720}
-            height={this.props.height}
+            height={this.props.viewOptions.infiniteHeight}
             style={{
                 boxShadow: '0 0 2px 1px rgba(0, 0, 0, 0.2)',
                 borderRadius: 2,
                 width: "100%",
-                height: this.props.height,
+                height: this.props.viewOptions.infiniteHeight,
             }}
             //
             onMouseDown={this._handleMouseDown.bind(this)}
@@ -440,7 +440,8 @@ export default class InfiniteCanvas extends Component {
     _getRowDimensions() {
         return {
             width: this.refs.canvas.width,
-            height: this.props.height / this.props.viewOptions.infiniteLevels,
+            height: this.props.viewOptions.infiniteHeight /
+                this.props.viewOptions.infiniteLevels,
         };
     }
 
@@ -619,7 +620,6 @@ export default class InfiniteCanvas extends Component {
 
 }
 InfiniteCanvas.propTypes = {
-    height: PropTypes.number.isRequired,
     viewOptions: CustomPropTypes.viewOptions.isRequired,
     rationalizer: PropTypes.func.isRequired,
 };
