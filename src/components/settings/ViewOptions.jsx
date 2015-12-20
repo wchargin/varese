@@ -16,7 +16,7 @@ export default class ViewOptions extends Component {
 
         const levelStep = infinite ? 0.05 : 1;
         const levelMin = 1;
-        const levelMax = (infinite ? 6 : 8);
+        const levelMax = 8;
         const levelValue = infinite ?
             values.infiniteLevels :
             values.levels;
