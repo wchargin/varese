@@ -3,6 +3,7 @@ import React, {Component, PropTypes} from 'react';
 import {findChordRootOffset} from '../../HarmonicSeries';
 import {pitchToName, parseNameOrPitch} from '../../PitchNames';
 import {flatten} from '../../Utils';
+import {withinLimits} from '../../DisplayUtils';
 
 import CustomPropTypes from '../CustomPropTypes';
 
@@ -17,41 +18,13 @@ export default class TrichordView extends Component {
         };
     }
 
-    _withinLimits() {
-        if (!this.props.limits) {
-            return true;
-        }
-        const {notes: unsortedNotes, limits} = this.props;
-        const notes = [...unsortedNotes].sort((a, b) => a - b);
-
-        const span = notes[notes.length - 1] - notes[0];
-        if (limits.minCombinedEnabled && span < limits.minCombined) {
-            return false;
-        }
-        if (limits.maxCombinedEnabled && span > limits.maxCombined) {
-            return false;
-        }
-
-        const deltas = notes.slice(1).map((snd, idx) => snd - notes[idx]);
-        if (limits.minIndividualEnabled && deltas.some(x =>
-                x < limits.minIndividual)) {
-            return false;
-        }
-        if (limits.maxIndividualEnabled && deltas.some(x =>
-                x > limits.maxIndividual)) {
-            return false;
-        }
-
-        return true;
-    }
-
     render() {
         // If we're not within limits,
         // we still need to render a component of the right size
         // so that the grid layout isn't thrown off.
         // But we'll lower the opacity of the main content,
         // and set the engraving's 'visibility' to 'hidden'.
-        const visible = this._withinLimits();
+        const visible = withinLimits(this.props.notes, this.props.limits);
 
         const {notes, showOctave} = this.props;
         const notesAscending  = [...notes].sort((a, b) => a - b);
