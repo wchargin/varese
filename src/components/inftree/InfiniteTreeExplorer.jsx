@@ -27,7 +27,7 @@ class InfiniteTreeExplorer extends Component {
                 Infinite chord tree explorer
                 {" "}
                 <span style={{ color: "red", fontSize: "75%" }}>
-                    {"alpha".toUpperCase()}
+                    {"beta".toUpperCase()}
                 </span>
             </h1>
             <ViewOptions
