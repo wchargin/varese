@@ -43,22 +43,30 @@ export default class SingleNoteInput extends Component {
         super();
         this.state = {
             text: null,
+            focused: false,
         };
     }
 
     render() {
-        const text = this.state.text !== null ?
-            this.state.text :
+        const text = this.state.focused ?
+            //
+            // When focused, if the user's entering text, display that.
+            // Otherwise, display the canonical version of the pitch,
+            // which may be distinct from the displayValue
+            // (e.g., the displayValue may lack the octave).
+            this.state.text !== null ?
+                this.state.text :
+                pitchToName(this.props.value, true) :
+            //
+            // When not focused, always show the display value.
             this.props.displayValue;
         return <input
             ref="input"
             type="text"
             size={3}
             {...this.props}
-            onFocus={() => this.setState({
-                text: pitchToName(this.props.value, true),
-            })}
-            onBlur={() => this.setState({ text: null })}
+            onFocus={() => this.setState({ text: null, focused: true })}
+            onBlur={() => this.setState({ text: null, focused: false })}
             onChange={() => this._handleChange()}
             value={text}
         />;
