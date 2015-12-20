@@ -104,6 +104,7 @@ import CustomPropTypes from '../CustomPropTypes';
 import {findChordRootOffset} from '../../HarmonicSeries';
 import {positionToPitches} from '../../TreeSpace';
 import {pitchToName} from '../../PitchNames';
+import {withinLimits} from '../../DisplayUtils';
 
 export default class InfiniteCanvas extends Component {
 
@@ -511,6 +512,7 @@ export default class InfiniteCanvas extends Component {
         const notes = this._fastPositionToPitches(row, col);
         const noteNames = notes.map(x => pitchToName(
             x, true, this.props.viewOptions.showOctaves));
+        const visible = withinLimits(notes, this.props.viewOptions.limits);
 
         const [low, mid, high] = notes;
         const semitones = [mid - low, high - mid];
@@ -561,12 +563,13 @@ export default class InfiniteCanvas extends Component {
 
         // HSV is great! But we have to use HSL :(
         const satHSV = 0.1;
-        const light = 0.5 * (2 - satHSV);
+        const baseLight = 0.5 * (2 - satHSV);
+        const light = visible ? baseLight : baseLight * 0.2 + 0.8;
         const sat = satHSV / (1 - Math.abs(2 * light - 1));
         const hslString = (h, s, l) =>
             `hsl(${h * 360}, ${s * 100}%, ${l * 100}%)`;
         ctx.fillStyle = hslString(row / 16, sat, light);
-        ctx.strokeStyle = hslString(row / 16, sat, 0.25);
+        ctx.strokeStyle = hslString(row / 16, sat, visible ? 0.25 : 0.8);
 
         ctx.lineWidth = 1;
         ctx.beginPath();
@@ -577,8 +580,10 @@ export default class InfiniteCanvas extends Component {
         // Finally, paint the text!
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
+        const rootStyle = visible ? "blue" : "#DDF";
+        const nonRootStyle = visible ? "black" : "#DDD";
         lines.forEach((data, index) => {
-            ctx.fillStyle = data.root ? "blue" : "black";
+            ctx.fillStyle = data.root ? rootStyle : nonRootStyle;
             const boldTag = data.root ? "bold " : "";
             ctx.font = `${boldTag}${fontSize}px ${fontFamily}`;
             ctx.fillText(data.text + "", x, y + padding + index * lineHeight);
