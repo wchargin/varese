@@ -348,6 +348,16 @@ export default class InfiniteCanvas extends Component {
         }
     }
 
+    _getMaxSafeRow() {
+        // We use some exponential factors 2^row when rendering,
+        // and bizarre things start happening at really high rows.
+        // This seems to happen when we approach Number.MAX_SAFE_INTEGER,
+        // so we stop just a few before there,
+        // where (empirically) the effects become observable.
+        const bits = Math.floor(Math.log2(Number.MAX_SAFE_INTEGER));
+        return bits - 2;
+    }
+
     /*
      * Given a starting point and a displacement, get the new position.
      *
@@ -360,16 +370,13 @@ export default class InfiniteCanvas extends Component {
     _pan(canvasDeltaXY) {
         const {width: rowWidth, height: rowHeight} = this._getRowDimensions();
 
-        // We use some exponential factors 2^row when rendering,
-        // and bizarre things start happening at really high rows.
-        // This seems to happen when we pass Number.MAX_SAFE_INTEGER,
-        // so we'll clamp it there and see what happens!
-        const maxLevel = Math.log2(Number.MAX_SAFE_INTEGER);
+        const maxLevel = this._getMaxSafeRow();
 
         const newY = this.state.position.y + canvasDeltaXY.y;
         const minY = 0;
         const maxY = (maxLevel - this.props.levels) * rowHeight;
-        const finalY = Math.max(minY, Math.min(newY, maxY));
+        const maxYPadding = 2 * rowHeight;  // don't chop off the bottom nodes
+        const finalY = Math.max(minY, Math.min(newY, maxY + maxYPadding));
 
         const scalingFactor = this._getScalingFactor(finalY);
 
@@ -433,7 +440,9 @@ export default class InfiniteCanvas extends Component {
         // The y-position of the top of the top row, in absolute coordinates.
         const topY = this.state.position.y - rowHeight / 2;
         const rowMin = Math.ceil(topY / rowHeight);
-        const rowMax = Math.floor((topY + height) / rowHeight);
+        const rowMax = Math.min(
+            this._getMaxSafeRow(),
+            Math.floor((topY + height) / rowHeight));
 
         // Paint one extra row above so that things move into view smoothly.
         // We don't need to paint a row below
