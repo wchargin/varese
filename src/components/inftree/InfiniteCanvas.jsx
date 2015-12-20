@@ -101,6 +101,7 @@
 import React, {Component, PropTypes} from 'react';
 import CustomPropTypes from '../CustomPropTypes';
 
+import {findChordRootOffset} from '../../HarmonicSeries';
 import {positionToPitches} from '../../TreeSpace';
 import {pitchToName} from '../../PitchNames';
 
@@ -520,11 +521,43 @@ export default class InfiniteCanvas extends Component {
                 widestLine: Math.max(newState.widestLine, lineWidth),
             };
         }, state);
+        const writeRoot = () => state => {
+            if (!this.props.viewOptions.showRoots) {
+                return state;
+            }
+
+            const finish = rootText => {
+                const oldColor = ctx.fillStyle;
+                const oldFont = ctx.font;
+                ctx.fillStyle = 'blue';
+                ctx.font = `bold ${ctx.font}`;
+                const newState = writeLines([rootText])(state);
+                ctx.font = oldFont;
+                ctx.fillStyle = oldColor;
+                return newState;
+            };
+
+            const maybeRootPitch = findChordRootOffset(
+                this.props.rationalizer, notes);
+            if (maybeRootPitch.status === "success") {
+                const rootPitch = maybeRootPitch.result;
+                const rootName = pitchToName(rootPitch, true,
+                    this.props.viewOptions.showOctaves);
+                return finish(rootName);
+            } else {
+                const e = maybeRootPitch.error;
+                if (e.match(/finite/) || e.match(/zero_ratio/)) {
+                    return finish("?");
+                } else {
+                    throw e;
+                }
+            }
+        };
 
         // ...then sequence a bunch of them together!
         const actions = [
             writeLines(noteNames.slice().reverse()),
-            advanceTextYPosition(lineHeight / 2),
+            writeRoot(),
             writeLines(semitoneNames.slice().reverse()),
         ];
         const performActions = () =>
