@@ -65,6 +65,7 @@ export default class ViewOptions extends Component {
             {infinite && <Table>
                 <Row>
                     <LabelCell htmlFor="depth">Levels shown</LabelCell>
+                    <LabelCell htmlFor="height">Height</LabelCell>
                     <LabelCell htmlFor="treeNumber">Tree number</LabelCell>
                     <LabelCell htmlFor="rootBass">Root chord bass</LabelCell>
                 </Row>
@@ -81,6 +82,19 @@ export default class ViewOptions extends Component {
                             value={values.infiniteLevels}
                             onChange={() => handlers.onSetInfiniteLevels(
                                 this.refs.levels.valueAsNumber)}
+                        />
+                    </Cell>
+                    <Cell style={{ verticalAlign: "middle" }}>
+                        <input
+                            ref="height"
+                            type="range"
+                            id="height"
+                            //
+                            min={500}
+                            max={1000}
+                            value={values.infiniteHeight}
+                            onChange={() => handlers.onSetInfiniteHeight(
+                                this.refs.height.valueAsNumber)}
                         />
                     </Cell>
                     <Cell>
