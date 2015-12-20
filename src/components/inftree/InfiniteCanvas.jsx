@@ -509,7 +509,8 @@ export default class InfiniteCanvas extends Component {
 
     _drawNode(ctx, row, col, x, y) {
         const notes = this._fastPositionToPitches(row, col);
-        const noteNames = notes.map(x => pitchToName(x, true));
+        const noteNames = notes.map(x => pitchToName(
+            x, true, this.props.viewOptions.showOctaves));
 
         const [low, mid, high] = notes;
         const semitones = [mid - low, high - mid];
