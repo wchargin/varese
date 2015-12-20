@@ -573,11 +573,8 @@ export default class InfiniteCanvas extends Component {
 
 }
 InfiniteCanvas.propTypes = {
-    height: PropTypes.number,
+    height: PropTypes.number.isRequired,
     levels: PropTypes.number.isRequired,
     treeNumber: PropTypes.number.isRequired,
     rootBass: PropTypes.number.isRequired,
-};
-InfiniteCanvas.defaultProps = {
-    height: 600,
 };
