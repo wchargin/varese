@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 
-import {parseNameOrPitch} from '../PitchNames';
+import {pitchToName, parseNameOrPitch} from '../PitchNames';
 
 /*
  * Input node for a single pitch.
@@ -55,7 +55,9 @@ export default class SingleNoteInput extends Component {
             type="text"
             size={3}
             {...this.props}
-            onFocus={() => this.setState({ text: this.props.value })}
+            onFocus={() => this.setState({
+                text: pitchToName(this.props.value, true),
+            })}
             onBlur={() => this.setState({ text: null })}
             onChange={() => this._handleChange()}
             value={text}
@@ -105,7 +107,7 @@ export default class SingleNoteInput extends Component {
 }
 SingleNoteInput.propTypes = {
     displayValue: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.number.isRequired,
 
     // (number, string) => void; takes
     //   * the new pitch after successful parse, and

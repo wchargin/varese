@@ -121,7 +121,7 @@ export default class ViewOptions extends Component {
                     </Cell>
                     <Cell>
                         <SingleNoteInput
-                            value={pitchToName(values.rootBass, true, true)}
+                            value={values.rootBass}
                             displayValue={pitchToName(
                                 values.rootBass, true, values.showOctaves)}
                             onChange={value => handlers.onSetRootBass(value)}

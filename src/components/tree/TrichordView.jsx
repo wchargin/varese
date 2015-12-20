@@ -39,7 +39,7 @@ export default class TrichordView extends Component {
                     key={"note-" + index}
                     type="text"
                     displayValue={name}
-                    value={pitchToName(notesAscending[index], true)}
+                    value={notesAscending[index]}
                     style={{ textAlign: "center", width: "100%" }}
                     onChange={(newPitch, displayText) =>
                         this._handleChange(index, newPitch, displayText)}
