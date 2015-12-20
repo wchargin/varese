@@ -1,7 +1,10 @@
 import React, {Component, PropTypes} from 'react';
 
+import {pitchToName} from '../../PitchNames';
+
 import CustomPropTypes from '../CustomPropTypes';
 import LimitsOptions from './LimitsOptions';
+import SingleNoteInput from '../SingleNoteInput';
 import {Table, Row, Cell, LabelCell, CheckboxCell} from './SettingsTable';
 
 /*
@@ -89,17 +92,12 @@ export default class ViewOptions extends Component {
                         />
                     </Cell>
                     <Cell>
-                        <input
-                            ref="rootBass"
-                            id="rootBass"
-                            type="number"
+                        <SingleNoteInput
+                            value={pitchToName(values.rootBass, true, true)}
+                            displayValue={pitchToName(
+                                values.rootBass, true, values.showOctaves)}
+                            onChange={value => handlers.onSetRootBass(value)}
                             className="form-control"
-                            //
-                            min={-24}
-                            max={24}
-                            value={values.rootBass}
-                            onChange={() => handlers.onSetRootBass(
-                                parseInt(this.refs.rootBass.value, 10))}
                         />
                     </Cell>
                 </Row>
