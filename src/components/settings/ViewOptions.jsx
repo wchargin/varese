@@ -17,37 +17,28 @@ export default class ViewOptions extends Component {
     render() {
         const {infinite, values, handlers} = this.props;
 
-        const levelStep = infinite ? 0.05 : 1;
-        const levelMin = 1;
-        const levelMax = 8;
-        const levelValue = infinite ?
-            values.infiniteLevels :
-            values.levels;
-        const levelSetter = infinite ?
-            handlers.onSetInfiniteLevels :
-            handlers.onSetLevels;
         return <div>
             <Table>
                 <Row>
-                    <LabelCell htmlFor="depth">Tree depth</LabelCell>
+                    {!infinite && <LabelCell htmlFor="depth">Tree depth</LabelCell>}
                     <LabelCell htmlFor="showRoots">Show roots?</LabelCell>
                     <LabelCell htmlFor="showOctaves">Show octaves?</LabelCell>
                     <LabelCell htmlFor="fillWindow">Fill window?</LabelCell>
                 </Row>
                 <Row>
-                    <Cell>
+                    {!infinite && <Cell>
                         <input
                             ref="levels"
                             type="range"
                             id="depth"
                             //
-                            min={levelMin / levelStep}
-                            max={levelMax / levelStep}
-                            value={levelValue / levelStep}
-                            onChange={() => levelSetter(levelStep *
-                                parseInt(this.refs.levels.value, 10))}
+                            min={1}
+                            max={8}
+                            value={values.levels}
+                            onChange={() => handlers.onSetLevels(
+                                this.refs.levels.valueAsNumber)}
                         />
-                    </Cell>
+                    </Cell>}
                     <CheckboxCell
                         id="showRoots"
                         checked={values.showRoots}
@@ -73,10 +64,25 @@ export default class ViewOptions extends Component {
             </Table>
             {infinite && <Table>
                 <Row>
+                    <LabelCell htmlFor="depth">Levels shown</LabelCell>
                     <LabelCell htmlFor="treeNumber">Tree number</LabelCell>
                     <LabelCell htmlFor="rootBass">Root chord bass</LabelCell>
                 </Row>
                 <Row>
+                    <Cell style={{ verticalAlign: "middle" }}>
+                        <input
+                            ref="levels"
+                            type="range"
+                            id="depth"
+                            //
+                            min={1}
+                            max={9}
+                            step={0.05}
+                            value={values.infiniteLevels}
+                            onChange={() => handlers.onSetInfiniteLevels(
+                                this.refs.levels.valueAsNumber)}
+                        />
+                    </Cell>
                     <Cell>
                         <input
                             ref="treeNumber"
