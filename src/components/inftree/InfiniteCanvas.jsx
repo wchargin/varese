@@ -138,6 +138,37 @@ export default class InfiniteCanvas extends Component {
         // and unset when the user releases the last key
         // (see _handleKeyUp).
         this._keyInterval = null;
+
+        this._fastFindChordRootOffsetMemo = new Map();
+        this._fastPositionToPitchesMemo = new Map();
+    }
+
+    componentWillReceiveProps() {
+        this._fastFindChordRootOffsetMemo.clear();
+        this._fastPositionToPitchesMemo.clear();
+    }
+
+    _fastFindChordRootOffset(notes) {
+        // Ugly, but should work for our case (all integers).
+        const key = notes.join(",");
+        const memo = this._fastFindChordRootOffsetMemo;
+        if (!memo.has(key)) {
+            memo.set(key, findChordRootOffset(this.props.rationalizer, notes));
+        }
+        return memo.get(key);
+    }
+
+    _fastPositionToPitches(row, col) {
+        const key = `${row},${col}`;
+        const memo = this._fastPositionToPitchesMemo;
+        if (!memo.has(key)) {
+            const notes = positionToPitches(
+                this.props.viewOptions.treeNumber,
+                row, col,
+                this.props.viewOptions.rootBass);
+            memo.set(key, notes);
+        }
+        return memo.get(key);
     }
 
     render() {
@@ -477,10 +508,7 @@ export default class InfiniteCanvas extends Component {
     }
 
     _drawNode(ctx, row, col, x, y) {
-        const notes = positionToPitches(
-            this.props.viewOptions.treeNumber,
-            row, col,
-            this.props.viewOptions.rootBass);
+        const notes = this._fastPositionToPitches(row, col);
         const noteNames = notes.map(x => pitchToName(x, true));
 
         const [low, mid, high] = notes;
@@ -497,8 +525,7 @@ export default class InfiniteCanvas extends Component {
         ctx.font = `${fontSize}px ${fontFamily}`;  // for metrics
 
         const getRoot = () => {
-            const maybeRootPitch = findChordRootOffset(
-                this.props.rationalizer, notes);
+            const maybeRootPitch = this._fastFindChordRootOffset(notes);
             if (maybeRootPitch.status === "success") {
                 const rootPitch = maybeRootPitch.result;
                 const rootName = pitchToName(rootPitch, true,
