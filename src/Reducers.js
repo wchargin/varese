@@ -89,7 +89,9 @@ function setTreeLimitEnabled(state, name, value) {
 }
 
 function rehydrate(state, dehydrated) {
-    const {acousticRatios} = dehydrated;
+    const merged = merge.recursive(true /* clone */, state, dehydrated);
+
+    const {acousticRatios} = merged;
     if (!Array.isArray(acousticRatios)) {
         throw new Error(
             `expected to find an array of acousticRatios, ` +
@@ -97,11 +99,10 @@ function rehydrate(state, dehydrated) {
     }
     const rehydratedRatios = acousticRatios.map(x => new Rational(x.a, x.b));
 
-    // First, do a deep merge to copy over all the properties...
-    const deep = merge.recursive(true, state, dehydrated);
-
-    // ...then shallow-merge on the rehydrated ratios to keep their prototypes.
-    return merge(deep, {acousticRatios: rehydratedRatios});
+    return {
+        ...merged,
+        acousticRatios: rehydratedRatios,
+    };
 }
 
 export default function reducer(state = initialState, action) {
