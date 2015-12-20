@@ -494,78 +494,42 @@ export default class InfiniteCanvas extends Component {
         const lineHeight = 1.2 * fontSize;
         const padding = 5;
         const fontFamily = '"Helvetica Neue",Helvetica,Arial,sans-serif';
+        ctx.font = `${fontSize}px ${fontFamily}`;  // for metrics
 
-        ctx.font = `${fontSize}px ${fontFamily}`;
-        ctx.fillStyle = 'black';
-
-        // Here's our little state schema that we'll keep track of.
-        const initialState = {
-            textYPosition: y + padding,
-            widestLine: -Infinity,
-        };
-
-        // Define a few reusable action creators
-        // whose return values are actions of type State -> IO State...
-        const advanceTextYPosition = delta => state => ({
-            ...state,
-            textYPosition: state.textYPosition + delta,
-        });
-        const writeLines = texts => state => texts.reduce((state, text) => {
-            ctx.textAlign = "center";
-            ctx.textBaseline = "top";
-            ctx.fillText(text, x, state.textYPosition);
-            const newState = advanceTextYPosition(lineHeight)(state);
-            const lineWidth = ctx.measureText(text).width;
-            return {
-                ...newState,
-                widestLine: Math.max(newState.widestLine, lineWidth),
-            };
-        }, state);
-        const writeRoot = () => state => {
-            if (!this.props.viewOptions.showRoots) {
-                return state;
-            }
-
-            const finish = rootText => {
-                const oldColor = ctx.fillStyle;
-                const oldFont = ctx.font;
-                ctx.fillStyle = 'blue';
-                ctx.font = `bold ${ctx.font}`;
-                const newState = writeLines([rootText])(state);
-                ctx.font = oldFont;
-                ctx.fillStyle = oldColor;
-                return newState;
-            };
-
+        const getRoot = () => {
             const maybeRootPitch = findChordRootOffset(
                 this.props.rationalizer, notes);
             if (maybeRootPitch.status === "success") {
                 const rootPitch = maybeRootPitch.result;
                 const rootName = pitchToName(rootPitch, true,
                     this.props.viewOptions.showOctaves);
-                return finish(rootName);
+                return rootName;
             } else {
                 const e = maybeRootPitch.error;
                 if (e.match(/finite/) || e.match(/zero_ratio/)) {
-                    return finish("?");
+                    return "?";
                 } else {
                     throw e;
                 }
             }
         };
-
-        // ...then sequence a bunch of them together!
-        const actions = [
-            writeLines(noteNames.slice().reverse()),
-            writeRoot(),
-            writeLines(semitoneNames.slice().reverse()),
+        const lines = [
+            ...noteNames.slice().reverse().map(x => ({text: x})),
+            ...(this.props.viewOptions.showRoots ?
+                [{text: getRoot(), root: true}] :
+                []),
+            ...semitoneNames.slice().reverse().map(x => ({text: x})),
         ];
-        const performActions = () =>
-            actions.reduce((state, action) => action(state), initialState);
-        const finalState = performActions();
 
-        const width = finalState.widestLine + 2 * padding;
-        const height = (finalState.textYPosition + padding) - y;
+        // Profiling indicates that measureText is a bottleneck,
+        // so this is a little heuristic to avoid calls...
+        const lineWidth = line => !line ? 0 :
+            line.text.length * (line.root ? 1.5 : 1);
+        const longestLine = ctx.measureText(lines.reduce((best, line) =>
+            lineWidth(line) > lineWidth(best) ? line : best).text).width;
+
+        const width = longestLine + 2 * padding;
+        const height = lineHeight * lines.length + 2 * padding;
 
         // HSV is great! But we have to use HSL :(
         const satHSV = 0.1;
@@ -582,11 +546,15 @@ export default class InfiniteCanvas extends Component {
         ctx.stroke();
         ctx.fill();
 
-        // Now repaint the text, which we just covered up.
-        // TODO(william): Consider doing this less wastefully.
-        ctx.font = `${fontSize}px ${fontFamily}`;
-        ctx.fillStyle = 'black';
-        performActions();
+        // Finally, paint the text!
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        lines.forEach((data, index) => {
+            ctx.fillStyle = data.root ? "blue" : "black";
+            const boldTag = data.root ? "bold " : "";
+            ctx.font = `${boldTag}${fontSize}px ${fontFamily}`;
+            ctx.fillText(data.text + "", x, y + padding + index * lineHeight);
+        });
     }
 
     /*
