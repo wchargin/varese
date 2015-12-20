@@ -419,7 +419,7 @@ export default class InfiniteCanvas extends Component {
     _draw() {
         const {canvas} = this.refs;
         const {width, height} = canvas;
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', {alpha: 'false'});
         ctx.clearRect(0, 0, width, height);
 
         const {width: rowWidth, height: rowHeight} = this._getRowDimensions();
