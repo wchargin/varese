@@ -96,7 +96,8 @@
  *   - "Idealized coordinates" are the easiest to work with mathematically.
  *     The origin is at the top-center of the tree,
  *     and the basis vectors point to the right and downward.
- *     The scaling factor is the same as the absolute coordinates.
+ *     A distance of one unit in the y direction corresponds to one level,
+ *     and the entire horizontal axis ranges from -0.5 to 0.5.
  */
 import React, {Component, PropTypes} from 'react';
 import CustomPropTypes from '../CustomPropTypes';
@@ -406,7 +407,7 @@ export default class InfiniteCanvas extends Component {
 
         const maxLevel = this._getMaxSafeRow();
 
-        const newY = this.state.position.y + canvasDeltaXY.y;
+        const newY = this.state.position.y + canvasDeltaXY.y / rowHeight;
         const minY = 0;
         const maxY = (maxLevel - this.props.viewOptions.infiniteLevels) *
             rowHeight;
@@ -415,9 +416,9 @@ export default class InfiniteCanvas extends Component {
 
         const scalingFactor = this._getScalingFactor(finalY);
 
-        const newX = this.state.position.x + canvasDeltaXY.x / scalingFactor;
-        const viewportWidth = rowWidth / scalingFactor;
-        const rangeX = rowWidth - viewportWidth;
+        const perceivedWidth = rowWidth * scalingFactor;
+        const newX = this.state.position.x + canvasDeltaXY.x / perceivedWidth;
+        const rangeX = 1 - 1 / scalingFactor;
         const minX = -rangeX / 2;
         const maxX = +rangeX / 2;
         const finalX = Math.max(minX, Math.min(newX, maxX));
@@ -454,7 +455,7 @@ export default class InfiniteCanvas extends Component {
      * and also that the viewport should be a third of its original size.
      */
     _getScalingFactor(y) {
-        return Math.pow(2, y / this._getRowDimensions().height);
+        return Math.pow(2, y);
     }
 
     _draw() {
@@ -468,12 +469,12 @@ export default class InfiniteCanvas extends Component {
 
         // Viewport dimensions and position, in absolute coordinates.
         const viewportWidth = rowWidth / scalingFactor;
-        const viewportXc = this.state.position.x + rowWidth / 2;
+        const viewportXc = this.state.position.x * width + rowWidth / 2;
         const viewportXl = viewportXc - viewportWidth / 2;
         const viewportXr = viewportXc + viewportWidth / 2;
 
         // The y-position of the top of the top row, in absolute coordinates.
-        const topY = this.state.position.y - rowHeight / 2;
+        const topY = rowHeight * (this.state.position.y - 0.5);
         const rowMin = Math.ceil(topY / rowHeight);
         const rowMax = Math.min(
             this._getMaxSafeRow(),
@@ -484,7 +485,7 @@ export default class InfiniteCanvas extends Component {
         // because everything has top-gravity.
         for (let row = Math.max(0, rowMin - 1); row <= rowMax; row++) {
             const absoluteYc = rowHeight * (row + 0.5);
-            const canvasYc = absoluteYc - this.state.position.y;
+            const canvasYc = absoluteYc - this.state.position.y * rowHeight;
 
             // We only have to paint the nodes that are in view.
             // Determine these bounds.
