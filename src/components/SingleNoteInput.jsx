@@ -124,6 +124,10 @@ export default class SingleNoteInput extends Component {
             return;
         }
 
+        // Don't move the cursor around
+        // (or maybe select everything, if holding shift).
+        e.preventDefault();
+
         // Jump full octaves when holding shift.
         const delta = e.shiftKey ? direction * 12 : direction;
         this.props.onChange(this.props.value + delta, null /* synthetic */);
