@@ -99,6 +99,7 @@
  *     The scaling factor is the same as the absolute coordinates.
  */
 import React, {Component, PropTypes} from 'react';
+import CustomPropTypes from '../CustomPropTypes';
 
 import {positionToPitches} from '../../TreeSpace';
 import {pitchToName} from '../../PitchNames';
@@ -374,7 +375,8 @@ export default class InfiniteCanvas extends Component {
 
         const newY = this.state.position.y + canvasDeltaXY.y;
         const minY = 0;
-        const maxY = (maxLevel - this.props.levels) * rowHeight;
+        const maxY = (maxLevel - this.props.viewOptions.infiniteLevels) *
+            rowHeight;
         const maxYPadding = 2 * rowHeight;  // don't chop off the bottom nodes
         const finalY = Math.max(minY, Math.min(newY, maxY + maxYPadding));
 
@@ -404,7 +406,7 @@ export default class InfiniteCanvas extends Component {
     _getRowDimensions() {
         return {
             width: this.refs.canvas.width,
-            height: this.props.height / this.props.levels,
+            height: this.props.height / this.props.viewOptions.infiniteLevels,
         };
     }
 
@@ -475,7 +477,9 @@ export default class InfiniteCanvas extends Component {
 
     _drawNode(ctx, row, col, x, y) {
         const notes = positionToPitches(
-            this.props.treeNumber, row, col, this.props.rootBass);
+            this.props.viewOptions.treeNumber,
+            row, col,
+            this.props.viewOptions.rootBass);
         const noteNames = notes.map(x => pitchToName(x, true));
 
         const [low, mid, high] = notes;
@@ -574,8 +578,6 @@ export default class InfiniteCanvas extends Component {
 }
 InfiniteCanvas.propTypes = {
     height: PropTypes.number.isRequired,
-    levels: PropTypes.number.isRequired,
-    treeNumber: PropTypes.number.isRequired,
-    rootBass: PropTypes.number.isRequired,
+    viewOptions: CustomPropTypes.viewOptions.isRequired,
     rationalizer: PropTypes.func.isRequired,
 };
