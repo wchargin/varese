@@ -24,8 +24,7 @@ export default class Page extends Component {
                         <ul className="nav navbar-nav">
                             {link("calculator", "Root calculator")}
                             {link("tree", "Tree explorer")}
-                            {/* global __PROD__ */ !__PROD__ && link(
-                                "infinite-tree", "Infinite tree", "beta")}
+                            {link("infinite-tree", "Infinite tree", "beta")}
                         </ul>
                     </div>
                 </div>
