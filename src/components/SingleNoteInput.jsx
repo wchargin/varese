@@ -68,6 +68,7 @@ export default class SingleNoteInput extends Component {
             onFocus={() => this.setState({ text: null, focused: true })}
             onBlur={() => this.setState({ text: null, focused: false })}
             onChange={() => this._handleChange()}
+            onKeyDown={e => this._handleKeyDown(e)}
             value={text}
         />;
     }
@@ -112,14 +113,32 @@ export default class SingleNoteInput extends Component {
         }
     }
 
+    _handleKeyDown(e) {
+        const direction = ({
+            "ArrowUp": +1,
+            "ArrowDown": -1,
+        })[e.key];
+
+        // Ignore other keys.
+        if (direction === undefined) {
+            return;
+        }
+
+        // Jump full octaves when holding shift.
+        const delta = e.shiftKey ? direction * 12 : direction;
+        this.props.onChange(this.props.value + delta, null /* synthetic */);
+        this.setState({ text: null });
+    }
+
 }
 SingleNoteInput.propTypes = {
     displayValue: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired,
 
-    // (number, string) => void; takes
+    // (number, string?) => void; takes
     //   * the new pitch after successful parse, and
     //   * the current text entered by the user,
-    //     which might need to be copied to a different element.
+    //     which might need to be copied to a different element,
+    //     or null if the new value is synthetically generated.
     onChange: PropTypes.func.isRequired,
 };

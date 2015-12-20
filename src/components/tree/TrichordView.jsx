@@ -43,7 +43,6 @@ export default class TrichordView extends Component {
                     style={{ textAlign: "center", width: "100%" }}
                     onChange={(newPitch, displayText) =>
                         this._handleChange(index, newPitch, displayText)}
-                    onKeyDown={e => this._handleKeyDown(index, e)}
                 />;
             } else {
                 return <strong key={"note-" + index}>{name}</strong>;
@@ -154,10 +153,6 @@ export default class TrichordView extends Component {
     }
 
     _updatePitch(noteIndex, newNote, maybeDisplayText) {
-        const displayText = maybeDisplayText === undefined ?
-            pitchToName(newNote, true, true) :
-            maybeDisplayText;
-
         const {notes} = this.props;
         const newNotes = [
             ...notes.slice(0, noteIndex),
@@ -181,34 +176,15 @@ export default class TrichordView extends Component {
             a.note - b.note);
         const newIndex = notesAscending.findIndex(note => note.isTarget);
 
-        const oldRef = this.refs["note-" + oldIndex];
-        const newRef = this.refs["note-" + newIndex];
-
         // Handle that case where a note's position in the chord has changed.
         if (newIndex !== noteIndex) {
-            newRef.takeStateFrom(oldRef, displayText);
-        } else {
-            newRef.setDisplayText(displayText);
+            const oldRef = this.refs["note-" + oldIndex];
+            const newRef = this.refs["note-" + newIndex];
+            newRef.takeStateFrom(oldRef, maybeDisplayText);
         }
 
         // Finally, we can just discard the tagging information.
         this.props.onChange(notesAscending.map(x => x.note));
-    }
-
-    _handleKeyDown(index, e) {
-        const direction = ({
-            "ArrowUp": +1,
-            "ArrowDown": -1,
-        })[e.key];
-
-        // Ignore other keys.
-        if (direction === undefined) {
-            return;
-        }
-
-        const delta = e.shiftKey ? direction * 12 : direction;
-
-        this._updatePitch(index, this.props.notes[index] + delta);
     }
 
 }
