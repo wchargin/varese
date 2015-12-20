@@ -485,7 +485,7 @@ export default class InfiniteCanvas extends Component {
         const scale = 0.5 + 0.5 *
             Math.sqrt(Math.max(0, 1 - y / ctx.canvas.height));
 
-        const fontSize = 14 * scale;
+        const fontSize = Math.round(14 * scale);
         const lineHeight = 1.2 * fontSize;
         const padding = 5;
         const fontFamily = '"Helvetica Neue",Helvetica,Arial,sans-serif';
