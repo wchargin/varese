@@ -523,7 +523,7 @@ export default class InfiniteCanvas extends Component {
             Math.sqrt(Math.max(0, 1 - y / ctx.canvas.height));
 
         const fontSize = Math.round(14 * scale);
-        const lineHeight = 1.2 * fontSize;
+        const lineHeight = Math.round(1.2 * fontSize);
         const padding = 5;
         const fontFamily = '"Helvetica Neue",Helvetica,Arial,sans-serif';
         ctx.font = `${fontSize}px ${fontFamily}`;  // for metrics
@@ -592,7 +592,9 @@ export default class InfiniteCanvas extends Component {
             ctx.fillStyle = data.root ? rootStyle : nonRootStyle;
             const boldTag = data.root ? "bold " : "";
             ctx.font = `${boldTag}${fontSize}px ${fontFamily}`;
-            ctx.fillText(data.text + "", x, y + padding + index * lineHeight);
+            ctx.fillText(data.text + "",
+                Math.round(x),
+                Math.round(y) + padding + index * lineHeight);
         });
     }
 
