@@ -8,6 +8,8 @@ import Page from '../Page';
 import InfiniteTrichordTree from './InfiniteTrichordTree';
 import ViewOptions from '../settings/ViewOptions';
 
+import {extendRationalizer} from '../../HarmonicSeries';
+
 class InfiniteTreeExplorer extends Component {
 
     constructor() {
@@ -33,6 +35,7 @@ class InfiniteTreeExplorer extends Component {
                 handlers={this.props.viewOptionsHandlers}
             />
             <InfiniteTrichordTree
+                rationalizer={extendRationalizer(this.props.acousticRatios)}
                 viewOptions={this.props.treeViewOptions}
             />
         </Page>;

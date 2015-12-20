@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 
 import CustomPropTypes from '../CustomPropTypes';
 import InfiniteCanvas from './InfiniteCanvas';
@@ -19,6 +19,7 @@ export default class InfiniteTrichordTree extends Component {
                 levels={this.props.viewOptions.infiniteLevels}
                 treeNumber={this.props.viewOptions.treeNumber}
                 rootBass={this.props.viewOptions.rootBass}
+                rationalizer={this.props.rationalizer}
             />
         </div>;
     }
@@ -26,4 +27,5 @@ export default class InfiniteTrichordTree extends Component {
 }
 InfiniteTrichordTree.propTypes = {
     viewOptions: CustomPropTypes.viewOptions.isRequired,
+    rationalizer: PropTypes.func.isRequired,
 };

@@ -577,4 +577,5 @@ InfiniteCanvas.propTypes = {
     levels: PropTypes.number.isRequired,
     treeNumber: PropTypes.number.isRequired,
     rootBass: PropTypes.number.isRequired,
+    rationalizer: PropTypes.func.isRequired,
 };
