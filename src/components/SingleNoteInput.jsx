@@ -53,13 +53,12 @@ export default class SingleNoteInput extends Component {
         return <input
             ref="input"
             type="text"
-            value={text}
             size={3}
-            onChange={() => this._handleChange()}
+            {...this.props}
             onFocus={() => this.setState({ text: this.props.value })}
             onBlur={() => this.setState({ text: null })}
-            onKeyDown={this.props.onKeyDown}
-            style={this.props.style}
+            onChange={() => this._handleChange()}
+            value={text}
         />;
     }
 
@@ -113,8 +112,4 @@ SingleNoteInput.propTypes = {
     //   * the current text entered by the user,
     //     which might need to be copied to a different element.
     onChange: PropTypes.func.isRequired,
-
-    onKeyDown: PropTypes.func,
-
-    style: PropTypes.object,
 };
