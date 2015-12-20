@@ -20,7 +20,8 @@ export default class ViewOptions extends Component {
         return <div>
             <Table>
                 <Row>
-                    {!infinite && <LabelCell htmlFor="depth">Tree depth</LabelCell>}
+                    {!infinite &&
+                        <LabelCell htmlFor="depth">Tree depth</LabelCell>}
                     <LabelCell htmlFor="showRoots">Show roots?</LabelCell>
                     <LabelCell htmlFor="showOctaves">Show octaves?</LabelCell>
                     <LabelCell htmlFor="fillWindow">Fill window?</LabelCell>
