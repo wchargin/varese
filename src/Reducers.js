@@ -9,8 +9,9 @@ const initialState = {
         // There are two different 'levels' properties:
         // one for the finite tree, and one for the infinite tree.
         // All the other properties are shared, unless otherwise noted.
-        levels: 4,          // for the finite tree; must be discrete
-        infiniteLevels: 3,  // for the infinite tree; can be real
+        levels: 4,              // for the finite tree; must be discrete
+        infiniteLevels: 3,      // for the infinite tree; can be real
+        infiniteHeight: 600,    // pixel height of the infinite tree
         //
         showRoots: true,
         showOctaves: true,
@@ -115,6 +116,8 @@ export default function reducer(state = initialState, action) {
             return setTreeViewOption(state, 'levels', action.levels);
         case "SET_INFINITE_TREE_LEVELS":
             return setTreeViewOption(state, 'infiniteLevels', action.levels);
+        case "SET_INFINITE_TREE_HEIGHT":
+            return setTreeViewOption(state, 'infiniteHeight', action.height);
         case "SET_TREE_SHOW_ROOTS":
             return setTreeViewOption(state, 'showRoots', action.showRoots);
         case "SET_TREE_SHOW_OCTAVES":

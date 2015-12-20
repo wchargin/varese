@@ -26,6 +26,13 @@ export function setInfiniteTreeLevels(levels) {
     };
 }
 
+export function setInfiniteTreeHeight(height) {
+    return {
+        type: "SET_INFINITE_TREE_HEIGHT",
+        height,
+    };
+}
+
 export function setTreeShowRoots(showRoots) {
     return {
         type: "SET_TREE_SHOW_ROOTS",
