@@ -409,9 +409,8 @@ export default class InfiniteCanvas extends Component {
 
         const newY = this.state.position.y + canvasDeltaXY.y / rowHeight;
         const minY = 0;
-        const maxY = (maxLevel - this.props.viewOptions.infiniteLevels) *
-            rowHeight;
-        const maxYPadding = 2 * rowHeight;  // don't chop off the bottom nodes
+        const maxY = maxLevel - this.props.viewOptions.infiniteLevels;
+        const maxYPadding = 2;  // don't chop off the bottom nodes
         const finalY = Math.max(minY, Math.min(newY, maxY + maxYPadding));
 
         const scalingFactor = this._getScalingFactor(finalY);
