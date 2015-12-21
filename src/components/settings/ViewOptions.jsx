@@ -156,6 +156,34 @@ export default class ViewOptions extends Component {
                     <LabelCell htmlFor="highQuality">
                         Display quality
                     </LabelCell>
+                    <LabelCell
+                        htmlFor="rainbowFactor"
+                        aria-label="Rainbow factor"
+                    >
+                        {(() => {
+                            const rainbow = "Rainbow".split('');
+                            return rainbow.map((chr, idx) => {
+                                // Compute a simple rainbow gradient,
+                                // but decrease the lightness near cyan
+                                // because it's hard to see.
+                                const t = idx / rainbow.length;
+                                const hue = t * 360;
+                                const sigma = 0.1;
+                                const crit = 0.5;
+                                const base = 0.5;
+                                const drop = 0.1;
+                                const lit = Math.abs(t - crit) > sigma ?
+                                    base :
+                                    base - drop * Math.exp(1 - 1 /
+                                        (1 - Math.pow((t - crit) / sigma, 2)));
+                                const hsl = `hsl(${hue}, 50%, ${lit * 100}%)`;
+                                return <span
+                                    style={{ color: hsl }}
+                                    key={idx}
+                                >{chr}</span>;
+                            });
+                        })()} factor
+                    </LabelCell>
                 </Row>
                 <Row>
                     <CheckboxCell
@@ -165,6 +193,20 @@ export default class ViewOptions extends Component {
                         labelYes="Pretty"
                         labelNo="Fast"
                     />
+                    <Cell style={{ verticalAlign: "middle" }}>
+                        <input
+                            ref="rainbowFactor"
+                            type="range"
+                            id="rainbowFactor"
+                            //
+                            min={0}
+                            max={1}
+                            step={0.05}
+                            value={values.rainbowFactor}
+                            onChange={() => handlers.onSetRainbowFactor(
+                                this.refs.rainbowFactor.valueAsNumber)}
+                        />
+                    </Cell>
                 </Row>
             </Table>}
         </div>;

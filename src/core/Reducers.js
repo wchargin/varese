@@ -33,6 +33,7 @@ const initialState = {
         treeNumber: 1,          // the 'n' in "the root has semitones '[n][n]'"
         rootBass: 0,            // semitones above middle C of the bass note
         highQuality: false,     // smoother, slower rendering
+        rainbowFactor: 0,       // how colorful should the nodes be?
     },
 };
 

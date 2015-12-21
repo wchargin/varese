@@ -84,6 +84,14 @@ export function setTreeHighQuality(highQuality) {
     };
 }
 
+export function setTreeRainbowFactor(rainbowFactor) {
+    return {
+        type: "SET_TREE_VIEW_OPTION",
+        field: "rainbowFactor",
+        value: rainbowFactor,
+    };
+}
+
 export function setTreeLimitValue(limit, value) {
     return {
         type: "SET_TREE_LIMIT_VALUE",

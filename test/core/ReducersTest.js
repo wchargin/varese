@@ -113,6 +113,13 @@ describe('reducer', () => {
                     .to.equal(flag),
                 reducer(undefined, Actions.setTreeHighQuality(flag)))));
 
+    it(":SET_TREE_RAINBOW_FACTOR sets the 'rainbowFactor' field", () =>
+        [0.0, 0.5, 1.0].forEach(value =>
+            verifyShapeAnd(
+                state => expect(state.treeViewOptions.rainbowFactor)
+                    .to.equal(value),
+                reducer(undefined, Actions.setTreeRainbowFactor(value)))));
+
     describe(':SET_TREE_LIMIT_VALUE', () => {
         it("sets a valid limit value", () => {
             [10, 20].forEach(value =>
