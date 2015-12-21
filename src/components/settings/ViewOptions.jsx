@@ -153,10 +153,18 @@ export default class ViewOptions extends Component {
             </Table>}
             {infinite && this.state.showAdvanced && <Table>
                 <Row>
-                    <LabelCell htmlFor="nothing">Field</LabelCell>
+                    <LabelCell htmlFor="highQuality">
+                        Display quality
+                    </LabelCell>
                 </Row>
                 <Row>
-                    <Cell>Thing</Cell>
+                    <CheckboxCell
+                        id="highQuality"
+                        checked={values.highQuality}
+                        onChange={handlers.onSetHighQuality}
+                        labelYes="Pretty"
+                        labelNo="Fast"
+                    />
                 </Row>
             </Table>}
         </div>;
