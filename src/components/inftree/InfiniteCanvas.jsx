@@ -504,7 +504,7 @@ export default class InfiniteCanvas extends Component {
         const height = lineHeight * lines.length + 2 * padding;
 
         // HSV is great! But we have to use HSL :(
-        const satHSV = 0.1;
+        const satHSV = viewOptions.rainbowFactor * 0.2;
         const value = 1.0;
         const baseLight = value * 0.5 * (2 - satHSV);
         const light = visible ? baseLight : (baseLight * 0.2 + 0.8);
