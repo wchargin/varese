@@ -112,22 +112,8 @@ export default function reducer(state = initialState, action) {
             return state;
         case "SET_ACOUSTIC_RATIO":
             return setAcousticRatio(state, action.index, action.ratio);
-        case "SET_TREE_LEVELS":
-            return setTreeViewOption(state, 'levels', action.levels);
-        case "SET_INFINITE_TREE_LEVELS":
-            return setTreeViewOption(state, 'infiniteLevels', action.levels);
-        case "SET_INFINITE_TREE_HEIGHT":
-            return setTreeViewOption(state, 'infiniteHeight', action.height);
-        case "SET_TREE_SHOW_ROOTS":
-            return setTreeViewOption(state, 'showRoots', action.showRoots);
-        case "SET_TREE_SHOW_OCTAVES":
-            return setTreeViewOption(state, 'showOctaves', action.showOctaves);
-        case "SET_TREE_WIDE":
-            return setTreeViewOption(state, 'wide', action.wide);
-        case "SET_TREE_TREE_NUMBER":  // ugh
-            return setTreeViewOption(state, 'treeNumber', action.treeNumber);
-        case "SET_TREE_ROOT_BASS":
-            return setTreeViewOption(state, 'rootBass', action.rootBass);
+        case "SET_TREE_VIEW_OPTION":
+            return setTreeViewOption(state, action.field, action.value);
         case "SET_TREE_LIMIT_VALUE":
             return setTreeLimitValue(state, action.limit, action.value);
         case "SET_TREE_LIMIT_ENABLED":

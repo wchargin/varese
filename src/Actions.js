@@ -14,57 +14,65 @@ export function setAcousticRatio(index, ratio) {
 
 export function setTreeLevels(levels) {
     return {
-        type: "SET_TREE_LEVELS",
-        levels,
+        type: "SET_TREE_VIEW_OPTION",
+        field: "levels",
+        value: levels,
     };
 }
 
 export function setInfiniteTreeLevels(levels) {
     return {
-        type: "SET_INFINITE_TREE_LEVELS",
-        levels,
+        type: "SET_TREE_VIEW_OPTION",
+        field: "infiniteLevels",
+        value: levels,
     };
 }
 
 export function setInfiniteTreeHeight(height) {
     return {
-        type: "SET_INFINITE_TREE_HEIGHT",
-        height,
+        type: "SET_TREE_VIEW_OPTION",
+        field: "infiniteHeight",
+        value: height,
     };
 }
 
 export function setTreeShowRoots(showRoots) {
     return {
-        type: "SET_TREE_SHOW_ROOTS",
-        showRoots,
+        type: "SET_TREE_VIEW_OPTION",
+        field: "showRoots",
+        value: showRoots,
     };
 }
 
 export function setTreeShowOctaves(showOctaves) {
     return {
-        type: "SET_TREE_SHOW_OCTAVES",
-        showOctaves,
+        type: "SET_TREE_VIEW_OPTION",
+        field: "showOctaves",
+        value: showOctaves,
     };
 }
 
 export function setTreeWide(wide) {
     return {
-        type: "SET_TREE_WIDE",
-        wide,
+        type: "SET_TREE_VIEW_OPTION",
+        field: "wide",
+        value: wide,
     };
 }
 
 export function setTreeTreeNumber(treeNumber) {
     return {
-        type: "SET_TREE_TREE_NUMBER",
-        treeNumber,
+        type: "SET_TREE_VIEW_OPTION",
+        field: "treeNumber",
+        value: treeNumber,
     };
 }
 
 export function setTreeRootBass(rootBass) {
     return {
-        type: "SET_TREE_ROOT_BASS",
-        rootBass,
+        type: "SET_TREE_VIEW_OPTION",
+        field: "rootBass",
+        value: rootBass,
     };
 }
 
