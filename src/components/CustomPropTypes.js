@@ -26,6 +26,7 @@ export const viewOptions = PropTypes.shape({
     wide: PropTypes.bool.isRequired,
     treeNumber: PropTypes.number.isRequired,
     rootBass: PropTypes.number.isRequired,
+    highQuality: PropTypes.bool.isRequired,
     limits: limits.isRequired,
 });
 
@@ -38,6 +39,7 @@ export const viewOptionsHandlers = PropTypes.shape({
     onSetWide: PropTypes.func.isRequired,
     onSetTreeNumber: PropTypes.func.isRequired,
     onSetRootBass: PropTypes.func.isRequired,
+    onSetHighQuality: PropTypes.func.isRequired,
     ...limitsHandlersShape,
 });
 

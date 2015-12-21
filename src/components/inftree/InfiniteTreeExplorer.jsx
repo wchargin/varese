@@ -76,6 +76,8 @@ function mapDispatchToProps(dispatch) {
                 Actions.setTreeTreeNumber(treeNumber)),
             onSetRootBass: rootBass => dispatch(
                 Actions.setTreeRootBass(rootBass)),
+            onSetHighQuality: highQuality => dispatch(
+                Actions.setTreeHighQuality(highQuality)),
             onSetLimitValue: (limit, value) => dispatch(
                 Actions.setTreeLimitValue(limit, value)),
             onSetLimitEnabled: (limit, enabled) => dispatch(
