@@ -494,7 +494,7 @@ export default class InfiniteCanvas extends Component {
         // Profiling indicates that measureText is a bottleneck,
         // so this is a little heuristic to avoid calls...
         const lineWidth = line => !line ? 0 :
-            line.text.length * (line.root ? 1.5 : 1);
+            line.text.length * (line.root ? 1.2 : 1);
         const longestLine = ctx.measureText(lines.reduce((best, line) =>
             lineWidth(line) > lineWidth(best) ? line : best).text).width;
 
