@@ -3,7 +3,7 @@ import React, {Component, PropTypes} from 'react';
 import {findChordRootOffset} from '../../HarmonicSeries';
 import {pitchToName} from '../../PitchNames';
 import {flatten} from '../../Utils';
-import {withinLimits} from '../../DisplayUtils';
+import {withinLimits, formatMaybeRoot} from '../../DisplayUtils';
 
 import CustomPropTypes from '../CustomPropTypes';
 
@@ -119,24 +119,11 @@ export default class TrichordView extends Component {
     }
 
     _renderRootView(notes) {
-        const {rationalizer, showOctave} = this.props;
-
-        const createRootView = text =>
-            <strong key="root" style={{ color: "blue" }}>{text}</strong>;
-
-        const maybeRootPitch = findChordRootOffset(rationalizer, notes);
-        if (maybeRootPitch.status === "success") {
-            const rootPitch = maybeRootPitch.result;
-            const rootName = pitchToName(rootPitch, true, showOctave);
-            return createRootView(rootName);
-        } else {
-            const e = maybeRootPitch.error;
-            if (e.match(/finite/) || e.match(/zero_ratio/)) {
-                return createRootView("?");
-            } else {
-                throw e;
-            }
-        }
+        const maybeRootPitch = findChordRootOffset(
+            this.props.rationalizer, notes);
+        return <strong key="root" style={{ color: "blue" }}>
+            {formatMaybeRoot(maybeRootPitch, this.props)}
+        </strong>;
     }
 
     /*
