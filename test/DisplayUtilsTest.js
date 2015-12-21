@@ -1,4 +1,4 @@
-import {describe, it} from 'mocha';
+import {describe, describe as context, it} from 'mocha';
 import {expect} from 'chai';
 
 import * as DisplayUtils from '../src/DisplayUtils';
@@ -88,6 +88,47 @@ describe('DisplayUtils', () => {
             expect(fmr(no('zero_ratio'), show)).to.equal("?"));
         it("gives up upon encountering an unexpected error message", () =>
             expect(() => fmr(no('ragnarok'), show)).to.throw(/ragnarok/));
+    });
+
+    describe('#formatMaybeRoot', () => {
+        const {formatPitchesAndSemitones: fps} = DisplayUtils;
+
+        const dfsa = [2, 6, 9];  // D4, F#4, A4
+        const withOctaves    = (notes = dfsa) =>
+            fps(notes, { showOctaves: true });
+        const withoutOctaves = (notes = dfsa) =>
+            fps(notes, { showOctaves: false });
+
+        context("when octaves should be shown", () => {
+            it("formats note names", () =>
+                expect(withOctaves().noteNames)
+                    .to.deep.equal(["D4", "F\u266F4", "A4"]));
+            it("formats semitone names", () =>
+                expect(withOctaves().semitoneNames)
+                    .to.deep.equal(["[4]", "[3]"]));
+        });
+
+        context("when octaves should be hidden", () => {
+            it("formats note names", () =>
+                expect(withoutOctaves().noteNames)
+                    .to.deep.equal(["D", "F\u266F", "A"]));
+            it("formats semitone names", () =>
+                expect(withoutOctaves().semitoneNames)
+                    .to.deep.equal(["[4]", "[3]"]));
+        });
+
+        context("for chords with more than three notes", () => {
+            it("formats note names", () =>
+                expect(withoutOctaves([0, 2, 4, 5]).noteNames)
+                    .to.deep.equal(["C", "D", "E", "F"]));
+            it("formats semitone names", () =>
+                expect(withoutOctaves([0, 2, 4, 5]).semitoneNames)
+                    .to.deep.equal(["[2]", "[2]", "[1]"]));
+        });
+
+        it("uses a proper minus sign for negative semitones", () =>
+            expect(withoutOctaves([1, 1, 0]).semitoneNames)
+                .to.deep.equal(["[0]", "[\u22121]"]));
     });
 
 });

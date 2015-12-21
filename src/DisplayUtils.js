@@ -55,3 +55,29 @@ export function formatMaybeRoot(maybeRootPitch, viewOptions) {
         }
     }
 }
+
+/*
+ * Given an ascending sequence of pitches
+ * (as numbers, representing semitones above middle C),
+ * format each of the pitches and also the differences between them
+ * according to the given view options.
+ *
+ * If the sequence is not ascending,
+ * some of the semitone differences will be negative;
+ * the proper MINUS SIGN (U+2212) will be used in the representation.
+ *
+ * The return value has shape { noteNames: [string], semitoneNames: [string] },
+ * where the values are in the same order as the input.
+ *
+ * For example, [0, 4, 7] might map to {
+ *     noteNames: ["C4", "E4", "G4"],
+ *     semitoneNames: ["[4]", "[3]"],
+ * }, but the octaves are hidden if so specified by the view options.
+ */
+export function formatPitchesAndSemitones(notes, viewOptions) {
+    const noteNames = notes.map(x =>
+        pitchToName(x, true, viewOptions.showOctaves));
+    const semitoneNames = notes.slice(1).map((snd, idx) =>
+        `[${snd - notes[idx]}]`.replace(/-/, "\u2212"));
+    return { noteNames, semitoneNames };
+}
