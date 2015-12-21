@@ -70,4 +70,24 @@ describe('DisplayUtils', () => {
             test(true, gdb, 1, 8, 3, 5, {xc: true}));
     });
 
+    describe('#formatMaybeRoot', () => {
+        const {formatMaybeRoot: fmr} = DisplayUtils;
+        const yes = result => ({ status: "success", result });
+        const no  = error  => ({ status: "error", error });
+
+        const show = { showOctaves: true };
+        const hide = { showOctaves: false };
+
+        it("properly formats a chord with octaves displayed", () =>
+            expect(fmr(yes(6), show)).to.equal("F\u266F4"));
+        it("properly formats a chord with octaves hidden", () =>
+            expect(fmr(yes(6), hide)).to.equal("F\u266F"));
+        it("properly formats a missing root due to a singularity", () =>
+            expect(fmr(no('finite'), show)).to.equal("?"));
+        it("properly formats a missing root due to a zero ratio", () =>
+            expect(fmr(no('zero_ratio'), show)).to.equal("?"));
+        it("gives up upon encountering an unexpected error message", () =>
+            expect(() => fmr(no('ragnarok'), show)).to.throw(/ragnarok/));
+    });
+
 });
