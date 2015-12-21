@@ -106,6 +106,13 @@ describe('reducer', () => {
                 state => expect(state.treeViewOptions.rootBass).to.equal(value),
                 reducer(undefined, Actions.setTreeRootBass(value)))));
 
+    it(":SET_TREE_HIGH_QUALITY sets the 'highQuality' field", () =>
+        [true, false].forEach(flag =>
+            verifyShapeAnd(
+                state => expect(state.treeViewOptions.highQuality)
+                    .to.equal(flag),
+                reducer(undefined, Actions.setTreeHighQuality(flag)))));
+
     describe(':SET_TREE_LIMIT_VALUE', () => {
         it("sets a valid limit value", () => {
             [10, 20].forEach(value =>

@@ -76,6 +76,14 @@ export function setTreeRootBass(rootBass) {
     };
 }
 
+export function setTreeHighQuality(highQuality) {
+    return {
+        type: "SET_TREE_VIEW_OPTION",
+        field: "highQuality",
+        value: highQuality,
+    };
+}
+
 export function setTreeLimitValue(limit, value) {
     return {
         type: "SET_TREE_LIMIT_VALUE",

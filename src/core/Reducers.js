@@ -32,6 +32,7 @@ const initialState = {
         // These fields are for the infinite tree only.
         treeNumber: 1,  // the 'n' in "the root has semitones '[n][n]'"
         rootBass: 0,    // semitones above middle C of the bass note
+        highQuality: false,  // smoother, slower rendering
     },
 };
 
