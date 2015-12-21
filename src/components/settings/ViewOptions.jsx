@@ -14,6 +14,13 @@ import {Table, Row, Cell, LabelCell, CheckboxCell} from './SettingsTable';
  */
 export default class ViewOptions extends Component {
 
+    constructor() {
+        super();
+        this.state = {
+            showAdvanced: false,
+        };
+    }
+
     render() {
         const {infinite, values, handlers} = this.props;
 
@@ -76,6 +83,7 @@ export default class ViewOptions extends Component {
                     <LabelCell htmlFor="height">Height</LabelCell>
                     <LabelCell htmlFor="treeNumber">Tree number</LabelCell>
                     <LabelCell htmlFor="rootBass">Root chord bass</LabelCell>
+                    <LabelCell htmlFor="advanced">Advanced</LabelCell>
                 </Row>
                 <Row>
                     <Cell style={{ verticalAlign: "middle" }}>
@@ -128,6 +136,27 @@ export default class ViewOptions extends Component {
                             className="form-control"
                         />
                     </Cell>
+                    <Cell>
+                    <button
+                        className={this.state.showAdvanced ?
+                            "btn btn-primary" :
+                            "btn btn-default"}
+                        onClick={() => this.setState({
+                            showAdvanced: !this.state.showAdvanced,
+                        })}
+                        id="advanced"
+                    >
+                        <i className="glyphicon glyphicon-cog" />
+                    </button>
+                    </Cell>
+                </Row>
+            </Table>}
+            {infinite && this.state.showAdvanced && <Table>
+                <Row>
+                    <LabelCell htmlFor="nothing">Field</LabelCell>
+                </Row>
+                <Row>
+                    <Cell>Thing</Cell>
                 </Row>
             </Table>}
         </div>;
