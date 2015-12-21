@@ -43,7 +43,7 @@ import CustomPropTypes from '../CustomPropTypes';
 import {findChordRootOffset} from '../../HarmonicSeries';
 import {positionToPitches} from '../../TreeSpace';
 import {pitchToName} from '../../PitchNames';
-import {withinLimits} from '../../DisplayUtils';
+import {withinLimits, formatMaybeRoot} from '../../DisplayUtils';
 
 export default class InfiniteCanvas extends Component {
 
@@ -490,7 +490,12 @@ export default class InfiniteCanvas extends Component {
         const lines = [
             ...noteNames.slice().reverse().map(x => ({text: x})),
             ...(this.props.viewOptions.showRoots ?
-                [{text: getRoot(), root: true}] :
+                [{
+                    text: formatMaybeRoot(
+                        this._fastFindChordRootOffset(notes),
+                        this.props.viewOptions),
+                    root: true,
+                }] :
                 []),
             ...semitoneNames.slice().reverse().map(x => ({text: x})),
         ];
