@@ -471,22 +471,6 @@ export default class InfiniteCanvas extends Component {
         const fontFamily = '"Helvetica Neue",Helvetica,Arial,sans-serif';
         ctx.font = `${fontSize}px ${fontFamily}`;  // for metrics
 
-        const getRoot = () => {
-            const maybeRootPitch = this._fastFindChordRootOffset(notes);
-            if (maybeRootPitch.status === "success") {
-                const rootPitch = maybeRootPitch.result;
-                const rootName = pitchToName(rootPitch, true,
-                    this.props.viewOptions.showOctaves);
-                return rootName;
-            } else {
-                const e = maybeRootPitch.error;
-                if (e.match(/finite/) || e.match(/zero_ratio/)) {
-                    return "?";
-                } else {
-                    throw e;
-                }
-            }
-        };
         const lines = [
             ...noteNames.slice().reverse().map(x => ({text: x})),
             ...(this.props.viewOptions.showRoots ?
