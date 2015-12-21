@@ -1,4 +1,9 @@
+/*
+ * Utilities for formatting and displaying
+ * primarily trichords and related results.
+ */
 import {pitchToName} from './PitchNames';
+
 /*
  * Determine whether the given chord passes the given limit filters.
  * Return true if the chord should be displayed, or false otherwise.
