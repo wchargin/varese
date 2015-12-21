@@ -482,8 +482,13 @@ export default class InfiniteCanvas extends Component {
 
         // Set up fonts now because we have some metrics to handle below.
         const fontFamily = '"Helvetica Neue",Helvetica,Arial,sans-serif';
-        const fontSize = Math.round(14 * scale);
-        const lineHeight = Math.round(1.2 * fontSize);
+
+        // Unless we're optimizing for display quality,
+        // we round the font size and line height to integers
+        // because it helps immensely with rendering speed.
+        const maybeRound = viewOptions.highQuality ? x => x : Math.round;
+        const fontSize = maybeRound(14 * scale);
+        const lineHeight = maybeRound(1.2 * fontSize);
         ctx.font = `${fontSize}px ${fontFamily}`;
 
         // Profiling indicates that measureText is a bottleneck,
