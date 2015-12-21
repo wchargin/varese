@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 
-import VexFlowUtils from '../src/VexFlowUtils';
+import VexFlowUtils from '../../src/utils/VexFlowUtils';
 
 describe('VexFlowUtils', () => {
 

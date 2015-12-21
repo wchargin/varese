@@ -1,15 +1,15 @@
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 
-import Rational from '../src/Rational';
-import HarmonicSeries from '../src/HarmonicSeries';
+import Rational from '../../src/core/Rational';
+import HarmonicSeries from '../../src/core/HarmonicSeries';
 
 // NOTE: This next dependency is implemented in terms of HarmonicSeries!
 // This isn't necessarily a problem, but it is something to be aware of.
 import {
     canonicalValues,
     canonicalRationalizer as cr,
-} from '../src/HarmonicData';
+} from '../../src/core/HarmonicData';
 
 describe('HarmonicSeries', () => {
 

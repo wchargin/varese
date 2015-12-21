@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 
-import Rational from '../src/Rational';
+import Rational from '../../src/core/Rational';
 
 describe('Rational', () => {
 

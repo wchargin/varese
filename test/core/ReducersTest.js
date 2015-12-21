@@ -3,9 +3,9 @@ import {expect} from 'chai';
 
 import merge from 'merge';
 
-import reducer from '../src/Reducers';
-import Rational from '../src/Rational';
-import * as Actions from '../src/Actions';
+import reducer from '../../src/core/Reducers';
+import Rational from '../../src/core/Rational';
+import * as Actions from '../../src/core/Actions';
 
 describe('reducer', () => {
 

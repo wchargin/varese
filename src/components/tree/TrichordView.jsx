@@ -1,12 +1,12 @@
 import React, {Component, PropTypes} from 'react';
 
-import {findChordRootOffset} from '../../HarmonicSeries';
-import {flatten} from '../../Utils';
+import {findChordRootOffset} from '../../core/HarmonicSeries';
+import {flatten} from '../../utils/Utils';
 import {
     withinLimits,
     formatMaybeRoot,
     formatPitchesAndSemitones,
-} from '../../DisplayUtils';
+} from '../../utils/DisplayUtils';
 
 import CustomPropTypes from '../CustomPropTypes';
 

@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 
 import Vex from 'vexflow';
-import VexFlowUtils from '../VexFlowUtils';
+import VexFlowUtils from '../utils/VexFlowUtils';
 
 /*
  * Engrave a chord and display it!

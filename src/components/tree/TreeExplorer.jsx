@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import * as Actions from '../../Actions';
+import * as Actions from '../../core/Actions';
+
+import {extendRationalizer} from '../../core/HarmonicSeries';
 
 import ChordInput from '../ChordInput';
 import Page from './../Page';
 import RationalizerSettings from '../settings/RationalizerSettings';
 import TrichordTree from './TrichordTree';
 import ViewOptions from '../settings/ViewOptions';
-
-import {extendRationalizer} from '../../HarmonicSeries';
 
 class TreeExplorer extends Component {
 

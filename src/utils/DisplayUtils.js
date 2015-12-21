@@ -2,7 +2,7 @@
  * Utilities for formatting and displaying
  * primarily trichords and related results.
  */
-import {pitchToName} from './PitchNames';
+import {pitchToName} from '../core/PitchNames';
 
 /*
  * Determine whether the given chord passes the given limit filters.

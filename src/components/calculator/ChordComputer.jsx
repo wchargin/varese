@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 
-import PitchNames from '../../PitchNames';
-import {findChordRootOffset} from '../../HarmonicSeries';
+import PitchNames from '../../core/PitchNames';
+import {findChordRootOffset} from '../../core/HarmonicSeries';
 
 import ChordEngraving from '../ChordEngraving';
 import ChordInput from '../ChordInput';

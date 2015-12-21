@@ -40,13 +40,13 @@
 import React, {Component, PropTypes} from 'react';
 import CustomPropTypes from '../CustomPropTypes';
 
-import {findChordRootOffset} from '../../HarmonicSeries';
-import {positionToPitches} from '../../TreeSpace';
+import {findChordRootOffset} from '../../core/HarmonicSeries';
+import {positionToPitches} from '../../core/TreeSpace';
 import {
     withinLimits,
     formatMaybeRoot,
     formatPitchesAndSemitones,
-} from '../../DisplayUtils';
+} from '../../utils/DisplayUtils';
 
 export default class InfiniteCanvas extends Component {
 

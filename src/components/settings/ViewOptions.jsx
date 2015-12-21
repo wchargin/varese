@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 
-import {pitchToName} from '../../PitchNames';
+import {pitchToName} from '../../core/PitchNames';
 
 import CustomPropTypes from '../CustomPropTypes';
 import LimitsOptions from './LimitsOptions';

@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import * as Actions from '../../Actions';
+import * as Actions from '../../core/Actions';
+
+import {extendRationalizer} from '../../core/HarmonicSeries';
 
 import Page from './../Page';
 import ChordComputer from './ChordComputer';
 import RationalizerSettings from '../settings/RationalizerSettings';
-
-import {extendRationalizer} from '../../HarmonicSeries';
 
 class PitchCalculator extends Component {
 

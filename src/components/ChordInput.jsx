@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 
-import PitchNames from '../PitchNames';
-import TextUtils from '../TextUtils';
+import PitchNames from '../core/PitchNames';
+import TextUtils from '../utils/TextUtils';
 
 export default class ChordInput extends Component {
 

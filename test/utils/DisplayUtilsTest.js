@@ -1,7 +1,7 @@
 import {describe, describe as context, it} from 'mocha';
 import {expect} from 'chai';
 
-import * as DisplayUtils from '../src/DisplayUtils';
+import * as DisplayUtils from '../../src/utils/DisplayUtils';
 
 describe('DisplayUtils', () => {
 

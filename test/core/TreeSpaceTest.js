@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 
-import TreeSpace from '../src/TreeSpace';
+import TreeSpace from '../../src/core/TreeSpace';
 
 describe('TreeSpace', () => {
 

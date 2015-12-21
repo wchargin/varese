@@ -4,8 +4,8 @@
  */
 import React, {Component, PropTypes} from 'react';
 
-import {infoldCanonical, invert} from '../../Folding';
-import {arraysEqual} from '../../Utils';
+import {infoldCanonical, invert} from '../../core/Folding';
+import {arraysEqual} from '../../utils/Utils';
 
 export default class ActionBar extends Component {
 

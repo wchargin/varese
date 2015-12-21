@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 
-import PitchNames from '../src/PitchNames';
+import PitchNames from '../../src/core/PitchNames';
 
 describe('PitchNames', () => {
 

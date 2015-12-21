@@ -7,8 +7,8 @@
  */
 import React, {Component, PropTypes} from 'react';
 
-import Folding from '../../Folding';
-import {flatten} from '../../Utils';
+import Folding from '../../core/Folding';
+import {flatten} from '../../utils/Utils';
 
 import CustomPropTypes from '../CustomPropTypes';
 

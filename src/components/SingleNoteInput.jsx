@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 
-import {pitchToName, parseNameOrPitch} from '../PitchNames';
+import {pitchToName, parseNameOrPitch} from '../core/PitchNames';
 
 /*
  * Input node for a single pitch.

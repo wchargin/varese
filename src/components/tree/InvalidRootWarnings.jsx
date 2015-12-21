@@ -5,7 +5,7 @@
  */
 import React, {Component, PropTypes} from 'react';
 
-import {findChordRootOffset} from '../../HarmonicSeries';
+import {findChordRootOffset} from '../../core/HarmonicSeries';
 
 export default class InvalidRootWarnings extends Component {
 

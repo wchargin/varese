@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 
-import Folding from '../src/Folding';
+import Folding from '../../src/core/Folding';
 
 describe('Folding', () => {
 

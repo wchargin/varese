@@ -1,15 +1,16 @@
 require("babel-polyfill");
-require("./LocalStore");
+require("./middleware/LocalStore");
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
-import Reducer from './Reducers';
+import Reducer from './core/Reducers';
 
 import App from './components/App';
-import setUpLocalStoreReduxInterface from './LocalStoreReduxInterface';
+import setUpLocalStoreReduxInterface
+    from './middleware/LocalStoreReduxInterface';
 
 const store = createStore(Reducer);
 setUpLocalStoreReduxInterface(store);

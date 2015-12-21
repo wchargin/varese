@@ -1,4 +1,4 @@
-import {gcd} from './Utils';
+import {gcd} from '../utils/Utils';
 
 export default class Rational {
 

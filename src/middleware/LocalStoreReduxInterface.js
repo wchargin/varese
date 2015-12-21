@@ -15,7 +15,7 @@
  */
 
 import LocalStore from './LocalStore';
-import * as Actions from './Actions';
+import * as Actions from '../core/Actions';
 
 const LOCAL_STORE_KEY = 'redux_state';
 

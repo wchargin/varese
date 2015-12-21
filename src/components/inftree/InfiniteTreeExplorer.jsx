@@ -1,15 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import * as Actions from '../../Actions';
+import * as Actions from '../../core/Actions';
+
+import {extendRationalizer} from '../../core/HarmonicSeries';
 
 import Page from '../Page';
-
 import InfiniteTrichordTree from './InfiniteTrichordTree';
 import RationalizerSettings from '../settings/RationalizerSettings';
 import ViewOptions from '../settings/ViewOptions';
-
-import {extendRationalizer} from '../../HarmonicSeries';
 
 class InfiniteTreeExplorer extends Component {
 
