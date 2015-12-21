@@ -1,9 +1,12 @@
 import React, {Component, PropTypes} from 'react';
 
 import {findChordRootOffset} from '../../HarmonicSeries';
-import {pitchToName} from '../../PitchNames';
 import {flatten} from '../../Utils';
-import {withinLimits, formatMaybeRoot} from '../../DisplayUtils';
+import {
+    withinLimits,
+    formatMaybeRoot,
+    formatPitchesAndSemitones,
+} from '../../DisplayUtils';
 
 import CustomPropTypes from '../CustomPropTypes';
 
@@ -27,12 +30,12 @@ export default class TrichordView extends Component {
         // and set the engraving's 'visibility' to 'hidden'.
         const visible = withinLimits(this.props.notes, this.props.limits);
 
-        const {notes, showOctave} = this.props;
+        const {notes} = this.props;
         const notesAscending  = [...notes].sort((a, b) => a - b);
+        const {noteNames, semitoneNames} = formatPitchesAndSemitones(
+            notes, this.props);
 
-        const names = notesAscending.map(x =>
-            pitchToName(x, true, showOctave));
-        const noteViews = names.map((name, index) => {
+        const noteViews = noteNames.map((name, index) => {
             if (this.props.onChange) {
                 return <SingleNoteInput
                     ref={"note-" + index}
@@ -51,10 +54,6 @@ export default class TrichordView extends Component {
 
         const rootView = this._renderRootView(notesAscending);
 
-        const [low, med, high] = notesAscending;
-        const semitones = [high - med, med - low];
-        const semitoneNames = semitones.map(x =>
-            `[${x}]`.replace(/-/, "\u2212"));
         const semitoneViews = semitoneNames.map((name, index) =>
             <span key={"semitone-" + index}>{name}</span>);
 
@@ -67,9 +66,9 @@ export default class TrichordView extends Component {
         };
 
         const lines = [
-            ...noteViews.slice().reverse(),  // show descending
+            ...noteViews.slice().reverse(),      // show descending
             this.props.showRoot && rootView,
-            ...semitoneViews,
+            ...semitoneViews.slice().reverse(),  // show descending
         ];
         const flattenedContents = flatten(lines.map((line, idx) =>
             line && [line, <br key={"br-" + idx} />]));
