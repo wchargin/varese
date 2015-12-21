@@ -462,14 +462,10 @@ export default class InfiniteCanvas extends Component {
         const {noteNames, semitoneNames} = formatPitchesAndSemitones(
             notes, viewOptions);
 
+        // Get smaller as we go further down the tree
+        // so we can fit more nodes in when we need to.
         const scale = 0.5 + 0.5 *
             Math.sqrt(Math.max(0, 1 - y / ctx.canvas.height));
-
-        const fontSize = Math.round(14 * scale);
-        const lineHeight = Math.round(1.2 * fontSize);
-        const padding = 5;
-        const fontFamily = '"Helvetica Neue",Helvetica,Arial,sans-serif';
-        ctx.font = `${fontSize}px ${fontFamily}`;  // for metrics
 
         const lines = [
             ...noteNames.slice().reverse().map(x => ({text: x})),
@@ -484,6 +480,12 @@ export default class InfiniteCanvas extends Component {
             ...semitoneNames.slice().reverse().map(x => ({text: x})),
         ];
 
+        // Set up fonts now because we have some metrics to handle below.
+        const fontFamily = '"Helvetica Neue",Helvetica,Arial,sans-serif';
+        const fontSize = Math.round(14 * scale);
+        const lineHeight = Math.round(1.2 * fontSize);
+        ctx.font = `${fontSize}px ${fontFamily}`;
+
         // Profiling indicates that measureText is a bottleneck,
         // so this is a little heuristic to avoid calls...
         const lineWidth = line => !line ? 0 :
@@ -491,20 +493,23 @@ export default class InfiniteCanvas extends Component {
         const longestLine = ctx.measureText(lines.reduce((best, line) =>
             lineWidth(line) > lineWidth(best) ? line : best).text).width;
 
+        // Determine the bounds for the enclosing rectangle.
+        const padding = 5;
         const width = longestLine + 2 * padding;
         const height = lineHeight * lines.length + 2 * padding;
 
         // HSV is great! But we have to use HSL :(
         const satHSV = 0.1;
-        const baseLight = 0.5 * (2 - satHSV);
-        const light = visible ? baseLight : baseLight * 0.2 + 0.8;
-        const sat = satHSV / (1 - Math.abs(2 * light - 1));
+        const value = 1.0;
+        const baseLight = value * 0.5 * (2 - satHSV);
+        const light = visible ? baseLight : (baseLight * 0.2 + 0.8);
+        const sat = satHSV && value * satHSV / (1 - Math.abs(2 * light - 1));
         const hslString = (h, s, l) =>
             `hsl(${h * 360}, ${s * 100}%, ${l * 100}%)`;
         ctx.fillStyle = hslString(row / 16, sat, light);
         ctx.strokeStyle = hslString(row / 16, sat, visible ? 0.25 : 0.8);
 
-        ctx.lineWidth = 1;
+        // Finally, draw and fill the rectangle...
         ctx.beginPath();
         this._roundRect(ctx,
             Math.round(x - width / 2),
@@ -515,7 +520,7 @@ export default class InfiniteCanvas extends Component {
         ctx.stroke();
         ctx.fill();
 
-        // Finally, paint the text!
+        // ...then paint the text!
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
         const rootStyle = visible ? "blue" : "#DDF";
