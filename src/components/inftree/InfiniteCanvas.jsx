@@ -42,8 +42,11 @@ import CustomPropTypes from '../CustomPropTypes';
 
 import {findChordRootOffset} from '../../HarmonicSeries';
 import {positionToPitches} from '../../TreeSpace';
-import {pitchToName} from '../../PitchNames';
-import {withinLimits, formatMaybeRoot} from '../../DisplayUtils';
+import {
+    withinLimits,
+    formatMaybeRoot,
+    formatPitchesAndSemitones,
+} from '../../DisplayUtils';
 
 export default class InfiniteCanvas extends Component {
 
@@ -453,14 +456,11 @@ export default class InfiniteCanvas extends Component {
     }
 
     _drawNode(ctx, row, col, x, y) {
+        const {viewOptions} = this.props;
         const notes = this._fastPositionToPitches(row, col);
-        const noteNames = notes.map(x => pitchToName(
-            x, true, this.props.viewOptions.showOctaves));
         const visible = withinLimits(notes, this.props.viewOptions.limits);
-
-        const [low, mid, high] = notes;
-        const semitones = [mid - low, high - mid];
-        const semitoneNames = semitones.map(x => `[${x}]`);
+        const {noteNames, semitoneNames} = formatPitchesAndSemitones(
+            notes, viewOptions);
 
         const scale = 0.5 + 0.5 *
             Math.sqrt(Math.max(0, 1 - y / ctx.canvas.height));
@@ -473,11 +473,11 @@ export default class InfiniteCanvas extends Component {
 
         const lines = [
             ...noteNames.slice().reverse().map(x => ({text: x})),
-            ...(this.props.viewOptions.showRoots ?
+            ...(viewOptions.showRoots ?
                 [{
                     text: formatMaybeRoot(
                         this._fastFindChordRootOffset(notes),
-                        this.props.viewOptions),
+                        viewOptions),
                     root: true,
                 }] :
                 []),
