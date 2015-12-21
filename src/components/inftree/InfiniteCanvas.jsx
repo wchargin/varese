@@ -1,84 +1,15 @@
 /*
- * The idea for the approach is as follows.
- * The tree is a static vertical column.
- * As you move downward, your view narrows.
- * Define a coordinate system pointing
- * downward vertically and outward horizontally.
- * If the bottom of your viewport is at position $y' = y + h$,
- * then the scaling factor should be $s_x = 2^((y' - h) / H)$,
- * where $H$ is the height of a row.
+ * A mostly unbounded canvas for rendering trees of trichord outfoldings.
+ * ("Mostly" unbounded because all Numbers are double-precision floats,
+ * so we can't go past any rows with more than ~2^53 nodes.)
  *
- * The total perceived width of the viewport is then $v_w = W / s_x$,
- * where $W$ is the total width,
- * so the range of allowable values for $x$ must be $W - v_w$.
- * Thus the absolute value of $x$ must be no more than $W - v_w / 2$,
- * so we must have $-(W - v_w / 2) / 2 \leq x \leq (W - v_w) / 2$,
- * or, equivalently, $-W(1 - 1 / (2 s_x)) \leq x \leq W(1 - 1 / (2 s_x))$.
+ * This component is a bit lower-level than most React components,
+ * because it's implemented entirely with the <canvas> API.
+ * Most of the math (read: arithmetic) is contained in _draw and _drawNode,
+ * so the only things you really need to be familiar with elsewhere
+ * are the different coordinate systems in use.
  *
- * If position is $(x, y)$, and the viewport width is again $v_w$,
- * so the viewport covers---in actual coordinates---a horizontal range
- * of $x - v_w / 2$ to $x + v_w / 2$.
- *
- * We want to find all the nodes within this viewport;
- * that is, all the nodes with $y$-position in $[y - p_y, y + h - p_y]$, and
- * $x$-position in $[x - v_w - p_w, x + v_w + p_w]$,
- * where $p_x$ and $p_y$ are the horizontal and vertical paddings,
- * determined by half the width and height (respectively) of a node.
- * The minimum row is then row $\lceil (y - p_y) / H \rceil$,
- * while the maximum row is row $\lfloor (y + h + p_y) / H \rfloor$.
- * For each row $r$ within this range,
- * nodes are centered at $(k + 1/2) 2^(-r) W$
- * for each $k \in \{ 0, \dotsc, 2^r - 1 \}$.
- * So a node at actual position $x' = (k + 1/2) 2^(-r) W$
- * has zero-based index $k = 2^r (x' / W) - 1/2$.
- * This is, of course, monotonic, so we care about the nodes
- * from index $\lceil 2^r (x - v_w - p_w) / W - 1/2 \rceil$
- * to index  $\lfloor 2^r (x + v_w + p_w) / W - 1/2 \rfloor$
- * (where we've just substituted the viewport bounds
- * into the position-to-index formula).
- *
- * We thus have something like this for drawing the viewport:
- *
- *     // All units are ``actual'' (canvas) units.
- *     const {x, y} = currentPosition;
- *     const {rowWidth, rowHeight} = eachRowDimensions;
- *
- *     const viewportWidth = rowWidth / Math.pow(2, y / rowHeight);
- *     const halfViewportWidth = viewportWidth / 2;
- *     const viewportMin = x - halfViewportWidth;
- *     const viewportMax = x + halfViewportWidth;
- *
- *     const {paddingX, paddingY} = halfNodeDimensions;
- *
- *     const rowMin = Math.ceil((y - paddingY) / rowHeight)
- *     const rowMax = Math.floor((y + height + paddingY) / rowHeight)
- *     for (let row = rowMin; row <= rowMax; row++) {
- *         const colMin = Math.ceil(
- *             Math.pow(2, row) * (viewportMin - paddingX) / rowWidth - 0.5);
- *         const colMax = Math.floor(
- *             Math.pow(2, row) * (viewportMax + paddingX) / rowWidth - 0.5);
- *         for (let col = colMin; col <= colMax; col++) {
- *             processNode(row, col);
- *         }
- *     }
- *
- * Then there's the issue of navigation.
- * When you pan straight down, you can just go straight down,
- * because our scale is linear in the vertical.
- * But that's not quite true when you drag horizontally.
- * You want to *feel* like you're dragging linearly;
- * in particular, you want a point under your mouse to stay under your mouse.
- *
- * So if the viewport is width $v_w = W / 2^(y / H)$
- * and you pan by some $x$ pixels *in viewport units*,
- * your actual position should change by $x / v_w$.
- * Happily, that's a reasonably simple calculation to make!
- *
- *
- * COORDINATE SYSTEMS
- * ------------------
- *
- * There are three coordinate systems in use.
+ * There are three coordinate systems in use:
  *
  *   - "Canvas coordinates" are the actual drawing coordinates of the canvas.
  *     The origin is at the top-left of the current viewport,
@@ -98,6 +29,13 @@
  *     and the basis vectors point to the right and downward.
  *     A distance of one unit in the y direction corresponds to one level,
  *     and the entire horizontal axis ranges from -0.5 to 0.5.
+ *
+ * In general, it's nice to keep things in idealized coordinates,
+ * because they're robust to, e.g.,
+ * window resizes or a change to 'this.props.viewOptions.infiniteLevels'.
+ * So it's often a good idea to limit the other coordinate systems to drawing
+ * or things that really are inherently tied to the canvas,
+ * like the mouse position.
  */
 import React, {Component, PropTypes} from 'react';
 import CustomPropTypes from '../CustomPropTypes';
@@ -141,13 +79,18 @@ export default class InfiniteCanvas extends Component {
         // (see _handleKeyUp).
         this._keyInterval = null;
 
+        // Two functions are memoized for scrolling performance.
+        // These maps are used to cache the results,
+        // and are invalidated on every prop change for simplicity.
         this._fastFindChordRootOffsetMemo = new Map();
         this._fastPositionToPitchesMemo = new Map();
     }
 
     componentWillReceiveProps() {
-        this._fastFindChordRootOffsetMemo.clear();
-        this._fastPositionToPitchesMemo.clear();
+        // Some prop changes can invalidate these caches.
+        // We just clear them always for simplicity.
+        this._fastFindChordRootOffsetMemo.clear();  // <= rationalizer
+        this._fastPositionToPitchesMemo.clear();    // <= treeNumber, rootBass
     }
 
     _fastFindChordRootOffset(notes) {
