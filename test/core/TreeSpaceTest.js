@@ -10,7 +10,7 @@ describe('TreeSpace', () => {
         const [l, r] = ["left", "right"];
         const test = (a, b, output) => () =>
             expect(positionToPath(a, b, l, r)).to.deep.equal(output);
-        
+
         it("finds the root with no path operations", test(0, 0, []));
         it("finds the left child of the root", test(1, 0, [l]));
         it("finds the right child of the root", test(1, 1, [r]));

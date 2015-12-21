@@ -113,4 +113,4 @@ describe('PitchNames', () => {
         it("rejects a pitch like +3", test("+3", null));
     });
 
-})
+});

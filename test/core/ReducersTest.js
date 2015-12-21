@@ -10,7 +10,7 @@ import * as Actions from '../../src/core/Actions';
 describe('reducer', () => {
 
     const expectStateToHaveTheRightShape = state => {
-        expect(state).to.be.ok;
+        expect(state).to.be.an('object');
         expect(state.acousticRatios).to.be.an.instanceof(Array);
         expect(state.treeViewOptions).to.be.an('object');
         expect(state.treeViewOptions.limits).to.be.an('object');
@@ -96,7 +96,8 @@ describe('reducer', () => {
     it(":SET_TREE_TREE_NUMBER sets the 'treeNumber' field", () =>
         [1, 2, 3].forEach(value =>
             verifyShapeAnd(
-                state => expect(state.treeViewOptions.treeNumber).to.equal(value),
+                state => expect(state.treeViewOptions.treeNumber)
+                    .to.equal(value),
                 reducer(undefined, Actions.setTreeTreeNumber(value)))));
 
     it(":SET_TREE_ROOT_BASS sets the 'rootBass' field", () =>
@@ -182,7 +183,7 @@ describe('reducer', () => {
                         minCombined: 121,
                     },
                 },
-            }
+            };
             expect(() => reducer(undefined, Actions.rehydrate(badState)))
                 .to.throw(/acousticRatios/);
         });
@@ -197,10 +198,10 @@ describe('reducer', () => {
             // otherwise it's useless;
             // if this fails because the schema changed,
             // just pick some other dummy properties.
-            expect(state0.treeViewOptions.levels).to.be.ok;
-            expect(state0.treeViewOptions.limits).to.be.ok;
-            expect(state0.treeViewOptions.limits.minCombined).to.be.ok;
-            expect(state0.treeViewOptions.limits.maxCombined).to.be.ok;
+            expect(state0.treeViewOptions)
+                .to.contain.all.keys('levels', 'limits');
+            expect(state0.treeViewOptions.limits)
+                .to.contain.all.keys('minCombined', 'maxCombined');
 
             // Fake a rehydrated state from an "old version"
             // with some fields missing;

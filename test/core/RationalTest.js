@@ -35,11 +35,11 @@ describe('Rational', () => {
                 .to.throw(/denominator/));
         it("rejects an infinite quotient of finite numbers", () => {
             const superSmall = 1e-313;
-            expect(superSmall !== 0).to.be.true;
-            expect(isFinite(superSmall)).to.be.true;
+            expect(superSmall !== 0).to.equal(true);
+            expect(isFinite(superSmall)).to.equal(true);
             expect(() => new Rational(1, superSmall))
                 .to.throw(/finite quotient/);
-        })
+        });
     });
 
     describe('#equals', () => {
@@ -49,7 +49,7 @@ describe('Rational', () => {
         it("compares for inequality",
             () => expect(new Rational(8, 6).equals(new Rational(5, 3)))
                 .to.be.false);
-    })
+    });
 
     describe('#multiply', () => {
         it("multiplies things that would simplify",
