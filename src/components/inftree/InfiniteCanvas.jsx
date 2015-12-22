@@ -139,6 +139,7 @@ export default class InfiniteCanvas extends Component {
             //
             onKeyDown={this._handleKeyDown.bind(this)}
             onKeyUp={this._handleKeyUp.bind(this)}
+            onBlur={this._handleBlur.bind(this)}
             tabIndex={0}
         >
             <div className="alert alert-danger">
@@ -298,6 +299,15 @@ export default class InfiniteCanvas extends Component {
             window.clearInterval(this._keyInterval);
             this._keyInterval = null;
         }
+    }
+
+    _handleBlur() {
+        this.setState({
+            ...this.state,
+            keysDown: [],
+        });
+        window.clearInterval(this._keyInterval);
+        this._keyInterval = null;
     }
 
     /*
