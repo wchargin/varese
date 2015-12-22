@@ -98,6 +98,9 @@ export default class ViewOptions extends Component {
                     <LabelCell htmlFor="showRoots">Show roots?</LabelCell>
                     <LabelCell htmlFor="showOctaves">Show octaves?</LabelCell>
                     <LabelCell htmlFor="fillWindow">Fill window?</LabelCell>
+                    {infinite && <LabelCell
+                        htmlFor="alwaysEngrave"
+                    >Engrave notes</LabelCell>}
                 </Row>
                 <Row>
                     {!infinite && <Cell>
@@ -134,13 +137,19 @@ export default class ViewOptions extends Component {
                         labelYes="Wide"
                         labelNo="Inline"
                     />
+                    {infinite && <CheckboxCell
+                        id="alwaysEngrave"
+                        checked={values.alwaysEngrave}
+                        onChange={handlers.onSetAlwaysEngrave}
+                        labelYes="Always"
+                        labelNo="Hover only"
+                    />}
                 </Row>
             </Table>}
             {infinite && this.state.showDisplay && <Table>
                 <Row>
                     <LabelCell htmlFor="depth">Levels shown</LabelCell>
                     <LabelCell htmlFor="height">Height</LabelCell>
-                    <LabelCell htmlFor="alwaysEngrave">Engrave notes</LabelCell>
                 </Row>
                 <Row>
                     <Cell>
@@ -170,13 +179,6 @@ export default class ViewOptions extends Component {
                                 this.refs.height.valueAsNumber)}
                         />
                     </Cell>
-                    <CheckboxCell
-                        id="alwaysEngrave"
-                        checked={values.alwaysEngrave}
-                        onChange={handlers.onSetAlwaysEngrave}
-                        labelYes="Always"
-                        labelNo="Hover only"
-                    />
                 </Row>
             </Table>}
             {infinite && this.state.showAdvanced && <Table>
