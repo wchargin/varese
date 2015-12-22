@@ -40,8 +40,11 @@
 import React, {Component, PropTypes} from 'react';
 import CustomPropTypes from '../CustomPropTypes';
 
+import Vex from 'vexflow';
+
 import {findChordRootOffset} from '../../core/HarmonicSeries';
 import {positionToPitches} from '../../core/TreeSpace';
+import {pitchesToStaveNote} from '../../utils/VexFlowUtils';
 import {
     withinLimits,
     formatMaybeRoot,
@@ -548,6 +551,33 @@ export default class InfiniteCanvas extends Component {
                 Math.round(x),
                 Math.round(y) + padding + index * lineHeight);
         });
+
+        // STOPSHIP: make this only on hover
+        this._drawEngraving(ctx, notes, x, y, width, height);
+    }
+
+    /*
+     * Given the horizontal center ('cx') and vertical top ('ty') of a box
+     * whose dimensions are also provided (as 'bw' and 'bh'),
+     * engrave the given notes near (but outside) the box
+     * using the provided 2D canvas context.
+     */
+    _drawEngraving(ctx, notes, cx, ty, bw, bh) {
+        const chord = pitchesToStaveNote(notes);
+        const chords = [chord];
+
+        const renderer = new Vex.Flow.Renderer(ctx.canvas,
+            Vex.Flow.Renderer.Backends.CANVAS);
+        const vexctx = renderer.getContext();
+        const notesWidth = 100;
+        const padding = 5;
+        const stave = new Vex.Flow.Stave(
+            cx > ctx.canvas.width / 2 ?
+                cx - padding - bw / 2 - notesWidth :
+                cx + padding + bw / 2,
+            ty, notesWidth);
+        stave.addClef("treble").setContext(vexctx).draw();
+        Vex.Flow.Formatter.FormatAndDraw(vexctx, stave, chords);
     }
 
     /*
