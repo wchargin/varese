@@ -184,7 +184,7 @@ export default class InfiniteCanvas extends Component {
         }
     }
 
-    _handleMouseDown(e) {
+    _handleMouseDown() {
         this.setState({
             ...this.state,
             mouseDown: true,
@@ -557,7 +557,7 @@ export default class InfiniteCanvas extends Component {
 
         // Draw the engraving when the node is hovered.
         const engrave = () => {
-            this._drawEngraving(ctx, notes, x, y, width, height);
+            this._drawEngraving(ctx, notes, x, y, width);
         };
         if (viewOptions.alwaysEngrave) {
             engrave();
@@ -573,11 +573,11 @@ export default class InfiniteCanvas extends Component {
 
     /*
      * Given the horizontal center ('cx') and vertical top ('ty') of a box
-     * whose dimensions are also provided (as 'bw' and 'bh'),
+     * whose width is 'bw',
      * engrave the given notes near (but outside) the box
      * using the provided 2D canvas context.
      */
-    _drawEngraving(ctx, notes, cx, ty, bw, bh) {
+    _drawEngraving(ctx, notes, cx, ty, bw) {
         const chord = pitchesToStaveNote(notes);
         const chords = [chord];
 
