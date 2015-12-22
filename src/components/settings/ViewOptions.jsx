@@ -79,10 +79,39 @@ export default class ViewOptions extends Component {
             />
             {infinite && <Table>
                 <Row>
-                    <LabelCell htmlFor="depth">Levels shown</LabelCell>
-                    <LabelCell htmlFor="height">Height</LabelCell>
                     <LabelCell htmlFor="treeNumber">Tree number</LabelCell>
                     <LabelCell htmlFor="rootBass">Root chord bass</LabelCell>
+                </Row>
+                <Row>
+                    <Cell>
+                        <input
+                            ref="treeNumber"
+                            id="treeNumber"
+                            type="number"
+                            className="form-control"
+                            //
+                            min={0}
+                            max={12}
+                            value={values.treeNumber}
+                            onChange={() => handlers.onSetTreeNumber(
+                                parseInt(this.refs.treeNumber.value, 10))}
+                        />
+                    </Cell>
+                    <Cell>
+                        <SingleNoteInput
+                            value={values.rootBass}
+                            displayValue={pitchToName(
+                                values.rootBass, true, values.showOctaves)}
+                            onChange={value => handlers.onSetRootBass(value)}
+                            className="form-control"
+                        />
+                    </Cell>
+                </Row>
+            </Table>}
+            {infinite && <Table>
+                <Row>
+                    <LabelCell htmlFor="depth">Levels shown</LabelCell>
+                    <LabelCell htmlFor="height">Height</LabelCell>
                     <LabelCell htmlFor="alwaysEngrave">Engrave notes</LabelCell>
                     <LabelCell htmlFor="advanced">Advanced</LabelCell>
                 </Row>
@@ -112,29 +141,6 @@ export default class ViewOptions extends Component {
                             value={values.infiniteHeight}
                             onChange={() => handlers.onSetInfiniteHeight(
                                 this.refs.height.valueAsNumber)}
-                        />
-                    </Cell>
-                    <Cell>
-                        <input
-                            ref="treeNumber"
-                            id="treeNumber"
-                            type="number"
-                            className="form-control"
-                            //
-                            min={0}
-                            max={12}
-                            value={values.treeNumber}
-                            onChange={() => handlers.onSetTreeNumber(
-                                parseInt(this.refs.treeNumber.value, 10))}
-                        />
-                    </Cell>
-                    <Cell>
-                        <SingleNoteInput
-                            value={values.rootBass}
-                            displayValue={pitchToName(
-                                values.rootBass, true, values.showOctaves)}
-                            onChange={value => handlers.onSetRootBass(value)}
-                            className="form-control"
                         />
                     </Cell>
                     <CheckboxCell
