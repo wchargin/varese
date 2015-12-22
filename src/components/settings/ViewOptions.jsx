@@ -145,17 +145,17 @@ export default class ViewOptions extends Component {
                         labelNo="Only on hover"
                     />
                     <Cell>
-                    <button
-                        className={this.state.showAdvanced ?
-                            "btn btn-primary" :
-                            "btn btn-default"}
-                        onClick={() => this.setState({
-                            showAdvanced: !this.state.showAdvanced,
-                        })}
-                        id="advanced"
-                    >
-                        <i className="glyphicon glyphicon-cog" />
-                    </button>
+                        <button
+                            className={this.state.showAdvanced ?
+                                "btn btn-primary" :
+                                "btn btn-default"}
+                            onClick={() => this.setState({
+                                showAdvanced: !this.state.showAdvanced,
+                            })}
+                            id="advanced"
+                        >
+                            <i className="glyphicon glyphicon-cog" />
+                        </button>
                     </Cell>
                 </Row>
             </Table>}
