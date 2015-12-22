@@ -87,7 +87,7 @@ export default class ViewOptions extends Component {
                     <LabelCell htmlFor="advanced">Advanced</LabelCell>
                 </Row>
                 <Row>
-                    <Cell style={{ verticalAlign: "middle" }}>
+                    <Cell>
                         <input
                             ref="levels"
                             type="range"
@@ -101,7 +101,7 @@ export default class ViewOptions extends Component {
                                 this.refs.levels.valueAsNumber)}
                         />
                     </Cell>
-                    <Cell style={{ verticalAlign: "middle" }}>
+                    <Cell>
                         <input
                             ref="height"
                             type="range"
@@ -201,7 +201,7 @@ export default class ViewOptions extends Component {
                         labelYes="Pretty"
                         labelNo="Fast"
                     />
-                    <Cell style={{ verticalAlign: "middle" }}>
+                    <Cell>
                         <input
                             ref="rainbowFactor"
                             type="range"

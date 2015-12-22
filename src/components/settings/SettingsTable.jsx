@@ -78,7 +78,7 @@ export const Row = makeStyledComponent('Row', {
 
 const cellStyle = {
     display: "table-cell",
-    verticalAlign: "bottom",
+    verticalAlign: "middle",
     paddingBottom: 5,
     //
     // marginRight doesn't work on table cells,
