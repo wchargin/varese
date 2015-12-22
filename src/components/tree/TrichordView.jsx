@@ -30,10 +30,15 @@ export default class TrichordView extends Component {
         // and set the engraving's 'visibility' to 'hidden'.
         const visible = withinLimits(this.props.notes, this.props.limits);
 
+        const fakeViewOptions = {
+            showOctaves: this.props.showOctave,
+            showRoots: this.props.showRoot,
+        };
+
         const {notes} = this.props;
         const notesAscending  = [...notes].sort((a, b) => a - b);
         const {noteNames, semitoneNames} = formatPitchesAndSemitones(
-            notes, this.props);
+            notes, fakeViewOptions);
 
         const noteViews = noteNames.map((name, index) => {
             if (this.props.onChange) {
@@ -52,7 +57,7 @@ export default class TrichordView extends Component {
             }
         });
 
-        const rootView = this._renderRootView(notesAscending);
+        const rootView = this._renderRootView(notesAscending, fakeViewOptions);
 
         const semitoneViews = semitoneNames.map((name, index) =>
             <span key={"semitone-" + index}>{name}</span>);
@@ -117,11 +122,11 @@ export default class TrichordView extends Component {
         </div>;
     }
 
-    _renderRootView(notes) {
+    _renderRootView(notes, viewOptions) {
         const maybeRootPitch = findChordRootOffset(
             this.props.rationalizer, notes);
         return <strong key="root" style={{ color: "blue" }}>
-            {formatMaybeRoot(maybeRootPitch, this.props)}
+            {formatMaybeRoot(maybeRootPitch, viewOptions)}
         </strong>;
     }
 
