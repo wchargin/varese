@@ -83,7 +83,7 @@ export default class ViewOptions extends Component {
                     <LabelCell htmlFor="height">Height</LabelCell>
                     <LabelCell htmlFor="treeNumber">Tree number</LabelCell>
                     <LabelCell htmlFor="rootBass">Root chord bass</LabelCell>
-                    <LabelCell htmlFor="alwaysEngrave">Always engrave</LabelCell>
+                    <LabelCell htmlFor="alwaysEngrave">Engrave notes</LabelCell>
                     <LabelCell htmlFor="advanced">Advanced</LabelCell>
                 </Row>
                 <Row>
@@ -142,7 +142,7 @@ export default class ViewOptions extends Component {
                         checked={values.alwaysEngrave}
                         onChange={handlers.onSetAlwaysEngrave}
                         labelYes="Always"
-                        labelNo="Only on hover"
+                        labelNo="Hover only"
                     />
                     <Cell>
                         <button
