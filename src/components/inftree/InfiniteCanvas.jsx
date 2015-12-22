@@ -63,7 +63,8 @@ export default class InfiniteCanvas extends Component {
                 x: 0,
                 y: 0,
             },
-            lastMouse: null,  // canvas coordinates; null unless dragging
+            lastMouse: null,  // canvas coordinates
+            mouseDown: false,
             keysDown: [],     // a list of numeric key codes
         };
 
@@ -186,23 +187,25 @@ export default class InfiniteCanvas extends Component {
     _handleMouseDown(e) {
         this.setState({
             ...this.state,
-            lastMouse: this._getRelativeMousePosition(e),
+            mouseDown: true,
         });
     }
 
     _handleMouseMove(e) {
-        if (this.state.lastMouse) {
-            const newMouse = this._getRelativeMousePosition(e);
-            const oldMouse = this.state.lastMouse;
+        const oldMouse = this.state.lastMouse;
+        const newMouse = this._getRelativeMousePosition(e);
+        const newState = {
+            ...this.state,
+            lastMouse: newMouse,
+            // possibly mutated below
+        };
+        if (this.state.mouseDown) {
             const deltaX = -(newMouse.x - oldMouse.x);
             const deltaY = -(newMouse.y - oldMouse.y);
             const finalPosition = this._pan({x: deltaX, y: deltaY});
-            this.setState({
-                ...this.state,
-                position: finalPosition,
-                lastMouse: newMouse,
-            });
+            newState.position = finalPosition;
         }
+        this.setState(newState);
     }
 
     _handleMouseWheel(e) {
@@ -230,7 +233,7 @@ export default class InfiniteCanvas extends Component {
     _stopDrag() {
         this.setState({
             ...this.state,
-            lastMouse: null,
+            mouseDown: false,
         });
     }
 
@@ -266,7 +269,7 @@ export default class InfiniteCanvas extends Component {
         }, () => {
             if (this._keyInterval === null) {
                 this._keyInterval = window.setInterval(() => {
-                    if (this.state.lastMouse) {
+                    if (this.state.mouseDown) {
                         return;
                     }
                     const keys = this.state.keysDown;
