@@ -68,7 +68,7 @@ export default class TrichordView extends Component {
 
         const lines = [
             ...noteViews.slice().reverse(),      // show descending
-            this.props.viewOptions.showRoot && rootView,
+            this.props.viewOptions.showRoots && rootView,
             ...semitoneViews.slice().reverse(),  // show descending
         ];
         const flattenedContents = flatten(lines.map((line, idx) =>
