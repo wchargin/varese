@@ -40,9 +40,7 @@ export default class TrichordTree extends Component {
                 rationalizer={rationalizer}
                 notes={chord}
                 //
-                limits={this.props.viewOptions.limits}
-                showOctave={this.props.viewOptions.showOctaves}
-                showRoot={this.props.viewOptions.showRoots}
+                viewOptions={this.props.viewOptions}
                 size={isRoot ? sizeLarge : size}
                 //
                 onClick={isRoot ? null : (() => onClickChord(chord))}

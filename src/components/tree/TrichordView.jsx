@@ -28,17 +28,13 @@ export default class TrichordView extends Component {
         // so that the grid layout isn't thrown off.
         // But we'll lower the opacity of the main content,
         // and set the engraving's 'visibility' to 'hidden'.
-        const visible = withinLimits(this.props.notes, this.props.limits);
-
-        const fakeViewOptions = {
-            showOctaves: this.props.showOctave,
-            showRoots: this.props.showRoot,
-        };
+        const visible = withinLimits(
+            this.props.notes, this.props.viewOptions.limits);
 
         const {notes} = this.props;
         const notesAscending  = [...notes].sort((a, b) => a - b);
         const {noteNames, semitoneNames} = formatPitchesAndSemitones(
-            notes, fakeViewOptions);
+            notes, this.props.viewOptions);
 
         const noteViews = noteNames.map((name, index) => {
             if (this.props.onChange) {
@@ -57,7 +53,7 @@ export default class TrichordView extends Component {
             }
         });
 
-        const rootView = this._renderRootView(notesAscending, fakeViewOptions);
+        const rootView = this._renderRootView(notesAscending);
 
         const semitoneViews = semitoneNames.map((name, index) =>
             <span key={"semitone-" + index}>{name}</span>);
@@ -72,7 +68,7 @@ export default class TrichordView extends Component {
 
         const lines = [
             ...noteViews.slice().reverse(),      // show descending
-            this.props.showRoot && rootView,
+            this.props.viewOptions.showRoot && rootView,
             ...semitoneViews.slice().reverse(),  // show descending
         ];
         const flattenedContents = flatten(lines.map((line, idx) =>
@@ -122,11 +118,11 @@ export default class TrichordView extends Component {
         </div>;
     }
 
-    _renderRootView(notes, viewOptions) {
+    _renderRootView(notes) {
         const maybeRootPitch = findChordRootOffset(
             this.props.rationalizer, notes);
         return <strong key="root" style={{ color: "blue" }}>
-            {formatMaybeRoot(maybeRootPitch, viewOptions)}
+            {formatMaybeRoot(maybeRootPitch, this.props.viewOptions)}
         </strong>;
     }
 
@@ -182,12 +178,12 @@ export default class TrichordView extends Component {
 TrichordView.propTypes = {
     rationalizer: PropTypes.func.isRequired,
     notes: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
-    onClick: PropTypes.func,
+    //
+    viewOptions: CustomPropTypes.viewOptions.isRequired,
     size: PropTypes.oneOf([1, 2, 3]),
+    //
+    onClick: PropTypes.func,
     onChange: PropTypes.func,  // if provided, will make this node editable.
-    showRoot: PropTypes.bool.isRequired,
-    showOctave: PropTypes.bool.isRequired,
-    limits: CustomPropTypes.limits,
 };
 TrichordView.defaultProps = {
     size: 3,
