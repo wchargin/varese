@@ -120,6 +120,13 @@ describe('reducer', () => {
                     .to.equal(value),
                 reducer(undefined, Actions.setTreeRainbowFactor(value)))));
 
+    it(":SET_TREE_ALWAYS_ENGRAVE sets the 'alwaysEngrave' field", () =>
+        [true, false].forEach(flag =>
+            verifyShapeAnd(
+                state => expect(state.treeViewOptions.alwaysEngrave)
+                    .to.equal(flag),
+                reducer(undefined, Actions.setTreeAlwaysEngrave(flag)))));
+
     describe(':SET_TREE_LIMIT_VALUE', () => {
         it("sets a valid limit value", () => {
             [10, 20].forEach(value =>

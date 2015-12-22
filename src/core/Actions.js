@@ -92,6 +92,14 @@ export function setTreeRainbowFactor(rainbowFactor) {
     };
 }
 
+export function setTreeAlwaysEngrave(alwaysEngrave) {
+    return {
+        type: "SET_TREE_VIEW_OPTION",
+        field: "alwaysEngrave",
+        value: alwaysEngrave,
+    };
+}
+
 export function setTreeLimitValue(limit, value) {
     return {
         type: "SET_TREE_LIMIT_VALUE",

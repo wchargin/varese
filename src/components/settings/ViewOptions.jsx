@@ -83,6 +83,7 @@ export default class ViewOptions extends Component {
                     <LabelCell htmlFor="height">Height</LabelCell>
                     <LabelCell htmlFor="treeNumber">Tree number</LabelCell>
                     <LabelCell htmlFor="rootBass">Root chord bass</LabelCell>
+                    <LabelCell htmlFor="alwaysEngrave">Always engrave</LabelCell>
                     <LabelCell htmlFor="advanced">Advanced</LabelCell>
                 </Row>
                 <Row>
@@ -136,6 +137,13 @@ export default class ViewOptions extends Component {
                             className="form-control"
                         />
                     </Cell>
+                    <CheckboxCell
+                        id="alwaysEngrave"
+                        checked={values.alwaysEngrave}
+                        onChange={handlers.onSetAlwaysEngrave}
+                        labelYes="Always"
+                        labelNo="Only on hover"
+                    />
                     <Cell>
                     <button
                         className={this.state.showAdvanced ?

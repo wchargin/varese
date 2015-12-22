@@ -34,6 +34,7 @@ const initialState = {
         rootBass: 0,            // semitones above middle C of the bass note
         highQuality: false,     // smoother, slower rendering
         rainbowFactor: 0,       // how colorful should the nodes be?
+        alwaysEngrave: false,   // sohw engravings always, not just on hover
     },
 };
 

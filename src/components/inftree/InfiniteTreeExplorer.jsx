@@ -80,6 +80,8 @@ function mapDispatchToProps(dispatch) {
                 Actions.setTreeHighQuality(highQuality)),
             onSetRainbowFactor: rainbowFactor => dispatch(
                 Actions.setTreeRainbowFactor(rainbowFactor)),
+            onSetAlwaysEngrave: alwaysEngrave => dispatch(
+                Actions.setTreeAlwaysEngrave(alwaysEngrave)),
             onSetLimitValue: (limit, value) => dispatch(
                 Actions.setTreeLimitValue(limit, value)),
             onSetLimitEnabled: (limit, enabled) => dispatch(

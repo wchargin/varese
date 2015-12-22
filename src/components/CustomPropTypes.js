@@ -28,6 +28,7 @@ export const viewOptions = PropTypes.shape({
     rootBass: PropTypes.number.isRequired,
     highQuality: PropTypes.bool.isRequired,
     rainbowFactor: PropTypes.number.isRequired,
+    alwaysEngrave: PropTypes.bool.isRequired,
     limits: limits.isRequired,
 });
 
@@ -42,6 +43,7 @@ export const viewOptionsHandlers = PropTypes.shape({
     onSetRootBass: PropTypes.func.isRequired,
     onSetHighQuality: PropTypes.func.isRequired,
     onSetRainbowFactor: PropTypes.func.isRequired,
+    onSetAlwaysEngrave: PropTypes.func.isRequired,
     ...limitsHandlersShape,
 });
 
