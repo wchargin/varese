@@ -555,8 +555,15 @@ export default class InfiniteCanvas extends Component {
                 Math.round(y) + padding + index * lineHeight);
         });
 
-        // STOPSHIP: make this only on hover
-        this._drawEngraving(ctx, notes, x, y, width, height);
+        // Draw the engraving when the node is hovered.
+        if (this.state.lastMouse) {
+            const {x: mouseX, y: mouseY} = this.state.lastMouse;
+            const withinX = Math.abs(mouseX - x) <= width / 2;
+            const withinY = y <= mouseY && mouseY <= y + height;
+            if (withinX && withinY) {
+                this._drawEngraving(ctx, notes, x, y, width, height);
+            }
+        }
     }
 
     /*
