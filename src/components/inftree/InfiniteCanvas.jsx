@@ -585,7 +585,8 @@ export default class InfiniteCanvas extends Component {
             cx > ctx.canvas.width / 2 ?
                 cx - padding - bw / 2 - notesWidth :
                 cx + padding + bw / 2,
-            ty, notesWidth);
+            ty - 25,  // offset seems to be entirely static
+            notesWidth);
         stave.addClef("treble").setContext(vexctx).draw();
         Vex.Flow.Formatter.FormatAndDraw(vexctx, stave, chords);
     }
