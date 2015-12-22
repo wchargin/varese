@@ -17,6 +17,9 @@ export default class ViewOptions extends Component {
     constructor() {
         super();
         this.state = {
+            showLimits: true,
+            showTreeConfiguration: true,
+            showDisplay: true,
             showAdvanced: false,
         };
     }
@@ -24,7 +27,30 @@ export default class ViewOptions extends Component {
     render() {
         const {infinite, values, handlers} = this.props;
 
+        const ToggleButton = props => {
+            const {field, label} = props;
+            const value = this.state[field];
+            const handler = () => this.setState({ [field]: !value });
+            const btnClass = value ? "btn-primary" : "btn-default";
+            return <button
+                className={`btn ${btnClass}`}
+                onClick={handler}
+            >{label}</button>;
+        }
+
         return <div>
+            <div className="btn-group" style={{ marginBottom: 20 }}>
+                <span className="btn btn-default" disabled>
+                    <strong>Show:</strong>
+                </span>
+                <ToggleButton field="showLimits" label="Interval limits" />
+                <ToggleButton
+                    field="showTreeConfiguration"
+                    label="Tree configuration"
+                />
+                <ToggleButton field="showDisplay" label="Display settings" />
+                <ToggleButton field="showAdvanced" label="Advanced settings" />
+            </div>
             <Table>
                 <Row>
                     {!infinite &&
@@ -113,7 +139,6 @@ export default class ViewOptions extends Component {
                     <LabelCell htmlFor="depth">Levels shown</LabelCell>
                     <LabelCell htmlFor="height">Height</LabelCell>
                     <LabelCell htmlFor="alwaysEngrave">Engrave notes</LabelCell>
-                    <LabelCell htmlFor="advanced">Advanced</LabelCell>
                 </Row>
                 <Row>
                     <Cell>
@@ -150,19 +175,6 @@ export default class ViewOptions extends Component {
                         labelYes="Always"
                         labelNo="Hover only"
                     />
-                    <Cell>
-                        <button
-                            className={this.state.showAdvanced ?
-                                "btn btn-primary" :
-                                "btn btn-default"}
-                            onClick={() => this.setState({
-                                showAdvanced: !this.state.showAdvanced,
-                            })}
-                            id="advanced"
-                        >
-                            <i className="glyphicon glyphicon-cog" />
-                        </button>
-                    </Cell>
                 </Row>
             </Table>}
             {infinite && this.state.showAdvanced && <Table>
