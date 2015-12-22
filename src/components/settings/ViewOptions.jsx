@@ -27,8 +27,8 @@ export default class ViewOptions extends Component {
     render() {
         const {infinite, values, handlers} = this.props;
 
-        const ToggleButton = props => {
-            const {field, label} = props;
+        // Toggle one of the 'showFoo' state fields.
+        const ToggleButton = ({field, label}) => {
             const value = this.state[field];
             const handler = () => this.setState({ [field]: !value });
             const btnClass = value ? "btn-primary" : "btn-default";
@@ -36,7 +36,11 @@ export default class ViewOptions extends Component {
                 className={`btn ${btnClass}`}
                 onClick={handler}
             >{label}</button>;
-        }
+        };
+        ToggleButton.propTypes = {
+            field: PropTypes.oneOf(Object.keys(this.state)).isRequired,
+            label: PropTypes.node.isRequired,
+        };
 
         return <div>
             <div className="btn-group" style={{ marginBottom: 20 }}>
