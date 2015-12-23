@@ -4,7 +4,7 @@ import {expect} from 'chai';
 import React from 'react';
 import {
     renderIntoDocument,
-    scryRenderedDOMComponentsWithTag,
+    scryRenderedDOMComponentsWithTag as scryManyWithTag,
 } from 'react-addons-test-utils';
 
 import {
@@ -20,7 +20,7 @@ describe('SettingsTable', () => {
     describe('Table', () => {
         it("should render a div with 'display: table'", () => {
             const component = renderIntoDocument(<Table>Innards</Table>);
-            const divs = scryRenderedDOMComponentsWithTag(component, 'div');
+            const divs = scryManyWithTag(component, 'div');
             expect(divs.length).to.equal(1);
             expect(divs[0].textContent).to.equal("Innards");
             expect(divs[0].style.display).to.equal('table');
@@ -30,7 +30,7 @@ describe('SettingsTable', () => {
     describe('Row', () => {
         it("should render a div with 'display: table-row'", () => {
             const component = renderIntoDocument(<Row>Minutiae</Row>);
-            const divs = scryRenderedDOMComponentsWithTag(component, 'div');
+            const divs = scryManyWithTag(component, 'div');
             expect(divs.length).to.equal(1);
             expect(divs[0].textContent).to.equal("Minutiae");
             expect(divs[0].style.display).to.equal('table-row');
@@ -39,7 +39,7 @@ describe('SettingsTable', () => {
 
     describe('Cell', () => {
         const getDivs = () =>
-            scryRenderedDOMComponentsWithTag(
+            scryManyWithTag(
                 renderIntoDocument(<Cell>Wonders</Cell>),
                 'div');
         it("should render a div with 'display: table-cell'", () => {
@@ -59,14 +59,14 @@ describe('SettingsTable', () => {
         const element = <LabelCell htmlFor="widget">Setting</LabelCell>;
         it("should render a label with 'display: table-cell'", () => {
             const component = renderIntoDocument(element);
-            const lbls = scryRenderedDOMComponentsWithTag(component, 'label');
+            const lbls = scryManyWithTag(component, 'label');
             expect(lbls.length).to.equal(1);
             expect(lbls[0].textContent).to.equal("Setting");
             expect(lbls[0].style.display).to.equal('table-cell');
         });
         it("forwards the htmlFor prop", () => {
             const component = renderIntoDocument(element);
-            const lbls = scryRenderedDOMComponentsWithTag(component, 'label');
+            const lbls = scryManyWithTag(component, 'label');
             expect(lbls.length).to.equal(1);
             expect(lbls[0].htmlFor).to.equal("widget");
         });
@@ -84,24 +84,24 @@ describe('SettingsTable', () => {
         it("renders the affirmative label", () => {
             const component = renderIntoDocument(makeCell(true, noop));
 
-            const ckbxs = scryRenderedDOMComponentsWithTag(component, 'input');
+            const ckbxs = scryManyWithTag(component, 'input');
             expect(ckbxs.length).to.equal(1);
             expect(ckbxs[0].type).to.equal("checkbox");
             expect(ckbxs[0].checked).to.equal(true);
 
-            const lbls = scryRenderedDOMComponentsWithTag(component, 'label');
+            const lbls = scryManyWithTag(component, 'label');
             expect(lbls.length).to.equal(1);
             expect(lbls[0].textContent).to.equal("Hooray");
         });
         it("renders the negative label", () => {
             const component = renderIntoDocument(makeCell(false, noop));
 
-            const ckbxs = scryRenderedDOMComponentsWithTag(component, 'input');
+            const ckbxs = scryManyWithTag(component, 'input');
             expect(ckbxs.length).to.equal(1);
             expect(ckbxs[0].type).to.equal("checkbox");
             expect(ckbxs[0].checked).to.equal(false);
 
-            const lbls = scryRenderedDOMComponentsWithTag(component, 'label');
+            const lbls = scryManyWithTag(component, 'label');
             expect(lbls.length).to.equal(1);
             expect(lbls[0].textContent).to.equal("Shucks");
         });
