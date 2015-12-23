@@ -37,6 +37,18 @@ describe('TrichordView', () => {
             expect(diviner(nodes[idx])).to.equal(content));
     }
 
+    function makeBox(initialValue = null) {
+        let box = initialValue;
+        return {
+            getBox() {
+                return box;
+            },
+            setBox(value) {
+                box = value;
+            },
+        };
+    }
+
     it("renders a static (non-clickable, non-editable) view", () => {
         const component = renderIntoDocument(<TrichordView
             {...baseProps}
@@ -97,17 +109,15 @@ describe('TrichordView', () => {
     });
 
     it("forwards events to the onClick handler", () => {
-        let touched = false;
+        const {getBox, setBox} = makeBox(false);
         const component = renderIntoDocument(<TrichordView
             {...baseProps}
-            onClick={() => {
-                touched = true;
-            }}
+            onClick={() => setBox(true)}
         />);
         const button = findOneWithTag(component, 'button');
-        expect(touched).to.equal(false);
+        expect(getBox()).to.equal(false);
         Simulate.click(button);
-        expect(touched).to.equal(true);
+        expect(getBox()).to.equal(true);
     });
 
     it("shows editable text boxes when the onChange property is given", () => {
@@ -136,17 +146,15 @@ describe('TrichordView', () => {
         });
 
         it("passes up the inverted chord on click", () => {
-            let output = null;
+            const {getBox, setBox} = makeBox(null);
             const component = renderIntoDocument(<TrichordView
                 {...baseProps}
-                onChange={x => {
-                    output = x;
-                }}
+                onChange={x => setBox(x)}
             />);
             const invertButton = findInvert(component);
-            expect(output).to.equal(null);
+            expect(getBox()).to.equal(null);
             Simulate.click(invertButton);
-            expect(output).to.deep.equal([0, 3, 7]);  // was [0, 4, 7]
+            expect(getBox()).to.deep.equal([0, 3, 7]);  // was [0, 4, 7]
         });
 
         it("is disabled for the root of a tree", () => {
