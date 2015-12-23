@@ -45,6 +45,15 @@ describe('TrichordView', () => {
         verifyNodes(strongs, ["G4", "E4", "C4", "C2"]);
     });
 
+    it("renders no buttons in the static view", () => {
+        const component = renderIntoDocument(<TrichordView
+            {...baseProps}
+        />);
+        const strongs = scryManyWithTag(component, 'strong');
+        verifyNodes(strongs, ["G4", "E4", "C4", "C2"]);
+        expect(scryManyWithTag(component, 'button').length).to.equal(0);
+    });
+
     it("respects when showRoots = false", () => {
         const component = renderIntoDocument(<TrichordView
             {...baseProps}

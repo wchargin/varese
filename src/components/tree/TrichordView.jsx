@@ -80,10 +80,10 @@ export default class TrichordView extends Component {
             </button> :
             <div style={style} className="well">
                 {flattenedContents}
-                <ActionBar
+                {this.props.onChange && <ActionBar
                     chord={notes}
                     onSetChord={this.props.onChange}
-                />
+                />}
             </div>;
 
         const hide = !visible && this.props.onClick;
