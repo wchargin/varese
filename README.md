@@ -44,7 +44,7 @@ This is mostly a new area of study.
 
 ## Technical overview
 
-The core operations (i.e., the actual calculations and the interesting stuff) are in a thoroughly tested functional core. The UI is a rather light React wrapper around this. Because it's in React, it's really easy to reason about the data flow.
+The core operations (i.e., the actual calculations and the interesting stuff) are in a thoroughly tested functional core. The UI is as light as possible a React wrapper around this, which makes it really easy to reason about the data flow. We're also starting to write some tests for the React components themselves—both in terms of the DOM output they produce and with simulated user interactions.
 
 The whole React app is [webpack][]ed into a `bundle.js` file, which is included by the HTML page. The HTML page is tiny, and just provides a `<div id="app"></div>` into which React will render the application.
 
