@@ -13,11 +13,12 @@ export default class ChordInput extends Component {
         };
     }
 
-    componentDidMount() {
-        const {input} = this.refs;
-        input.focus();
-        input.selectionStart = input.value.length;
-        input.selectionEnd = input.value.length;
+    _initializeInput(input) {
+        if (input !== null) {
+            input.focus();
+            input.selectionStart = input.value.length;
+            input.selectionEnd = input.value.length;
+        }
     }
 
     render() {
@@ -31,10 +32,10 @@ export default class ChordInput extends Component {
             {" "}
             <input
                 className="form-control"
-                ref="input"
+                ref={this._initializeInput}
                 id="chord-entry"
                 value={formattedText}
-                onChange={() => this._handleChange()}
+                onChange={e => this._handleChange(e.target.value)}
                 onBlur={() => this.setState({ text: null, error: null })}
                 style={{
                     color: this._fromString(text).status === "error" ?
@@ -51,8 +52,7 @@ export default class ChordInput extends Component {
         </div>;
     }
 
-    _handleChange() {
-        const text = this.refs.input.value;
+    _handleChange(text) {
         this.setState({ text });
 
         const value = this._fromString(text);
