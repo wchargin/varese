@@ -3,7 +3,9 @@ import {expect} from 'chai';
 
 import React from 'react';
 import {
+    Simulate,
     renderIntoDocument,
+    findRenderedDOMComponentWithTag as findOneWithTag,
     scryRenderedDOMComponentsWithTag as scryManyWithTag,
 } from 'react-addons-test-utils';
 
@@ -104,6 +106,20 @@ describe('SettingsTable', () => {
             const lbls = scryManyWithTag(component, 'label');
             expect(lbls.length).to.equal(1);
             expect(lbls[0].textContent).to.equal("Shucks");
+        });
+        it("triggers the onChange handler", () => {
+            let flag = true;
+            const handler = newFlag => {
+                flag = newFlag;
+            };
+            const component = renderIntoDocument(makeCell(flag, handler));
+            const ckbx = findOneWithTag(component, 'input');
+
+            expect(flag).to.equal(true);
+            Simulate.change(ckbx, { target: { checked: false } });
+            expect(flag).to.equal(false);
+            Simulate.change(ckbx, { target: { checked: true } });
+            expect(flag).to.equal(true);
         });
     });
 

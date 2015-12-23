@@ -104,7 +104,7 @@ export class CheckboxCell extends Component {
                 type="checkbox"
                 id={id}
                 checked={checked}
-                onChange={() => onChange(this.refs.ckbx.checked)}
+                onChange={e => onChange(e.target.checked)}
                 style={{ marginLeft: 0, marginRight: 20 }}
             />
             <label
