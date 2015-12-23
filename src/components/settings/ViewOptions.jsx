@@ -72,7 +72,6 @@ export default class ViewOptions extends Component {
                 <Row>
                     <Cell>
                         <input
-                            ref="treeNumber"
                             id="treeNumber"
                             type="number"
                             className="form-control"
@@ -80,8 +79,8 @@ export default class ViewOptions extends Component {
                             min={0}
                             max={12}
                             value={values.treeNumber}
-                            onChange={() => handlers.onSetTreeNumber(
-                                parseInt(this.refs.treeNumber.value, 10))}
+                            onChange={e => handlers.onSetTreeNumber(
+                                parseInt(e.target.value, 10))}
                         />
                     </Cell>
                     <Cell>
@@ -109,15 +108,14 @@ export default class ViewOptions extends Component {
                 <Row>
                     {!infinite && <Cell>
                         <input
-                            ref="levels"
                             type="range"
                             id="depth"
                             //
                             min={1}
                             max={8}
                             value={values.levels}
-                            onChange={() => handlers.onSetLevels(
-                                this.refs.levels.valueAsNumber)}
+                            onChange={e => handlers.onSetLevels(
+                                e.target.valueAsNumber)}
                         />
                     </Cell>}
                     <CheckboxCell
@@ -158,7 +156,6 @@ export default class ViewOptions extends Component {
                 <Row>
                     <Cell>
                         <input
-                            ref="levels"
                             type="range"
                             id="depth"
                             //
@@ -166,21 +163,20 @@ export default class ViewOptions extends Component {
                             max={9}
                             step={0.05}
                             value={values.infiniteLevels}
-                            onChange={() => handlers.onSetInfiniteLevels(
-                                this.refs.levels.valueAsNumber)}
+                            onChange={e => handlers.onSetInfiniteLevels(
+                                e.target.valueAsNumber)}
                         />
                     </Cell>
                     <Cell>
                         <input
-                            ref="height"
                             type="range"
                             id="height"
                             //
                             min={500}
                             max={1000}
                             value={values.infiniteHeight}
-                            onChange={() => handlers.onSetInfiniteHeight(
-                                this.refs.height.valueAsNumber)}
+                            onChange={e => handlers.onSetInfiniteHeight(
+                                e.target.valueAsNumber)}
                         />
                     </Cell>
                 </Row>
@@ -229,7 +225,6 @@ export default class ViewOptions extends Component {
                     />
                     <Cell>
                         <input
-                            ref="rainbowFactor"
                             type="range"
                             id="rainbowFactor"
                             //
@@ -237,8 +232,8 @@ export default class ViewOptions extends Component {
                             max={1}
                             step={0.05}
                             value={values.rainbowFactor}
-                            onChange={() => handlers.onSetRainbowFactor(
-                                this.refs.rainbowFactor.valueAsNumber)}
+                            onChange={e => handlers.onSetRainbowFactor(
+                                e.target.valueAsNumber)}
                         />
                     </Cell>
                 </Row>

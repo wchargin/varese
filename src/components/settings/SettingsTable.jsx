@@ -100,7 +100,6 @@ export class CheckboxCell extends Component {
         const {id, checked, onChange, labelYes, labelNo} = this.props;
         return <Cell className="checkbox">
             <input
-                ref="ckbx"
                 type="checkbox"
                 id={id}
                 checked={checked}

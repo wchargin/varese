@@ -88,16 +88,14 @@ class LimitControls extends Component {
         return <div className="input-group">
             <span className="input-group-addon">
                 <input
-                    ref="minEnabled"
                     type="checkbox"
                     aria-label={this.props.minEnabledLabel}
                     checked={minEnabled}
-                    onChange={() =>
-                        onSetMinEnabled(this.refs.minEnabled.checked)}
+                    onChange={e =>
+                        onSetMinEnabled(e.target.checked)}
                 />
             </span>
             <input
-                ref="min"
                 style={inputStyle}
                 disabled={!minEnabled}
                 type="number"
@@ -105,10 +103,9 @@ class LimitControls extends Component {
                 className="form-control"
                 value={minEnabled ? min : null}
                 aria-label={this.props.minLabel}
-                onChange={() => onSetMin(this.refs.min.valueAsNumber)}
+                onChange={e => onSetMin(e.target.valueAsNumber)}
             />
             <input
-                ref="max"
                 style={inputStyle}
                 disabled={!maxEnabled}
                 type="number"
@@ -116,16 +113,15 @@ class LimitControls extends Component {
                 className="form-control"
                 value={maxEnabled ? max : null}
                 aria-label={this.props.maxLabel}
-                onChange={() => onSetMax(this.refs.max.valueAsNumber)}
+                onChange={e => onSetMax(e.target.valueAsNumber)}
             />
             <span className="input-group-addon">
                 <input
-                    ref="maxEnabled"
                     type="checkbox"
                     aria-label={this.props.maxEnabledLabel}
                     checked={maxEnabled}
-                    onChange={() =>
-                        onSetMaxEnabled(this.refs.maxEnabled.checked)}
+                    onChange={e =>
+                        onSetMaxEnabled(e.target.checked)}
                 />
             </span>
         </div>;
