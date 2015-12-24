@@ -8,7 +8,7 @@
 import React, {Component, PropTypes} from 'react';
 
 import Folding from '../../core/Folding';
-import {flatten} from '../../utils/Utils';
+import {flatten, range} from '../../utils/Utils';
 
 import CustomPropTypes from '../CustomPropTypes';
 
@@ -86,9 +86,8 @@ export default class TrichordTree extends Component {
 
     _generateTree(root, depth) {
         const result = [[root]];
-        for (let i = 1; i < depth; i++) {
-            result.push(this._iterateRow(result[result.length - 1]));
-        }
+        range(1, depth).forEach(i =>
+            result.push(this._iterateRow(result[result.length - 1])));
         return result;
     }
 

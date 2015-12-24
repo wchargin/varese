@@ -45,6 +45,7 @@ import Vex from 'vexflow';
 import {findChordRootOffset} from '../../core/HarmonicSeries';
 import {positionToPitches} from '../../core/TreeSpace';
 import {pitchesToStaveNote} from '../../utils/VexFlowUtils';
+import {range} from '../../utils/Utils';
 import {
     withinLimits,
     formatMaybeRoot,
@@ -449,7 +450,7 @@ export default class InfiniteCanvas extends Component {
         // Paint one extra row above so that things move into view smoothly.
         // We don't need to paint a row below
         // because everything has top-gravity.
-        for (let row = Math.max(0, rowMin - 1); row <= rowMax; row++) {
+        range(Math.max(0, rowMin - 1), rowMax + 1).forEach(row => {
             const absoluteYc = rowHeight * (row + 0.5);
             const canvasYc = absoluteYc - this.state.position.y * rowHeight;
 
@@ -460,9 +461,9 @@ export default class InfiniteCanvas extends Component {
             const colMax = Math.floor(nodes * viewportXr / rowWidth - 0.5);
 
             // Similarly, paint one extra column in each direction.
-            for (let col = Math.max(0, colMin - 1);
-                    col <= Math.min(nodes - 1, colMax + 1);
-                    col++) {
+            range(
+                Math.max(0, colMin - 1),
+                Math.min(nodes - 1, colMax + 1) + 1).forEach(col => {
                 // We find the offset from the viewport center (OFVC)
                 // in absolute coordinates,
                 // then convert that to canvas coordinates.
@@ -471,8 +472,8 @@ export default class InfiniteCanvas extends Component {
                 const canvasOFVC = absoluteOFVC * (rowWidth / viewportWidth);
                 const canvasXc = rowWidth / 2 + canvasOFVC;
                 this._drawNode(ctx, row, col, canvasXc, canvasYc);
-            }
-        }
+            });
+        });
     }
 
     _drawNode(ctx, row, col, x, y) {
