@@ -7,7 +7,7 @@
   "scripts": {
     "start": "webpack-dev-server",
     "build": "NODE_ENV=production webpack",
-    "test": "mocha --compilers js:babel-register test/helper.js 'test/**/*.@(js|jsx)'",
+    "test": "mocha --compilers js:babel-register test/TestEnvironmentSetup.js 'test/**/*.@(js|jsx)'",
     "lint": "node node_modules/eslint/bin/eslint.js src test --ext '.js,.jsx'"
   },
   "babel": {
