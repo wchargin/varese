@@ -54,16 +54,17 @@ describe('CanvasCore', () => {
         expect(maxSafeRow).to.be.at.most(75);
     });
 
-    it("indicates a unit scaling factor when at the top", () =>
-        expect(CanvasCore.getScalingFactorForHeight(0)).to.equal(1));
+    describe("#getScalingFactor", () => {
+        const {getScalingFactor, getScalingFactorForHeight} = CanvasCore;
+        it("of 1\u00D7 when at the top", () =>
+            expect(getScalingFactorForHeight(0)).to.equal(1));
+        it("of 2\u00D7 when one row down", () =>
+            expect(getScalingFactorForHeight(1)).to.equal(2));
+        it("of 4\u00D7 when two rows down", () =>
+            expect(getScalingFactorForHeight(2)).to.equal(4));
+        it("of 1\u00D7 given the initial state", () =>
+            expect(getScalingFactor(s0v())).to.equal(1));
+    });
 
-    it("indicates a doubled scaling factor one row down", () =>
-        expect(CanvasCore.getScalingFactorForHeight(1)).to.equal(2));
-
-    it("indicates a quadrupled scaling factor two rows down", () =>
-        expect(CanvasCore.getScalingFactorForHeight(2)).to.equal(4));
-
-    it("indicates a unit scaling factor given the initial state", () =>
-        expect(CanvasCore.getScalingFactor(s0v())).to.equal(1));
 
 });
