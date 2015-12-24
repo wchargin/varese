@@ -54,4 +54,16 @@ describe('CanvasCore', () => {
         expect(maxSafeRow).to.be.at.most(75);
     });
 
+    it("indicates a unit scaling factor when at the top", () =>
+        expect(CanvasCore.getScalingFactorForHeight(0)).to.equal(1));
+
+    it("indicates a doubled scaling factor one row down", () =>
+        expect(CanvasCore.getScalingFactorForHeight(1)).to.equal(2));
+
+    it("indicates a quadrupled scaling factor two rows down", () =>
+        expect(CanvasCore.getScalingFactorForHeight(2)).to.equal(4));
+
+    it("indicates a unit scaling factor given the initial state", () =>
+        expect(CanvasCore.getScalingFactor(s0v())).to.equal(1));
+
 });

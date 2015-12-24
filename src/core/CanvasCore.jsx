@@ -97,3 +97,28 @@ export function getMaxSafeRow() {
     const bits = Math.floor(Math.log2(Number.MAX_SAFE_INTEGER));
     return bits - 2;
 }
+
+/*
+ * As we move down in the viewport, we change the horizontal scale.
+ * You can interpret this in two ways:
+ * either we compress the viewport by a certain factor
+ * or we expand the nodes themselves by a certain factor.
+ * This method returns that scaling factor.
+ *
+ * To be a bit more precise, the result of this method is the number 'c'
+ * such that the viewport width, in absolute coordinates, is 1 / c.
+ *
+ * The argument should be the 'y' coordinate of the current position,
+ * in absolute coordinates.
+ * If you have a state object, see 'getScalingFactor'.
+ */
+export function getScalingFactorForHeight(y) {
+    return Math.pow(2, y);
+}
+
+/*
+ * Like 'getScalingFactorForHeight', but uses the state's 'y' position.
+ */
+export function getScalingFactor(state) {
+    return getScalingFactorForHeight(state.position.y);
+}
