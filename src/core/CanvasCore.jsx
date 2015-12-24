@@ -42,3 +42,13 @@ export function initialState() {
         keysDown: [],     // a list of numeric key codes
     };
 }
+
+/*
+ * Set the view options, and return the new state.
+ */
+export function setViewOptions(state, viewOptions) {
+    return {
+        ...state,
+        viewOptions,
+    };
+}
