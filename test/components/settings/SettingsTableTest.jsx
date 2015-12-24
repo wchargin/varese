@@ -5,9 +5,9 @@ import React from 'react';
 import {
     Simulate,
     renderIntoDocument,
-    findRenderedDOMComponentWithTag as findOneWithTag,
-    scryRenderedDOMComponentsWithTag as scryManyWithTag,
-} from 'react-addons-test-utils';
+    findOneWithTag,
+    scryManyWithTag,
+} from '../../TestUtils';
 
 import {
     Table,

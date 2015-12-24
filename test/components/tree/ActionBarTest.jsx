@@ -5,8 +5,8 @@ import React from 'react';
 import {
     Simulate,
     renderIntoDocument,
-    scryRenderedDOMComponentsWithTag as scryManyWithTag,
-} from 'react-addons-test-utils';
+    scryManyWithTag,
+} from '../../TestUtils';
 
 import ActionBar from '../../../src/components/tree/ActionBar';
 

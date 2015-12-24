@@ -5,10 +5,9 @@ import React from 'react';
 import {
     Simulate,
     renderIntoDocument,
-    findRenderedDOMComponentWithTag as findOneWithTag,
-    scryRenderedDOMComponentsWithTag as scryManyWithTag,
-} from 'react-addons-test-utils';
-
+    findOneWithTag,
+    scryManyWithTag,
+} from '../../TestUtils';
 import {initialState, canonicalRationalizer} from '../../TestData';
 
 import TrichordView from '../../../src/components/tree/TrichordView';
