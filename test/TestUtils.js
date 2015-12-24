@@ -8,6 +8,8 @@ export {
     renderIntoDocument,
     findRenderedDOMComponentWithTag as findOneWithTag,
     scryRenderedDOMComponentsWithTag as scryManyWithTag,
+    findRenderedDOMComponentWithClass as findOneWithClass,
+    scryRenderedDOMComponentsWithClass as scryManyWithClass,
 } from 'react-addons-test-utils';
 
 /*

@@ -5,8 +5,8 @@ import React from 'react';
 import {
     renderIntoDocument,
     scryManyWithTag,
+    scryManyWithClass,
 } from '../TestUtils';
-import {scryRenderedDOMComponentsWithClass} from 'react-addons-test-utils';
 
 import Page from '../../src/components/Page';
 
@@ -27,8 +27,7 @@ describe('Page', () => {
 
     it("renders its children", () => {
         const component = render();
-        const spans = scryRenderedDOMComponentsWithClass(
-            component, 'amazing-stuff');
+        const spans = scryManyWithClass(component, 'amazing-stuff');
         expect(spans).to.have.length(1);
         expect(spans[0].textContent).to.equal('Inspiring!');
     });
@@ -57,8 +56,7 @@ describe('Page', () => {
 
     it("marks the current page as active", () => {
         const component = render();
-        const activeLinks = scryRenderedDOMComponentsWithClass(
-            component, 'active');
+        const activeLinks = scryManyWithClass(component, 'active');
         expect(activeLinks).to.have.length(1);
         expect(activeLinks[0].textContent).to.equal("The second");
     });
