@@ -79,8 +79,8 @@ export function setCanvasDimensions(state, canvasWidth, canvasHeight) {
 export function getRowDimensions(state) {
     return {
         width: state.canvasDimensions.width,
-        height: state.canvasDimensions.height /
-            state.viewOptions.infiniteLevels,
+        height:
+            state.canvasDimensions.height / state.viewOptions.infiniteLevels,
     };
 }
 
