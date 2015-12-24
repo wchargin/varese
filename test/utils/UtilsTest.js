@@ -1,4 +1,4 @@
-import {describe, it} from 'mocha';
+import {describe, describe as context, it} from 'mocha';
 import {expect} from 'chai';
 
 import Utils from '../../src/utils/Utils';
@@ -36,6 +36,66 @@ describe('Utils', () => {
             () => expect(gcd(-15, -5)).to.equal(5));
         it("gives a positive result when b < a < 0",
             () => expect(gcd(-5, -15)).to.equal(5));
+    });
+
+    describe('#range', () => {
+        const {range} = Utils;
+        const test = (...args) => (...expected) =>
+            expect(range(...args)).to.deep.equal(expected);
+        context("with one argument", () => {
+            it("generates a simple exclusive range", () => test(3)(0, 1, 2));
+            it("generates the singleton range", () => test(1)(0));
+            it("generates the empty range at 0", () => test(0)());
+            it("generates the empty range at -1", () => test(-1)());
+            it("generates the empty range at -77", () => test(-77)());
+            it("complains for a non-numeric argument", () =>
+                expect(() => range("two")).to.throw(/numeric/));
+            it("complains for an infinite argument", () =>
+                expect(() => range(Infinity)).to.throw(/finite/));
+        });
+        context("with two arguments", () => {
+            it("generates a range from 0 to 3", () => test(0, 3)(0, 1, 2));
+            it("generates a range from 1 to 3", () => test(1, 3)(1, 2));
+            it("generates a range from -1 to 2", () => test(-1, 2)(-1, 0, 1));
+            it("generates an empty range from 5 to 5", () => test(5, 5)());
+            it("generates an empty range from 5 to -5", () => test(5, -5)());
+            it("complains for a non-numeric argument", () =>
+                expect(() => range(1, "two")).to.throw(/numeric/));
+            it("complains for an infinite argument", () =>
+                expect(() => range(1, Infinity)).to.throw(/finite/));
+        });
+        context("with three arguments", () => {
+            it("generates a range from 0 to 5 by 2", () =>
+                test(0, 5, 2)(0, 2, 4));
+            it("generates a range from 0 to 6 by 2 (exclusively)", () =>
+                test(0, 6, 2)(0, 2, 4));
+            it("generates a range from 0 to 7 by 2", () =>
+                test(0, 7, 2)(0, 2, 4, 6));
+            it("generates a range from 10 to 20 by 3", () =>
+                test(10, 20, 3)(10, 13, 16, 19));
+            it("generates a range from -5 to 5 by 2", () =>
+                test(-5, 5, 2)(-5, -3, -1, 1, 3));
+            it("generates a range from 5 to -5 by -2", () =>
+                test(5, -5, -2)(5, 3, 1, -1, -3));
+            it("generates an empty range from 5 to -5 by 2", () =>
+                test(5, -5, 2)());
+            it("generates an empty range from -5 to 5 by -2", () =>
+                test(5, -5, 2)());
+            it("generates a range from 0 to 2 by 0.25", () =>
+                test(0, 2, 0.25)(0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75));
+            it("complains when the step size is zero", () =>
+                expect(() => range(1, 2, 0)).to.throw(/step/));
+            it("complains when the step size is negative zero", () =>
+                expect(() => range(1, 2, -0)).to.throw(/step/));
+            it("complains for a non-numeric argument", () =>
+                expect(() => range(0, 1, "two")).to.throw(/numeric/));
+            it("complains for an infinite argument", () =>
+                expect(() => range(0, 1, Infinity)).to.throw(/finite/));
+        });
+        context("with other numbers of arguments", () =>
+            [0, 4, 5].forEach(arity =>
+                it("fails when the arity is " + arity, () =>
+                    expect(() => range(...Array(arity))).to.throw(/arity/))));
     });
 
     describe('#arraysEqual', () => {
