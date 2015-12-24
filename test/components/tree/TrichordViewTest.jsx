@@ -9,16 +9,14 @@ import {
     scryRenderedDOMComponentsWithTag as scryManyWithTag,
 } from 'react-addons-test-utils';
 
-import reducer from '../../../src/core/Reducers';
-import * as Actions from '../../../src/core/Actions';
-import {canonicalRationalizer} from '../../../src/core/HarmonicData';
+import {initialState, canonicalRationalizer} from '../../TestData';
 
 import TrichordView from '../../../src/components/tree/TrichordView';
 
 describe('TrichordView', () => {
 
     const baseViewOptions = {
-        ...reducer(undefined, Actions.noop()).treeViewOptions,
+        ...initialState.treeViewOptions,
         showRoots: true,
         showOctaves: true,
     };
