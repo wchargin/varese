@@ -98,6 +98,22 @@ describe('Utils', () => {
                     expect(() => range(...Array(arity))).to.throw(/arity/))));
     });
 
+    describe('#buildArray', () => {
+        const {buildArray} = Utils;
+        const test = (...args) => (...expected) =>
+            expect(buildArray(...args)).to.deep.equal(expected);
+        it("works for an empty array", () =>
+            test(0, x => x)());
+        it("works for a length-3 identity array", () =>
+            test(3, x => x)(0, 1, 2));
+        it("works for a length-3 array of strings", () =>
+            test(3, x => Array(x + 1).join("z"))("", "z", "zz"));
+        it("works for the square numbers example", () =>
+            test(5, x => x * x)(0, 1, 4, 9, 16));
+        it("works for the self-reference example", () =>
+            test(5, (i, r) => (r[i - 1] || 0) + i)(0, 1, 3, 6, 10));
+    });
+
     describe('#arraysEqual', () => {
         const {arraysEqual} = Utils;
 

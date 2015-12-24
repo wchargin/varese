@@ -69,6 +69,30 @@ export function range(...args) {
     return result;
 }
 
+/*
+ * You'd like something like 'Array(length).map(callback)' to work,
+ * but it doesn't because this is JavaScript
+ * and "uninitialized array position" and "undefined value at position"
+ * are different things, so 'map' and friends don't work on such arrays.
+ * Instead, this does what you want.
+ *
+ * More precisely, 'length' is the length of an array to create,
+ * and 'callback' is a callback that takes
+ * an index into the array
+ * and (optionally) the previous state of the array
+ * and returns the element at the given index.
+ *
+ * For example: 'buildArray(5, x => x * x)' returns [0, 1, 4, 9, 16],
+ * and 'buildArray(5, (i, r) => (r[i - 1] || 0) + i)' returns [0, 1, 3, 6, 10].
+ */
+export function buildArray(length, callback) {
+    const result = Array(length);
+    for (let i = 0; i < length; i++) {
+        result[i] = callback(i, result);
+    }
+    return result;
+}
+
 export function arraysEqual(arr1, arr2, comparator = (a, b) => a === b) {
     if (arr1.length !== arr2.length) {
         return false;
@@ -88,6 +112,7 @@ export function flatten(arrays) {
 export default {
     gcd,
     range,
+    buildArray,
     arraysEqual,
     flatten,
 };
