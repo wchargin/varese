@@ -7,32 +7,48 @@ import {initialState as initialReduxState} from '../TestData';
 const {treeViewOptions: initialViewOptions} = initialReduxState;
 
 describe('CanvasCore', () => {
-
-    // Utilities for generating the initial canvas state,
-    // optionally setting the view options as well.
-    const s0 = () => CanvasCore.initialState();
-    const s0v = (v = initialViewOptions) => CanvasCore.setViewOptions(s0(), v);
+    // Fix some dimensions so we get predictable results.
+    const baseViewOptions = {
+        ...initialViewOptions,
+        infiniteLevels: 4,
+    };
+    const baseDimensions = { width: 600, height: 400 };
+    //
+    // Utilities for generating the initial canvas state
+    // and setting the view options.
+    const s0 = (viewOptions = baseViewOptions) =>
+        CanvasCore.setViewOptions(
+            CanvasCore.setCanvasDimensions(
+                CanvasCore.initialState(),
+                baseDimensions.width, baseDimensions.height),
+            viewOptions);
+    //
+    // Allow overriding the (actually internal) 'position' field.
+    const sp = (position, state = s0()) => ({ ...state, position });
+    //
+    // ...and do so easily with a helper function to save some typing.
+    const xy = (x, y) => ({ x, y });
 
     it("provides an initial state", () =>
-        expect(s0()).to.be.an('object'));
+        expect(CanvasCore.initialState()).to.be.an('object'));
 
     it("sets the view options", () => {
-        const initialState = s0v();
+        const initialState = s0();
         expect(initialState.viewOptions).to.be.an('object');
         const newViewOptions = {
             ...initialViewOptions,
             infiniteLevels: 3.14,
         };
-        const newState = s0v(newViewOptions);
+        const newState = s0(newViewOptions);
         expect(newState.viewOptions).to.be.an('object');
         expect(newState.viewOptions).to.deep.equal(newViewOptions);
     });
 
     it("sets the canvas dimensions", () => {
-        const newState = CanvasCore.setCanvasDimensions(s0v(), 123, 456);
+        const newState = CanvasCore.setCanvasDimensions(s0(), 123, 456);
         expect(newState.canvasDimensions.width).to.equal(123);
         expect(newState.canvasDimensions.height).to.equal(456);
-        expect(newState.viewOptions).to.deep.equal(initialViewOptions);
+        expect(newState.viewOptions).to.deep.equal(baseViewOptions);
     });
 
     it("gets the row dimensions, in canvas coordinates", () => {
@@ -63,32 +79,20 @@ describe('CanvasCore', () => {
         it("of 4\u00D7 when two rows down", () =>
             expect(getScalingFactorForHeight(2)).to.equal(4));
         it("of 1\u00D7 given the initial state", () =>
-            expect(getScalingFactor(s0v())).to.equal(1));
+            expect(getScalingFactor(s0())).to.equal(1));
     });
 
     describe("#getPanResult", () => {
         const {getPanResult} = CanvasCore;
-        const xy = (x, y) => ({ x, y });
-        //
-        // Fix some dimensions so we get predictable results.
-        const state = {
-            ...CanvasCore.setCanvasDimensions(s0v({
-                ...initialViewOptions,
-                infiniteLevels: 4,
-            }), 600, 400),
-        };
-        //
-        // Allow overriding the (actually internal) 'position' field.
-        const sp = position => ({ ...state, position });
         //
         context("retains the initial state when the displacement", () => {
             const none = xy(0, 0);
             it("is horizontal", () =>
-                expect(getPanResult(state, xy(100, 0))).to.deep.equal(none));
+                expect(getPanResult(s0(), xy(100, 0))).to.deep.equal(none));
             it("points upward", () =>
-                expect(getPanResult(state, xy(0, -50))).to.deep.equal(none));
+                expect(getPanResult(s0(), xy(0, -50))).to.deep.equal(none));
             it("points upward and to the right", () =>
-                expect(getPanResult(state, xy(50, -50))).to.deep.equal(none));
+                expect(getPanResult(s0(), xy(50, -50))).to.deep.equal(none));
         });
         context("pans straight down", () => {
             // test4: test panning down by four different distances
@@ -195,10 +199,10 @@ describe('CanvasCore', () => {
             // and use that to compute the x-position.
             context("from the origin", () => {
                 it("down a level and halfway to the right", () =>
-                    expect(getPanResult(state, xy(150, 100)))
+                    expect(getPanResult(s0(), xy(150, 100)))
                         .to.deep.equal(xy(0.125, 1)));
                 it("down a level and halfway to the left", () =>
-                    expect(getPanResult(state, xy(-150, 100)))
+                    expect(getPanResult(s0(), xy(-150, 100)))
                         .to.deep.equal(xy(-0.125, 1)));
             });
             context("from halfway right across the second level", () => {
