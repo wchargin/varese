@@ -70,7 +70,6 @@ export default class InfiniteCanvas extends Component {
             keysDown: [],     // a list of numeric key codes
             //
             // TODO(william): Move all the state and logic to CanvasCore.
-            coreState: CanvasCore.initialState(),
         };
 
         // We attach the following properties to the instance itself
