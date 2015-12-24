@@ -110,6 +110,132 @@ describe('CanvasCore', () => {
             context("from a state that's already panned diagonally, ", () =>
                 test4({ x: 0.1, y: 0.75 }));
         });
+        context("pans horizontally", () => {
+            context("from the centerline in the first level", () => {
+                // In this scenario, the viewport can see half the row
+                // and is centered in the center of the canvas.
+                // The viewport's absolute width is 0.5 units.
+                // At its most extreme rightward position,
+                // its right edge will be at position 0.5,
+                // so its center will be at position 0.25.
+                // The full canvas appears to be 1200px wide in canvas units.
+                const state = sp(xy(0, 1));
+                it("halfway across the viewport", () =>
+                    expect(getPanResult(state, xy(150, 0)))
+                        .to.deep.equal(xy(0.125, 1)));
+                it("to the right edge of the viewport", () =>
+                    expect(getPanResult(state, xy(300, 0)))
+                        .to.deep.equal(xy(0.25, 1)));
+                it("without going out of bounds to the right", () =>
+                    expect(getPanResult(state, xy(305, 0)))
+                        .to.deep.equal(xy(0.25, 1)));
+                it("to the left edge of the viewport", () =>
+                    expect(getPanResult(state, xy(-300, 0)))
+                        .to.deep.equal(xy(-0.25, 1)));
+                it("without going out of bounds to the left", () =>
+                    expect(getPanResult(state, xy(-305, 0)))
+                        .to.deep.equal(xy(-0.25, 1)));
+            });
+            context("from halfway right along the second level", () => {
+                // In this scenario, the viewport can see a quarter of the row
+                // and occupies the third quartile of the canvas.
+                // The viewport's absolute width is 0.25 units,
+                // and its leftmost edge is at position 0,
+                // so its rightmost edge is at position 0.25
+                // and its center is at position 0.125.
+                // The full canvas appears to be 2400px wide in canvas units.
+                const farEdge = 0.375;
+                const initialX = 0.125;
+                const state = sp(xy(initialX, 2));
+                //
+                // The remaining distance to the right
+                // is a quarter of the canvas (0.25 absolute units),
+                // which takes up 600 pixels (incidentally, a full viewport).
+                it("all the way to the right", () =>
+                    expect(getPanResult(state, xy(600, 0)))
+                        .to.deep.equal(xy(farEdge, 2)));
+                //
+                // Per the above, half the remaining distance
+                // is 0.125 absolute units, or 300 pixels.
+                it("half the remaining distance to the right", () =>
+                    expect(getPanResult(state, xy(300, 0)))
+                        .to.deep.equal(xy(initialX + 0.125, 2)));
+                //
+                // We want to move from the third quartile to the first,
+                // so our center will shift from 0.125 to -0.125,
+                // a shift of -0.25,
+                // which works out to 600 pixels.
+                it("to the left, traversing half the full tree", () =>
+                    expect(getPanResult(state, xy(-600, 0)))
+                        .to.deep.equal(xy(initialX - 0.25, 2)));
+                //
+                // Similarly, the left edge
+                // is (initialX + 0.5) = 0.625 absolute units away,
+                // which works out to 1500 pixels.
+                it("all the way to the left", () =>
+                    expect(getPanResult(state, xy(-1200, 0)))
+                        .to.deep.equal(xy(-farEdge, 2)));
+                //
+                // Of course, we don't want to exceed the bounds.
+                // We take the analogous values from above and add padding.
+                it("without going out of bounds to the right", () =>
+                    expect(getPanResult(state, xy(605, 0)))
+                        .to.deep.equal(xy(farEdge, 2)));
+                it("without going out of bounds to the left", () =>
+                    expect(getPanResult(state, xy(-1205, 0)))
+                        .to.deep.equal(xy(-farEdge, 2)));
+            });
+        });
+        context("pans diagonally", () => {
+            //
+            // The point of these test cases is to ensure that
+            // we're using the scaling factor from the new y-position
+            // to determine the horizontal translation.
+            // That is, we need to compute the y-position first
+            // and use that to compute the x-position.
+            context("from the origin", () => {
+                it("down a level and halfway to the right", () =>
+                    expect(getPanResult(state, xy(150, 100)))
+                        .to.deep.equal(xy(0.125, 1)));
+                it("down a level and halfway to the left", () =>
+                    expect(getPanResult(state, xy(-150, 100)))
+                        .to.deep.equal(xy(-0.125, 1)));
+            });
+            context("from halfway right across the second level", () => {
+                // (See the 'pans horizontally' section above
+                // for an explanation of these values.)
+                const farEdge = 0.375;
+                const initialX = 0.125;
+                const state = sp(xy(initialX, 2));
+                //
+                // Half the remaining distance to the right
+                // is (0.375 - 0.125) / 2 = 0.25 / 2 = 0.125 units,
+                // Once we've moved up a level, this will corespond
+                // to (1200 pixels * 0.125) = 150 pixels.
+                it("up a level and half the remainder to the right", () =>
+                    expect(getPanResult(state, xy(150, -100)))
+                        .to.deep.equal(xy(initialX + 0.125, 1)));
+                //
+                // Similarly, the full distance is 0.25 units = 300 pixels.
+                const farEdgeAbove = 0.25;
+                it("up a level and all the way to the right", () =>
+                    expect(getPanResult(state, xy(300, -100)))
+                        .to.deep.equal(xy(farEdgeAbove, 1)));
+                //
+                it("up a level and past all the way to the right", () =>
+                    expect(getPanResult(state, xy(305, -100)))
+                        .to.deep.equal(xy(farEdgeAbove, 1)));
+                //
+                // To go back to the centerline, we need to cover -0.125 units;
+                // if we've moved down a level
+                // so that the scaling factor is 8,
+                // the full tree width will be 4800 pixels,
+                // so we'll need to drag -600 pixels.
+                it("down a level and back to the centerline", () =>
+                    expect(getPanResult(state, xy(-600, 100)))
+                        .to.deep.equal(xy(0, 3)));
+            });
+        });
     });
 
 });
