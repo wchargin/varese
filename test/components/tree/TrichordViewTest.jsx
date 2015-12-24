@@ -131,108 +131,33 @@ describe('TrichordView', () => {
         verifyNodes(textFields, ["G4", "E4", "C4"], x => x.value);
     });
 
-    context("'Invert' button", () => {
-        const findInvert = component => scryManyWithTag(component, 'button')
-            .find(x => x.textContent === "Invert");
-
-        it("appears when 'onChange' is given", () => {
-            const component = renderIntoDocument(<TrichordView
-                {...baseProps}
-                onChange={() => {}}
-            />);
-            const invertButton = findInvert(component);
-            expect(invertButton).to.not.equal(undefined);
-            expect(invertButton.disabled).to.equal(false);
-        });
-
-        it("passes up the inverted chord on click", () => {
+    // ActionBar is tested more extensively separately (ActionBarTest.jsx);
+    // these examples just make sure that it's hooked up to the change handler.
+    context("regarding the ActionBar", () => {
+        it("passes the inverted chord when 'Invert' is clicked", () => {
             const {getBox, setBox} = makeBox(null);
             const component = renderIntoDocument(<TrichordView
                 {...baseProps}
                 onChange={x => setBox(x)}
             />);
-            const invertButton = findInvert(component);
+            const invertButton = scryManyWithTag(component, 'button')
+                .find(x => x.textContent === "Invert");
             expect(getBox()).to.equal(null);
             Simulate.click(invertButton);
             expect(getBox()).to.deep.equal([0, 3, 7]);  // was [0, 4, 7]
         });
-
-        it("is disabled for the root of a tree", () => {
+        it("passes the infolded chord when 'Infold' is clicked", () => {
+            const {getBox, setBox} = makeBox(null);
             const component = renderIntoDocument(<TrichordView
                 {...baseProps}
-                notes={[0, 2, 4]}
-                onChange={() => {}}
+                onChange={x => setBox(x)}
             />);
-            const invertButton = findInvert(component);
-            expect(invertButton).to.not.equal(undefined);
-            expect(invertButton.disabled).to.equal(true);
-        });
-
-        it("is enabled for a non-root degenerate chord", () => {
-            // (a degenerate chord is one where an interval is zero)
-            const component = renderIntoDocument(<TrichordView
-                {...baseProps}
-                notes={[0, 0, 4]}
-                onChange={() => {}}
-            />);
-            const invertButton = findInvert(component);
-            expect(invertButton).to.not.equal(undefined);
-            expect(invertButton.disabled).to.equal(false);
-        });
-
-    });
-
-    context("'Infold' button", () => {
-        const findInfold = component => scryManyWithTag(component, 'button')
-            .find(x => x.textContent === "Infold");
-
-        it("appears when 'onChange' is given", () => {
-            const component = renderIntoDocument(<TrichordView
-                {...baseProps}
-                onChange={() => {}}
-            />);
-            const infoldButton = findInfold(component);
-            expect(infoldButton).to.not.equal(undefined);
-            expect(infoldButton.disabled).to.equal(false);
-        });
-
-        it("passes up the inverted chord on click", () => {
-            let output = null;
-            const component = renderIntoDocument(<TrichordView
-                {...baseProps}
-                onChange={x => {
-                    output = x;
-                }}
-            />);
-            const infoldButton = findInfold(component);
-            expect(output).to.equal(null);
+            const infoldButton = scryManyWithTag(component, 'button')
+                .find(x => x.textContent === "Infold");
+            expect(getBox()).to.equal(null);
             Simulate.click(infoldButton);
-            expect(output).to.deep.equal([0, 1, 4]);  // was [0, 4, 7]
+            expect(getBox()).to.deep.equal([0, 1, 4]);  // was [0, 4, 7]
         });
-
-        it("is disabled for the root of a tree", () => {
-            const component = renderIntoDocument(<TrichordView
-                {...baseProps}
-                notes={[0, 2, 4]}
-                onChange={() => {}}
-            />);
-            const infoldButton = findInfold(component);
-            expect(infoldButton).to.not.equal(undefined);
-            expect(infoldButton.disabled).to.equal(true);
-        });
-
-        it("is disabled for a non-root degenerate chord", () => {
-            // (a degenerate chord is one where an interval is zero)
-            const component = renderIntoDocument(<TrichordView
-                {...baseProps}
-                notes={[0, 0, 4]}
-                onChange={() => {}}
-            />);
-            const infoldButton = findInfold(component);
-            expect(infoldButton).to.not.equal(undefined);
-            expect(infoldButton.disabled).to.equal(true);
-        });
-
     });
 
 });
