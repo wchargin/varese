@@ -1,4 +1,4 @@
-import {describe, it} from 'mocha';
+import {describe, describe as context, it} from 'mocha';
 import {expect} from 'chai';
 
 import * as CanvasCore from '../../src/core/CanvasCore';
@@ -66,5 +66,50 @@ describe('CanvasCore', () => {
             expect(getScalingFactor(s0v())).to.equal(1));
     });
 
+    describe("#getPanResult", () => {
+        const {getPanResult} = CanvasCore;
+        const xy = (x, y) => ({ x, y });
+        //
+        // Fix some dimensions so we get predictable results.
+        const state = {
+            ...CanvasCore.setCanvasDimensions(s0v({
+                ...initialViewOptions,
+                infiniteLevels: 4,
+            }), 600, 400),
+        };
+        //
+        // Allow overriding the (actually internal) 'position' field.
+        const sp = position => ({ ...state, position });
+        //
+        context("retains the initial state when the displacement", () => {
+            const none = xy(0, 0);
+            it("is horizontal", () =>
+                expect(getPanResult(state, xy(100, 0))).to.deep.equal(none));
+            it("points upward", () =>
+                expect(getPanResult(state, xy(0, -50))).to.deep.equal(none));
+            it("points upward and to the right", () =>
+                expect(getPanResult(state, xy(50, -50))).to.deep.equal(none));
+        });
+        context("pans straight down", () => {
+            // test4: test panning down by four different distances
+            const test4 = (initialPosition) => {
+                const baseState = sp(initialPosition);
+                const {x: initialX, y: initialY} = initialPosition;
+                const test1 = (deltaCanvas, deltaPosition) =>
+                    expect(getPanResult(baseState, xy(0, deltaCanvas)))
+                        .to.deep.equal(xy(initialX, initialY + deltaPosition));
+                it("by half a level",       () => test1(50,  0.5));
+                it("by a single level",     () => test1(100, 1));
+                it("by a level and a half", () => test1(150, 1.5));
+                it("by two levels",         () => test1(200, 2));
+            };
+            context("from the initial state, ", () =>
+                test4({ x: 0, y: 0 }));
+            context("from a state that's already panned down, ", () =>
+                test4({ x: 0, y: 0.75 }));
+            context("from a state that's already panned diagonally, ", () =>
+                test4({ x: 0.1, y: 0.75 }));
+        });
+    });
 
 });

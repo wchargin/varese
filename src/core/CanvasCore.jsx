@@ -122,3 +122,40 @@ export function getScalingFactorForHeight(y) {
 export function getScalingFactor(state) {
     return getScalingFactorForHeight(state.position.y);
 }
+
+/*
+ * Given a displacement in canvas coordinates,
+ * compute the new stateful position in absolute coordinates.
+ *
+ * The displacement argument should have shape {x: number, y: number}.
+ *
+ * The return value is the new value for the 'position' field.
+ */
+export function getPanResult(state, canvasDeltaXY) {
+    const {width: rowWidth, height: rowHeight} = getRowDimensions(state);
+
+    const newY = state.position.y + canvasDeltaXY.y / rowHeight;
+    const yMin = 0;
+    const levelMax = getMaxSafeRow();
+    const yPaddingBottom = 2;  // don't chop off the bottom few rows
+    const yMax = levelMax - state.viewOptions.infiniteLevels + yPaddingBottom;
+    const finalY = Math.max(yMin, Math.min(newY, yMax));
+
+    // The value of 'perceivedWidth' represents
+    // the width of the entire row (not just what's inside the viewport)
+    // in canvas coordinates.
+    // This allows us to determine
+    // the proportion of the absolute width
+    // through which the user wants to scroll,
+    // which is the delta in absolute coordinates
+    // (which is what we want, because 'position' is in absolute coordinates).
+    const scalingFactor = getScalingFactorForHeight(finalY);
+    const perceivedWidth = rowWidth * scalingFactor;
+    const newX = state.position.x + canvasDeltaXY.x / perceivedWidth;
+    const rangeX = 1 - 1 / scalingFactor;
+    const minX = -rangeX / 2;
+    const maxX = +rangeX / 2;
+    const finalX = Math.max(minX, Math.min(newX, maxX));
+
+    return { x: finalX, y: finalY };
+}
