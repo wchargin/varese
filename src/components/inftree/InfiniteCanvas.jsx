@@ -51,6 +51,8 @@ import {
     formatPitchesAndSemitones,
 } from '../../utils/DisplayUtils';
 
+import * as CanvasCore from '../../core/CanvasCore.jsx';
+
 export default class InfiniteCanvas extends Component {
 
     constructor() {
@@ -66,6 +68,9 @@ export default class InfiniteCanvas extends Component {
             lastMouse: null,  // canvas coordinates
             mouseDown: false,
             keysDown: [],     // a list of numeric key codes
+            //
+            // TODO(william): Move all the state and logic to CanvasCore.
+            coreState: CanvasCore.initialState(),
         };
 
         // We attach the following properties to the instance itself
