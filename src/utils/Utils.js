@@ -60,13 +60,8 @@ export function range(...args) {
     }
 
     // Finally, create an populate an array.
-    const result = Array(Math.max(0, Math.ceil((max - min) / step)));
-    let acc = min;
-    for (let i = 0; i < result.length; i++) {
-        result[i] = acc;
-        acc += step;
-    }
-    return result;
+    return buildArray(Math.max(0, Math.ceil((max - min) / step)), (i, r) =>
+        i === 0 ? min : (r[i - 1] + step));
 }
 
 /*
