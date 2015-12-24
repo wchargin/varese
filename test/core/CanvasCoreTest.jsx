@@ -47,4 +47,11 @@ describe('CanvasCore', () => {
         });
     });
 
+    it("provides a reasonable value for the maximum safe row", () => {
+        const maxSafeRow = CanvasCore.getMaxSafeRow();
+        expect(maxSafeRow).to.be.a('number');
+        expect(maxSafeRow).to.be.at.least(25);
+        expect(maxSafeRow).to.be.at.most(75);
+    });
+
 });

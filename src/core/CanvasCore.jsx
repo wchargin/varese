@@ -83,3 +83,17 @@ export function getRowDimensions(state) {
             state.viewOptions.infiniteLevels,
     };
 }
+
+/*
+ * We use some exponential factors 2^row when rendering,
+ * and bizarre things start happening at really high rows.
+ * This function returns the index of the highest row
+ * that we think won't produce weird output.
+ */
+export function getMaxSafeRow() {
+    // Weirdness seems to kick in as we approach Number.MAX_SAFE_INTEGER,
+    // so we stop just a few before there,
+    // where (empirically) the effects become observable.
+    const bits = Math.floor(Math.log2(Number.MAX_SAFE_INTEGER));
+    return bits - 2;
+}
