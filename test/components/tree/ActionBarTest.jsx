@@ -6,6 +6,7 @@ import {
     Simulate,
     renderIntoDocument,
     scryManyWithTag,
+    makeBox,
 } from '../../TestUtils';
 
 import ActionBar from '../../../src/components/tree/ActionBar';
@@ -16,18 +17,6 @@ describe('ActionBar', () => {
         chord: [0, 4, 7],
         onSetChord: () => {},
     };
-
-    function makeBox(initialValue = null) {
-        let box = initialValue;
-        return {
-            getBox() {
-                return box;
-            },
-            setBox(value) {
-                box = value;
-            },
-        };
-    }
 
     describe("'Invert' button", () => {
         const findInvert = component => scryManyWithTag(component, 'button')

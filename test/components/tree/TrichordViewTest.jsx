@@ -7,6 +7,7 @@ import {
     renderIntoDocument,
     findOneWithTag,
     scryManyWithTag,
+    makeBox,
 } from '../../TestUtils';
 import {initialState, canonicalRationalizer} from '../../TestData';
 
@@ -32,18 +33,6 @@ describe('TrichordView', () => {
         expect(nodes.length).to.equal(contents.length);
         contents.forEach((content, idx) =>
             expect(diviner(nodes[idx])).to.equal(content));
-    }
-
-    function makeBox(initialValue = null) {
-        let box = initialValue;
-        return {
-            getBox() {
-                return box;
-            },
-            setBox(value) {
-                box = value;
-            },
-        };
     }
 
     it("renders a static (non-clickable, non-editable) view", () => {
