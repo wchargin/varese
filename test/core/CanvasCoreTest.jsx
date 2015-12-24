@@ -8,31 +8,28 @@ const {treeViewOptions: initialViewOptions} = initialReduxState;
 
 describe('CanvasCore', () => {
 
+    // Utilities for generating the initial canvas state,
+    // optionally setting the view options as well.
+    const s0 = () => CanvasCore.initialState();
+    const s0v = (v = initialViewOptions) => CanvasCore.setViewOptions(s0(), v);
+
     it("provides an initial state", () =>
-        expect(CanvasCore.initialState()).to.be.an('object'));
+        expect(s0()).to.be.an('object'));
 
     it("sets the view options", () => {
-        const initialState = CanvasCore.setViewOptions(
-            CanvasCore.initialState(),
-            initialViewOptions);
+        const initialState = s0v();
         expect(initialState.viewOptions).to.be.an('object');
         const newViewOptions = {
             ...initialViewOptions,
             infiniteLevels: 3.14,
         };
-        const newState = CanvasCore.setViewOptions(
-            CanvasCore.initialState(),
-            newViewOptions);
+        const newState = s0v(newViewOptions);
         expect(newState.viewOptions).to.be.an('object');
         expect(newState.viewOptions).to.deep.equal(newViewOptions);
     });
 
     it("sets the canvas dimensions", () => {
-        const newState = CanvasCore.setCanvasDimensions(
-            CanvasCore.setViewOptions(
-                CanvasCore.initialState(),
-                initialViewOptions),
-            123, 456);
+        const newState = CanvasCore.setCanvasDimensions(s0v(), 123, 456);
         expect(newState.canvasDimensions.width).to.equal(123);
         expect(newState.canvasDimensions.height).to.equal(456);
         expect(newState.viewOptions).to.deep.equal(initialViewOptions);
