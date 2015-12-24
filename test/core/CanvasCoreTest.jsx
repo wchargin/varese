@@ -27,4 +27,15 @@ describe('CanvasCore', () => {
         expect(newState.viewOptions).to.deep.equal(newViewOptions);
     });
 
+    it("sets the canvas dimensions", () => {
+        const newState = CanvasCore.setCanvasDimensions(
+            CanvasCore.setViewOptions(
+                CanvasCore.initialState(),
+                initialViewOptions),
+            123, 456);
+        expect(newState.canvasDimensions.width).to.equal(123);
+        expect(newState.canvasDimensions.height).to.equal(456);
+        expect(newState.viewOptions).to.deep.equal(initialViewOptions);
+    });
+
 });

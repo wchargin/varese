@@ -52,3 +52,16 @@ export function setViewOptions(state, viewOptions) {
         viewOptions,
     };
 }
+
+/*
+ * Set the canvas dimensions, and return the new state.
+ */
+export function setCanvasDimensions(state, canvasWidth, canvasHeight) {
+    return {
+        ...state,
+        canvasDimensions: {
+            width: canvasWidth,
+            height: canvasHeight,
+        },
+    };
+}
