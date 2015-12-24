@@ -65,3 +65,21 @@ export function setCanvasDimensions(state, canvasWidth, canvasHeight) {
         },
     };
 }
+
+/*
+ * Return the dimensions, in canvas coordinates, of
+ * the portion of a row that would appear in the viewport.
+ * The rows are evenly distributed across the viewport height.
+ *
+ * The return value has the shape { width: number, height: number },
+ * using canvas coordinates.
+ *
+ * Requires 'viewOptions' to have been set.
+ */
+export function getRowDimensions(state) {
+    return {
+        width: state.canvasDimensions.width,
+        height: state.canvasDimensions.height /
+            state.viewOptions.infiniteLevels,
+    };
+}

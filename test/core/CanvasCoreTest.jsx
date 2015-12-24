@@ -35,4 +35,16 @@ describe('CanvasCore', () => {
         expect(newState.viewOptions).to.deep.equal(initialViewOptions);
     });
 
+    it("gets the row dimensions, in canvas coordinates", () => {
+        const initialState = CanvasCore.setViewOptions(
+            CanvasCore.initialState(),
+            { ...initialViewOptions, infiniteLevels: 3.5 });
+        expect(initialState.canvasDimensions.width).to.equal(800);
+        expect(initialState.canvasDimensions.height).to.equal(600);
+        expect(CanvasCore.getRowDimensions(initialState)).to.deep.equal({
+            width: 800,
+            height: 600 / 3.5,
+        });
+    });
+
 });
