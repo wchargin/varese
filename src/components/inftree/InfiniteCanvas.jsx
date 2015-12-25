@@ -3,39 +3,28 @@
  * ("Mostly" unbounded because all Numbers are double-precision floats,
  * so we can't go past any rows with more than ~2^53 nodes.)
  *
- * This component is a bit lower-level than most React components,
- * because it's implemented entirely with the <canvas> API.
- * Most of the math (read: arithmetic) is contained in _draw and _drawNode,
- * so the only things you really need to be familiar with elsewhere
- * are the different coordinate systems in use.
+ * Writing a canvas-based component is a different experience
+ * than writing most React components,
+ * because the canvas is immediate-mode
+ * so doesn't really fit well into the React declarative flow.
+ * To make this more declarative---and, importantly, more unit-testable---
+ * the main logic is in two other modules:
  *
- * There are three coordinate systems in use:
+ *   - the 'src/core/CanvasCore' module
+ *     comprises a suite of entirely pure functions
+ *     that handle the core logic for controlling the canvas position
+ *     and determine what should be displayed when; and
  *
- *   - "Canvas coordinates" are the actual drawing coordinates of the canvas.
- *     The origin is at the top-left of the current viewport,
- *     the basis vectors point to the right and downward,
- *     and the scaling factor is as with the canvas:
- *     that is, (canvas.width, canvas.height) is the bottom-right corner.
+ *   - the 'src/core/CanvasUIAdapter' module
+ *     provides event handlers and lifecycle mixins
+ *     that are modularized enough to be unit-tested separately
+ *     (although they do require some mocking
+ *     to interface with things like 'window.addEventListener').
  *
- *   - "Absolute coordinates" use
- *     the same orientation as the normal canvas coordinates,
- *     but the origin is at the very top-left of the *possible* view,
- *     not the current view.
- *     That the scale is the same as
- *     the scale used by the canvas coordinates when y = 0.
- *
- *   - "Idealized coordinates" are the easiest to work with mathematically.
- *     The origin is at the top-center of the tree,
- *     and the basis vectors point to the right and downward.
- *     A distance of one unit in the y direction corresponds to one level,
- *     and the entire horizontal axis ranges from -0.5 to 0.5.
- *
- * In general, it's nice to keep things in idealized coordinates,
- * because they're robust to, e.g.,
- * window resizes or a change to 'this.props.viewOptions.infiniteLevels'.
- * So it's often a good idea to limit the other coordinate systems to drawing
- * or things that really are inherently tied to the canvas,
- * like the mouse position.
+ * In a nutshell, if you're looking to modify the *behavior*,
+ * look into one of those modules;
+ * if you're looking to alter the *appearance*,
+ * you should find what you need in `_draw` and friends in this module.
  */
 import React, {Component, PropTypes} from 'react';
 import CustomPropTypes from '../CustomPropTypes';
