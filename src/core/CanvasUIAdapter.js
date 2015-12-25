@@ -147,9 +147,14 @@ function handleKeyDown(getState, setState, e) {
     });
 }
 
+function handleKeyUp(getState, setState, e) {
+    const state = getState();
+    const keysDown = state.keysDown.filter(x => x !== e.which);
+    setState({ ...state, keysDown });
+}
+
 // TODO(william) STOPSHIP: Implement these
 /* eslint-disable no-unused-vars */
-function handleKeyUp(getState, setState) {}
 function handleBlur(getState, setState) {}
 /* eslint-enable */
 

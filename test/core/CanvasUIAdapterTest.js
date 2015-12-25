@@ -268,6 +268,31 @@ describe('CanvasUIAdapter', () => {
         });
     });
 
+    describe('handler onKeyUp', () => {
+        const {getBox, handlers} = create();
+        const makeEvent = which => ({ which, repeat: false });
+        it("should release a key that was down", () => {
+            handlers.onKeyDown(makeEvent(0x41));  // 'A'
+            handlers.onKeyUp(makeEvent(0x41));    // 'A'
+            expect(getBox().keysDown).to.have.length(0);
+        });
+        it("should leave other keys pressed", () => {
+            handlers.onKeyDown(makeEvent(0x57));  // 'W'
+            handlers.onKeyDown(makeEvent(0x41));  // 'A'
+            handlers.onKeyDown(makeEvent(0x53));  // 'S'
+            handlers.onKeyUp(makeEvent(0x41));    // 'A'
+            expect(getBox().keysDown).to.deep.equal([0x57, 0x53]);
+        });
+        it("should leave unpressed keys alone", () => {
+            handlers.onKeyUp(makeEvent(0x44));    // 'D'
+            expect(getBox().keysDown).to.deep.equal([0x57, 0x53]);
+        });
+        it("should leave non-movement keys alone", () => {
+            handlers.onKeyUp(makeEvent(0x45));    // 'E'
+            expect(getBox().keysDown).to.deep.equal([0x57, 0x53]);
+        });
+    });
+
     describe('lifecycle mixin componentWillMount', () => {
         const {getBox, lifecycleMixins} = create();
         const newViewOptions = {
