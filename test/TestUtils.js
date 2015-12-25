@@ -1,6 +1,7 @@
 /*
  * Some useful pre-defined and centralized functions for testing purposes.
  */
+import {before, after} from 'mocha';
 
 // Alias and rename some React-provided testing utilities.
 export {
@@ -57,4 +58,42 @@ export function mocking(target, propertyName, newValue, callback) {
     } else {
         delete target[propertyName];
     }
+}
+
+/*
+ * Ask Mocha to mock out a property within the current context.
+ *
+ * Example usage:
+ *
+ *      const mySetInterval = () => {};
+ *      describe("before the mock", () =>
+ *          it("isn't mocked", () =>
+ *              expect(window.setInterval).to.not.equal(mySetInterval)));
+ *      describe("a thing", () => {
+ *          declareMochaMock(window, 'setInterval', mySetInterval);
+ *          it("uses the mock", () =>
+ *              expect(window.setInterval).to.equal(mySetInterval));
+ *          it("uses the mock again", () =>
+ *              expect(window.setInterval).to.equal(mySetInterval));
+ *      });
+ *      describe("after the mock", () =>
+ *          it("isn't mocked", () =>
+ *              expect(window.setInterval).to.not.equal(mySetInterval)));
+ */
+export function declareMochaMock(target, propertyName, newValue) {
+    let oldExisted;
+    let oldValue;
+    before(`set up mock for '${propertyName}'`, () => {
+        oldValue = target[propertyName]
+        oldExisted = Object.prototype.hasOwnProperty.call(
+            target, propertyName);
+        target[propertyName] = newValue;
+    });
+    after(`tear down mock for '${propertyName}'`, () => {
+        if (oldExisted) {
+            target[propertyName] = oldValue;
+        } else {
+            delete target[propertyName];
+        }
+    });
 }

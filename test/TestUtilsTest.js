@@ -41,4 +41,28 @@ describe('TestUtils', () => {
         });
     });
 
+    describe('declareMochaMock', () => {
+        const target = { foo: 123 };
+        describe("should not take effect before the mock is declared", () => {
+            it("for 'target.foo'", () =>
+                expect(target.foo).to.equal(123));
+            it("for 'target.bar'", () =>
+                expect(target).to.not.have.property('bar'));
+        });
+        describe("should take effect while the mock is declared", () => {
+            TestUtils.declareMochaMock(target, 'foo', 234);
+            TestUtils.declareMochaMock(target, 'bar', 345);
+            it("for 'target.foo'", () =>
+                expect(target.foo).to.equal(234));
+            it("for 'target.bar'", () =>
+                expect(target.bar).to.equal(345));
+        });
+        describe("should not take effect after the mock is declared", () => {
+            it("for 'target.foo'", () =>
+                expect(target.foo).to.equal(123));
+            it("for 'target.bar'", () =>
+                expect(target).to.not.have.property('bar'));
+        });
+    });
+
 });
