@@ -10,9 +10,22 @@
  * In a sense, the canvas implementation
  * becomes an interpreter for a DSL output by this file.
  *
- * The coordinate systems used in this file
- * are defined in the same way as in documentation for InfiniteCanvas.
- * (Eventually, those definitions may be moved here.)
+ * The two primary coordinate systems used in these calculations are
+ *
+ *   - absolute coordinates:
+ *     the origin is at the top-center of the entire tree,
+ *     the width of the entire tree is 1.0 unit
+ *     (so the left edge is at -0.5 and the right edge is at 0.5),
+ *     and each level is 1.0 unit tall; and
+ *
+ *   - canvas coordinates:
+ *     the origin is at the top-left of the canvas,
+ *     the width is the canvas width, and the height is the canvas height.
+ *
+ * Other ad hoc variations are sometimes used,
+ * like viewport-relative absolute coordinates
+ * (the scale of absolute coordinates,
+ * but the origin is at the top-center of the canvas).
  */
 import {range} from '../utils/Utils';
 
@@ -30,7 +43,7 @@ export function initialState() {
         //
         // The 'position' field locates the viewport,
         // which is anchored with top-center gravity
-        // and described in idealized coordinates.
+        // and described in absolute coordinates.
         position: {
             x: 0,
             y: 0,
@@ -225,15 +238,15 @@ export const rowPadding = 20;
 export function getNodeCanvasCoordinates(state, row, column) {
     const {width: rowWidth, height: rowHeight} = getRowDimensions(state);
 
-    const idealY = row;
-    const viewportRelativeY = idealY - state.position.y;
+    const absoluteY = row;
+    const viewportRelativeY = absoluteY - state.position.y;
     const canvasY = viewportRelativeY * rowHeight + rowPadding;
 
     // We compute the 'x' position in terms of
     // the offset from the centerline (OFC).
     const nodesInRow = Math.pow(2, row);
-    const idealX = (column + 0.5) / nodesInRow - 0.5;
-    const viewportRelativeOFC = idealX - state.position.x;
+    const absoluteX = (column + 0.5) / nodesInRow - 0.5;
+    const viewportRelativeOFC = absoluteX - state.position.x;
     const scaledOFC = viewportRelativeOFC * getScalingFactor(state);
     const canvasOFC = scaledOFC * rowWidth;
     const canvasX = canvasOFC + rowWidth / 2;
