@@ -182,3 +182,29 @@ export function getRowsInView(state) {
 
     return range(firstRow, lastRow + 1);  // inclusive
 }
+
+// The padding between the top of each row
+// and the top of the nodes within that row.
+export const rowPadding = 20;
+
+/*
+ * Get the canvas coordinates of the node in the given row and column.
+ */
+export function getNodeCanvasCoordinates(state, row, column) {
+    const {width: rowWidth, height: rowHeight} = getRowDimensions(state);
+
+    const idealY = row;
+    const viewportRelativeY = idealY - state.position.y;
+    const canvasY = viewportRelativeY * rowHeight + rowPadding;
+
+    // We compute the 'x' position in terms of
+    // the offset from the centerline (OFC).
+    const nodesInRow = Math.pow(2, row);
+    const idealX = (column + 0.5) / nodesInRow - 0.5;
+    const viewportRelativeOFC = idealX - state.position.x;
+    const scaledOFC = viewportRelativeOFC * getScalingFactor(state);
+    const canvasOFC = scaledOFC * rowWidth;
+    const canvasX = canvasOFC + rowWidth / 2;
+
+    return { x: canvasX, y: canvasY };
+}

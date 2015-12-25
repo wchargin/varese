@@ -271,4 +271,44 @@ describe('CanvasCore', () => {
                     [2, 1, 0].map(x => maxRow - x)));
     });
 
+    it("provides a reasonable value for the row padding", () => {
+        const {rowPadding} = CanvasCore;
+        expect(rowPadding).to.be.a('number');
+        expect(rowPadding).to.be.at.least(2);
+        expect(rowPadding).to.be.at.most(50);
+    });
+
+    describe('#getNodeCanvasCoordinates', () => {
+        const {rowPadding, getNodeCanvasCoordinates} = CanvasCore;
+        context("in the initial viewport", () => {
+            it("positions (0, 0) at (300, [padding])", () =>
+                expect(getNodeCanvasCoordinates(s0(), 0, 0))
+                    .to.deep.equal(xy(300, rowPadding)));
+            it("positions (1, 0) at (150, 100 + [padding])", () =>
+                expect(getNodeCanvasCoordinates(s0(), 1, 0))
+                    .to.deep.equal(xy(150, 100 + rowPadding)));
+            it("positions (1, 1) at (450, 100 + [padding])", () =>
+                expect(getNodeCanvasCoordinates(s0(), 1, 1))
+                    .to.deep.equal(xy(450, 100 + rowPadding)));
+            it("positions (2, 1) at (225, 200 + [padding])", () =>
+                expect(getNodeCanvasCoordinates(s0(), 2, 1))
+                    .to.deep.equal(xy(225, 200 + rowPadding)));
+        });
+        context("with the position set to (0.25, 1)", () => {
+            const s = sp(xy(0.25, 1));
+            it("positions (1, 1) at (300, [padding])", () =>
+                expect(getNodeCanvasCoordinates(s, 1, 1))
+                    .to.deep.equal(xy(300, rowPadding)));
+            it("positions (2, 2) at (150, 100 + [padding])", () =>
+                expect(getNodeCanvasCoordinates(s, 2, 2))
+                    .to.deep.equal(xy(150, 100 + rowPadding)));
+            it("positions (2, 3) at (450, 100 + [padding])", () =>
+                expect(getNodeCanvasCoordinates(s, 2, 3))
+                    .to.deep.equal(xy(450, 100 + rowPadding)));
+            it("positions (3, 5) at (225, 200 + [padding])", () =>
+                expect(getNodeCanvasCoordinates(s, 3, 5))
+                    .to.deep.equal(xy(225, 200 + rowPadding)));
+        });
+    });
+
 });
