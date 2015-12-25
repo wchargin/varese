@@ -16,6 +16,7 @@ export function createHandlers(getState, setState) {
         onMouseMove: link(handleMouseMove),
         onWheel: link(handleWheel),
         onMouseUp: link(handleMouseUp),
+        onMouseLeave: link(handleMouseLeave),
         onKeyDown: link(handleKeyDown),
         onKeyUp: link(handleKeyUp),
         onBlur: link(handleBlur),
@@ -70,6 +71,13 @@ function handleWheel(getState, setState, e) {
 }
 
 function handleMouseUp(getState, setState) {
+    setState({
+        ...getState(),
+        mouseDown: false,
+    });
+}
+
+function handleMouseLeave(getState, setState) {
     setState({
         ...getState(),
         mouseDown: false,
