@@ -113,10 +113,19 @@ function componentWillMount(getState, setState) {
     setState({ ...state, coreState });
 }
 
+function componentWillReceiveProps(getState, setState, getCanvas, newProps) {
+    if (newProps.viewOptions !== this.props.viewOptions) {
+        const state = getState();
+        const coreState = CanvasCore.setViewOptions(
+            state.coreState,
+            newProps.viewOptions);
+        setState({ ...state, coreState });
+    }
+}
+
 // TODO(william) STOPSHIP: Implement these
 /* eslint-disable no-unused-vars */
 function componentDidMount(getState, setState, getCanvas) {}
-function componentWillReceiveProps(getState, setState, getCanvas) {}
 function componentDidUpdate(getState, setState, getCanvas) {}
 function componentWillUnmount(getState, setState, getCanvas) {}
 /* eslint-enable */
