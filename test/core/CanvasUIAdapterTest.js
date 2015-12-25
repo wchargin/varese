@@ -77,4 +77,51 @@ describe('CanvasUIAdapter', () => {
         });
     });
 
+    describe('handler onMouseMove', () => {
+        const {getBox, handlers} = create();
+        it("should be initialized with a 'null' mouse position", () =>
+            expect(getBox().lastMouse).to.equal(null));
+
+        // Sample bounding rectangle for the canvas.
+        // To produce this, just execute
+        //     const canvas = document.getElementsByClassName('canvas')[0];
+        //     canvas.getBoundingClientRect();
+        // in a browser with the infinite canvas loaded.
+        // (Of course, the values don't matter, but the shape does.)
+        const boundingRect = {
+            bottom: 800,
+            height: 400,
+            left: 300,
+            right: 900,
+            top: 200,
+            width: 600,
+        };
+        const makeEvent = (relativeX, relativeY) => ({
+            clientX: boundingRect.left + relativeX,
+            clientY: boundingRect.top + relativeY,
+            target: {
+                getBoundingClientRect: () => boundingRect,
+            },
+        });
+        it("should initialize 'lastMouse' while the mouse is up", () => {
+            const e = makeEvent(200, 300);
+            handlers.onMouseMove(e);
+            expect(getBox().lastMouse).to.deep.equal(xy(200, 300));
+            expect(getBox().coreState.position).to.deep.equal(xy(0, 0));
+        });
+        it("should update 'lastMouse' while the mouse is up", () => {
+            const e = makeEvent(200, 250);  // 50px up from last
+            handlers.onMouseMove(e);
+            expect(getBox().lastMouse).to.deep.equal(xy(200, 250));
+            expect(getBox().coreState.position).to.deep.equal(xy(0, 0));
+        });
+        it("when the mouse is down should pan and update 'lastMouse'", () => {
+            handlers.onMouseDown({});
+            const e = makeEvent(200, 100);  // 150px up from last
+            handlers.onMouseMove(e);
+            expect(getBox().lastMouse).to.deep.equal(xy(200, 100));
+            expect(getBox().coreState.position).to.deep.equal(xy(0, 1.5));
+        });
+    });
+
 });

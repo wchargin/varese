@@ -29,9 +29,32 @@ function handleMouseDown(getState, setState) {
     });
 }
 
+function getRelativeMousePosition(e) {
+    const {left: baseX, top: baseY} = e.target.getBoundingClientRect();
+    return {
+        x: e.clientX - baseX,
+        y: e.clientY - baseY,
+    };
+}
+
+function handleMouseMove(getState, setState, e) {
+    const state = getState();
+    const oldMouse = state.lastMouse;
+    const newMouse = getRelativeMousePosition(e);
+    setState({
+        ...state,
+        lastMouse: newMouse,
+        coreState: !state.mouseDown ?
+            state.coreState :
+            CanvasCore.performPan(state.coreState, {
+                x: -(newMouse.x - oldMouse.x),
+                y: -(newMouse.y - oldMouse.y),
+            }),
+    });
+}
+
 // TODO(william) STOPSHIP: Implement these
 /* eslint-disable no-unused-vars */
-function handleMouseMove(getState, setState) {}
 function handleWheel(getState, setState) {}
 function handleMouseUp(getState, setState) {}
 function handleKeyDown(getState, setState) {}
