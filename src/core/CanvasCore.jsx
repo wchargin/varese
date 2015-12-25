@@ -14,6 +14,7 @@
  * are defined in the same way as in documentation for InfiniteCanvas.
  * (Eventually, those definitions may be moved here.)
  */
+import {range} from '../utils/Utils';
 
 /*
  * We use a lightweight object to keep track of the canvas state over time.
@@ -158,4 +159,26 @@ export function getPanResult(state, canvasDeltaXY) {
     const finalX = Math.max(minX, Math.min(newX, maxX));
 
     return { x: finalX, y: finalY };
+}
+
+/*
+ * Determine which rows should be painted in the current viewport.
+ * This includes all rows with any node completely within bounds,
+ * and up to one row direct above those rows
+ * so that nodes entering the current viewport can scroll into view smoothly.
+ *
+ * The return value is an array of consecutive integers,
+ * representing the indices of the rows to paint;
+ * the first row is row 0.
+ */
+export function getRowsInView(state) {
+    const firstFullyVisibleRow = Math.ceil(state.position.y);
+    const firstPartiallyVisibleRowUnclamped = firstFullyVisibleRow - 1;
+    const firstRow = Math.max(0, firstPartiallyVisibleRowUnclamped);
+
+    const lastRowUnclamped =
+        Math.floor(state.position.y + state.viewOptions.infiniteLevels);
+    const lastRow = Math.min(getMaxSafeRow(), lastRowUnclamped);
+
+    return range(firstRow, lastRow + 1);  // inclusive
 }
