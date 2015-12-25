@@ -1,4 +1,4 @@
-import {describe, it} from 'mocha';
+import {describe, it, before, after} from 'mocha';
 import {expect} from 'chai';
 
 import {makeBox, mocking} from '../TestUtils';
@@ -317,6 +317,57 @@ describe('CanvasUIAdapter', () => {
             lifecycleMixins.componentWillMount.call(component);
             expect(getBox().coreState.viewOptions)
                 .to.deep.equal(newViewOptions);
+        });
+    });
+
+    describe('lifecycle mixin componentDidMount', () => {
+        const {getBox, canvas, lifecycleMixins} = create();
+
+        // We'll use this box as the mock for 'getComputedStyle'.
+        const {getBox: getWidthBox, setBox: setWidthBox} = makeBox();
+        const mockedGetComputedStyle = (element) => {
+            expect(element).to.equal(canvas);
+            return { width: getWidthBox() };
+        };
+
+        // We'll use this box to store whatever event listener the mixin sets.
+        const {getBox: getListenerBox, setBox: setListenerBox} = makeBox();
+        const mockedAddEventListener = (name, fn) => {
+            expect(name).to.equal('resize');
+            setListenerBox(fn);
+        };
+
+        // TestUtils mocks don't seem to work here;
+        // this is because we need the mocking to happen outside the 'it',
+        // but the 'it's are all cached and used later
+        // after the mock is torn down.
+        // As a workaround, we can mock manually with Mocha's hooks.
+        // To really fix this, we should rewrite the mock function.
+        const oldGetComputedStyle = window.getComputedStyle;
+        const oldAddEventListener = window.addEventListener;
+        before(() => {
+            window.getComputedStyle = mockedGetComputedStyle;
+            window.addEventListener = mockedAddEventListener;
+        });
+        after(() => {
+            window.getComputedStyle = oldGetComputedStyle;
+            window.addEventListener = oldAddEventListener;
+        });
+
+        it("sets a listener", () => {
+            setWidthBox("234px");  // not the initial value
+            lifecycleMixins.componentDidMount.call({});
+            expect(getListenerBox()).to.be.a('function');
+        });
+        it("updates the width on mount", () => {
+            expect(canvas.width).to.equal(234);
+            expect(getBox().coreState.canvasWidth).to.equal(234);
+        });
+        it("sets a listener that properly updates the width", () => {
+            setWidthBox("345px");
+            getListenerBox()();  // simulate resizing the window
+            expect(canvas.width).to.equal(345);
+            expect(getBox().coreState.canvasWidth).to.equal(345);
         });
     });
 

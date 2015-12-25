@@ -149,6 +149,16 @@ function componentWillMount(getState, setState) {
     setState({ ...state, coreState });
 }
 
+function componentDidMount(getState, setState, getCanvas) {
+    const resizeListenerFunction = () =>
+        setState(resizeCanvas(getCanvas(), getState()));
+    window.addEventListener('resize', resizeListenerFunction);
+    setState({
+        ...resizeCanvas(getCanvas(), getState()),
+        resizeListenerFunction,
+    });
+}
+
 function componentWillReceiveProps(getState, setState, getCanvas, newProps) {
     if (newProps.viewOptions !== this.props.viewOptions) {
         const state = getState();
@@ -161,7 +171,6 @@ function componentWillReceiveProps(getState, setState, getCanvas, newProps) {
 
 // TODO(william) STOPSHIP: Implement these
 /* eslint-disable no-unused-vars */
-function componentDidMount(getState, setState, getCanvas) {}
 function componentDidUpdate(getState, setState, getCanvas) {}
 function componentWillUnmount(getState, setState, getCanvas) {}
 /* eslint-enable */
@@ -210,5 +219,22 @@ function getMotionDirection(which) {
             return { x: 0, y: +1 };
         default:
             return null;
+    }
+}
+
+/*
+ * Note: this is a confusingly semi-pure function.
+ * It's impure in that it modifies the <canvas> width in the DOM,
+ * but it's pure in that it doesn't call 'setState';
+ * this is needed to deal with React's batched events.
+ * Instead, it will return the new state (in addition to mutating the DOM).
+ */
+function resizeCanvas(canvas, state) {
+    const widthString = window.getComputedStyle(canvas).width;
+    const width = parseInt(widthString.match(/(\d+)px/)[1], 10);
+    if (width !== canvas.width) {
+        canvas.width = width;
+        const coreState = CanvasCore.setCanvasWidth(state.coreState, width);
+        return { ...state, coreState };
     }
 }
