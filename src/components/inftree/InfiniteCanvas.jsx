@@ -364,62 +364,6 @@ export default class InfiniteCanvas extends Component {
         }
     }
 
-    _getMaxSafeRow() {
-        // We use some exponential factors 2^row when rendering,
-        // and bizarre things start happening at really high rows.
-        // This seems to happen when we approach Number.MAX_SAFE_INTEGER,
-        // so we stop just a few before there,
-        // where (empirically) the effects become observable.
-        const bits = Math.floor(Math.log2(Number.MAX_SAFE_INTEGER));
-        return bits - 2;
-    }
-
-    /*
-     * Given a starting point and a displacement, get the new position.
-     *
-     * The argument should have shape { x: number, y: number },
-     * and should indicate the desired vector displacement across the canvas,
-     * in canvas coordinates.
-     *
-     * The return value is the new value for 'this.state.coreState.position'.
-     */
-    _pan(canvasDeltaXY) {
-        return CanvasCore.getPanResult(this.state.coreState, canvasDeltaXY);
-    }
-
-    /*
-     * Get the dimensions of any (every) row, in canvas coordinates.
-     * Return value has shape { width: number, height: number }.
-     *
-     * The width of each row is just the width of the canvas,
-     * and the height is determined from the `levels` prop
-     * (which specifies the number of levels to display at any given time)
-     * and the height of the canvas.
-     *
-     * WARNING: This function relies on refs. Do not call it from 'render'.
-     */
-    _getRowDimensions() {
-        return {
-            width: this.refs.canvas.width,
-            height: this.props.viewOptions.infiniteHeight /
-                this.props.viewOptions.infiniteLevels,
-        };
-    }
-
-    /*
-     * Determine the horizontal scaling factor that should be used
-     * when the top of the viewport is at the given y-position.
-     *
-     * This is the scaling-apart factor for the nodes,
-     * and also the compression factor for the viewport;
-     * for example, if the value is 3,
-     * that indicates that the nodes should be spaced 3 times further apart,
-     * and also that the viewport should be a third of its original size.
-     */
-    _getScalingFactor(y) {
-        return Math.pow(2, y);
-    }
-
     _draw() {
         const {canvas} = this.refs;
         const {coreState} = this.state;
