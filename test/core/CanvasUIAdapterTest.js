@@ -562,7 +562,7 @@ describe('CanvasUIAdapter', () => {
     });
 
     describe('lifecycle mixin componentDidUpdate', () => {
-        const {getBox, canvas, handlers, lifecycleMixins} = create();
+        const {getBox, canvas, lifecycleMixins} = create();
 
         // We'll use this box as the mock for 'getComputedStyle'.
         const {getBox: getWidthBox, setBox: setWidthBox} = makeBox();
@@ -573,7 +573,7 @@ describe('CanvasUIAdapter', () => {
         declareMochaMock(window, 'getComputedStyle', mockedGetComputedStyle);
 
         // We'll use this box to store whatever event listener the mixin sets.
-        const {getBox: getListenerBox, setBox: setListenerBox} = makeBox();
+        const {setBox: setListenerBox} = makeBox();
         const mockedAddEventListener = (name, fn) => {
             expect(name).to.equal('resize');
             setListenerBox(fn);
@@ -605,7 +605,7 @@ describe('CanvasUIAdapter', () => {
     });
 
     describe('lifecycle mixin componentWillUnmount', () => {
-        const {getBox, setBox, canvas, lifecycleMixins} = create();
+        const {getBox, setBox, lifecycleMixins} = create();
 
         const fakeResizeListener = () => {};
         const fakeIntervalId = 48879;

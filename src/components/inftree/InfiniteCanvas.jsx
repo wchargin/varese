@@ -102,7 +102,7 @@ export default class InfiniteCanvas extends Component {
         this._draw();
     }
 
-    componentWillReceiveProps(newProps) {
+    componentWillReceiveProps() {
         // Some prop changes can invalidate these caches.
         // We just clear them always for simplicity.
         this._fastFindChordRootOffsetMemo.clear();  // <= rationalizer
