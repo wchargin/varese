@@ -293,6 +293,17 @@ describe('CanvasUIAdapter', () => {
         });
     });
 
+    describe('handler onBlur', () => {
+        const {getBox, handlers} = create();
+        const makeEvent = which => ({ which, repeat: false });
+        it("should release all held keys", () => {
+            handlers.onKeyDown(makeEvent(0x41));  // 'A'
+            handlers.onKeyDown(makeEvent(0x44));  // 'D'
+            handlers.onBlur();
+            expect(getBox().keysDown).to.have.length(0);
+        });
+    });
+
     describe('lifecycle mixin componentWillMount', () => {
         const {getBox, lifecycleMixins} = create();
         const newViewOptions = {

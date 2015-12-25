@@ -153,10 +153,12 @@ function handleKeyUp(getState, setState, e) {
     setState({ ...state, keysDown });
 }
 
-// TODO(william) STOPSHIP: Implement these
-/* eslint-disable no-unused-vars */
-function handleBlur(getState, setState) {}
-/* eslint-enable */
+function handleBlur(getState, setState) {
+    setState({
+        ...getState(),
+        keysDown: [],
+    });
+}
 
 function componentWillMount(getState, setState) {
     const state = getState();
