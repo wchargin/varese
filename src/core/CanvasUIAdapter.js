@@ -24,7 +24,10 @@ export function createHandlers(getState, setState) {
 }
 
 export function createLifecycleMixins(getState, setState, getCanvas) {
-    const link = fn => fn.bind(this, getState, setState, getCanvas);
+    const link = fn => function(...args) {
+        // note: not bound to lexical 'this' (which is probably undefined here)
+        return fn.apply(this, [getState, setState, getCanvas, ...args]);
+    };
     return {
         componentWillMount: link(componentWillMount),
         componentDidMount: link(componentDidMount),
