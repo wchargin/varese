@@ -1,11 +1,11 @@
 import * as CanvasCore from './CanvasCore';
 
-export function initialState() {
+export function initialState(coreState) {
     return {
         lastMouse: null,
         mouseDown: false,
         keysDown: [],
-        coreState: CanvasCore.initialState,
+        coreState,
     };
 }
 
