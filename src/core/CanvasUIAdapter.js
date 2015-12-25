@@ -179,10 +179,11 @@ function componentDidUpdate(getState, setState, getCanvas) {
     setState(resizeCanvas(getCanvas(), getState()));
 }
 
-// TODO(william) STOPSHIP: Implement these
-/* eslint-disable no-unused-vars */
-function componentWillUnmount(getState, setState, getCanvas) {}
-/* eslint-enable */
+function componentWillUnmount(getState, setState, getCanvas) {
+    const state = getState();
+    window.removeEventListener('resize', state.resizeListenerFunction);
+    window.clearInterval(state.keyIntervalId);
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////

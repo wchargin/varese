@@ -514,4 +514,44 @@ describe('CanvasUIAdapter', () => {
         });
     });
 
+    describe('lifecycle mixin componentWillUnmount', () => {
+        const {getBox, setBox, canvas, lifecycleMixins} = create();
+
+        const fakeResizeListener = () => {};
+        const fakeIntervalId = 48879;
+
+        // Fabricate the state to avoid mocking the other half of the world...
+        setBox({
+            ...getBox(),
+            resizeListenerFunction: fakeResizeListener,
+            keyIntervalId: fakeIntervalId,
+        });
+
+        // We'll use this box to make sure the listener has been removed.
+        const {getBox: getListenerBox, setBox: setListenerBox} = makeBox();
+        const mockedRemoveEventListener = (name, fn) => {
+            expect(name).to.equal('resize');
+            setListenerBox(fn);
+        };
+        declareMochaMock(
+            window, 'removeEventListener', mockedRemoveEventListener);
+
+        // We'll use this box to check which interval ID was cleared.
+        const {getBox: getIntervalBox, setBox: setIntervalBox} = makeBox();
+        const mockedClearInterval = id => {
+            setIntervalBox(id);
+        };
+        declareMochaMock(window, 'clearInterval', mockedClearInterval);
+
+        it("executes without error", () => {
+            lifecycleMixins.componentWillUnmount.call({});
+        })
+        it("removes the event listener", () => {
+            expect(getListenerBox()).to.equal(fakeResizeListener);
+        });
+        it("clears the key interval", () => {
+            expect(getIntervalBox()).to.equal(fakeIntervalId);
+        });
+    });
+
 });
