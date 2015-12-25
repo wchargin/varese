@@ -1,10 +1,12 @@
 import {describe, describe as context, it} from 'mocha';
 import {expect} from 'chai';
 
-import * as CanvasCore from '../../src/core/CanvasCore';
+import {range} from '../../src/utils/Utils';
 
 import {initialState as initialReduxState} from '../TestData';
 const {treeViewOptions: initialViewOptions} = initialReduxState;
+
+import * as CanvasCore from '../../src/core/CanvasCore';
 
 describe('CanvasCore', () => {
     // Fix some dimensions so we get predictable results.
@@ -268,6 +270,37 @@ describe('CanvasCore', () => {
             expect(getRowsInView(sp(xy(0, topOfBottom + 2))))
                 .to.deep.equal(
                     [2, 1, 0].map(x => maxSafeRow - x)));
+    });
+
+    describe('#getColumnsInView', () => {
+        const {getColumnsInView} = CanvasCore;
+        context("in the initial viewport", () =>
+            range(baseViewOptions.infiniteLevels)
+                .forEach(i => it(`returns all columns in row ${i}`, () =>
+                    expect(getColumnsInView(s0(), i))
+                        .to.deep.equal(range(Math.pow(2, i))))));
+        context("with the position set to (0.25, 1)/(node: 1, 1)", () => {
+            const s = sp(xy(0.25, 1));
+            it("returns [(0), 1] for row 1", () =>
+                expect(getColumnsInView(s, 1)).to.deep.equal([0, 1]));
+            it("returns [(1), 2, 3] for row 2", () =>
+                expect(getColumnsInView(s, 2)).to.deep.equal([1, 2, 3]));
+            it("returns [(3), 4..7] for row 3", () =>
+                expect(getColumnsInView(s, 3)).to.deep.equal(range(3, 8)));
+            it("returns [(7), 8..15] for row 4", () =>
+                expect(getColumnsInView(s, 4)).to.deep.equal(range(7, 16)));
+        });
+        context("with the position set to (0.125, 2)/(node: 2, 2)", () => {
+            const s = sp(xy(0.125, 2));
+            it("returns [(1), 2, (3)] for row 2", () =>
+                expect(getColumnsInView(s, 2)).to.deep.equal([1, 2, 3]));
+            it("returns [(3), 4, 5, (6)] for row 3", () =>
+                expect(getColumnsInView(s, 3)).to.deep.equal([3, 4, 5, 6]));
+            it("returns [(7), 8..11, (12)] for row 4", () =>
+                expect(getColumnsInView(s, 4)).to.deep.equal(range(7, 13)));
+            it("returns [(15), 16..23, (24)] for row 5", () =>
+                expect(getColumnsInView(s, 5)).to.deep.equal(range(15, 25)));
+        });
     });
 
     it("provides a reasonable value for the row padding", () => {

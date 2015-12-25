@@ -183,6 +183,36 @@ export function getRowsInView(state) {
     return range(firstRow, lastRow + 1);  // inclusive
 }
 
+/*
+ * Determine which columns of a given row
+ * should be painted in the current viewport.
+ * This includes all columns whose nodes are completely within bounds,
+ * and up to one column directly before and after those columns
+ * so that nodes entering the current viewport can scroll into view smoothly.
+ *
+ * The return value is an array of consecutive integers,
+ * representing the indices of the columns to paint;
+ * the first column is column 0.
+ */
+export function getColumnsInView(state, row) {
+    const scalingFactor = getScalingFactor(state);
+
+    // Determine the left and right viewport bounds in [0, 1]-coordinates.
+    const viewportXc = state.position.x + 0.5;
+    const viewportWidth = 1 / scalingFactor;
+    const viewportXl = viewportXc - viewportWidth / 2;
+    const viewportXr = viewportXc + viewportWidth / 2;
+
+    const nodesInRow = Math.pow(2, row);
+    const nominalMin = Math.ceil(nodesInRow * viewportXl - 0.5);
+    const nominalMax = Math.floor(nodesInRow * viewportXr - 0.5);
+
+    const expandedMin = Math.max(0, nominalMin - 1);
+    const expandedMax = Math.min(nodesInRow - 1, nominalMax + 1);
+
+    return range(expandedMin, expandedMax + 1);  // inclusive
+}
+
 // The padding between the top of each row
 // and the top of the nodes within that row.
 export const rowPadding = 20;
