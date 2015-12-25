@@ -91,13 +91,13 @@ export function getRowDimensions(state) {
  * This function returns the index of the highest row
  * that we think won't produce weird output.
  */
-export function getMaxSafeRow() {
+export const maxSafeRow = (() => {
     // Weirdness seems to kick in as we approach Number.MAX_SAFE_INTEGER,
     // so we stop just a few before there,
     // where (empirically) the effects become observable.
     const bits = Math.floor(Math.log2(Number.MAX_SAFE_INTEGER));
     return bits - 2;
-}
+})();
 
 /*
  * As we move down in the viewport, we change the horizontal scale.
@@ -137,9 +137,9 @@ export function getPanResult(state, canvasDeltaXY) {
 
     const newY = state.position.y + canvasDeltaXY.y / rowHeight;
     const yMin = 0;
-    const levelMax = getMaxSafeRow();
     const yPaddingBottom = 2;  // don't chop off the bottom few rows
-    const yMax = levelMax - state.viewOptions.infiniteLevels + yPaddingBottom;
+    const yMax =
+        maxSafeRow - state.viewOptions.infiniteLevels + yPaddingBottom;
     const finalY = Math.max(yMin, Math.min(newY, yMax));
 
     // The value of 'perceivedWidth' represents
@@ -178,7 +178,7 @@ export function getRowsInView(state) {
 
     const lastRowUnclamped =
         Math.floor(state.position.y + state.viewOptions.infiniteLevels);
-    const lastRow = Math.min(getMaxSafeRow(), lastRowUnclamped);
+    const lastRow = Math.min(maxSafeRow, lastRowUnclamped);
 
     return range(firstRow, lastRow + 1);  // inclusive
 }

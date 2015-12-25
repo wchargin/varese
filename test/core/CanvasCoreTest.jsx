@@ -64,7 +64,7 @@ describe('CanvasCore', () => {
     });
 
     it("provides a reasonable value for the maximum safe row", () => {
-        const maxSafeRow = CanvasCore.getMaxSafeRow();
+        const {maxSafeRow} = CanvasCore;
         expect(maxSafeRow).to.be.a('number');
         expect(maxSafeRow).to.be.at.least(25);
         expect(maxSafeRow).to.be.at.most(75);
@@ -242,7 +242,7 @@ describe('CanvasCore', () => {
     });
 
     describe('#getRowsInView', () => {
-        const {getRowsInView} = CanvasCore;
+        const {getRowsInView, maxSafeRow} = CanvasCore;
         it("should yield [0..4] for the initial viewport", () =>
             expect(getRowsInView(s0())).to.deep.equal([0, 1, 2, 3, 4]));
         it("should yield [0, 1..5] after moving down a level", () =>
@@ -255,20 +255,19 @@ describe('CanvasCore', () => {
             expect(getRowsInView(sp(xy(0, 2))))
                 .to.deep.equal([1, 2, 3, 4, 5, 6]));
 
-        const maxRow = CanvasCore.getMaxSafeRow();
-        const topOfBottom = maxRow - baseViewOptions.infiniteLevels + 1;
+        const topOfBottom = maxSafeRow - baseViewOptions.infiniteLevels + 1;
         it("should work when the last row is barely visible", () =>
             expect(getRowsInView(sp(xy(0, topOfBottom))))
                 .to.deep.equal(
-                    [4, 3, 2, 1, 0].map(x => maxRow - x)));
+                    [4, 3, 2, 1, 0].map(x => maxSafeRow - x)));
         it("should work when the last row is more visible", () =>
             expect(getRowsInView(sp(xy(0, topOfBottom + 1))))
                 .to.deep.equal(
-                    [3, 2, 1, 0].map(x => maxRow - x)));
+                    [3, 2, 1, 0].map(x => maxSafeRow - x)));
         it("should work when the last row is very visible", () =>
             expect(getRowsInView(sp(xy(0, topOfBottom + 2))))
                 .to.deep.equal(
-                    [2, 1, 0].map(x => maxRow - x)));
+                    [2, 1, 0].map(x => maxSafeRow - x)));
     });
 
     it("provides a reasonable value for the row padding", () => {
