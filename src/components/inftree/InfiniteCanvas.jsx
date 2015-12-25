@@ -72,6 +72,11 @@ export default class InfiniteCanvas extends Component {
             CanvasUIAdapter.createLifecycleMixins(
                 getState, setState, getCanvas));
 
+        // These let us get properties from the UI state
+        // without having to know its internal structure.
+        this._getCoreState = CanvasUIAdapter.getCoreAccessor(getState);
+        this._getLastMouse = CanvasUIAdapter.getMouseAccessor(getState);
+
         // Two functions are memoized for scrolling performance.
         // These maps are used to cache the results,
         // and are invalidated on every prop change for simplicity.
@@ -144,7 +149,7 @@ export default class InfiniteCanvas extends Component {
 
     _draw() {
         const {canvas} = this.refs;
-        const {coreState} = this.state.uiState;
+        const coreState = this._getCoreState();
 
         const ctx = canvas.getContext('2d', {alpha: 'false'});
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -250,13 +255,15 @@ export default class InfiniteCanvas extends Component {
         };
         if (viewOptions.alwaysEngrave) {
             engrave();
-        } else if (this.state.uiState.lastMouse) {
-            // TODO(william): Don't reach into 'uiState'.
-            const {x: mouseX, y: mouseY} = this.state.uiState.lastMouse;
-            const withinX = Math.abs(mouseX - x) <= width / 2;
-            const withinY = y <= mouseY && mouseY <= y + height;
-            if (withinX && withinY) {
-                engrave();
+        } else {
+            const lastMouse = this._getLastMouse();
+            if (lastMouse) {
+                const {x: mouseX, y: mouseY} = lastMouse;
+                const withinX = Math.abs(mouseX - x) <= width / 2;
+                const withinY = y <= mouseY && mouseY <= y + height;
+                if (withinX && withinY) {
+                    engrave();
+                }
             }
         }
     }
