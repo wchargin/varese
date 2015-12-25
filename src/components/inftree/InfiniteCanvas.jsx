@@ -52,7 +52,7 @@ import {
     formatPitchesAndSemitones,
 } from '../../utils/DisplayUtils';
 
-/* TODO(william): import * as CanvasCore from '../../core/CanvasCore.jsx'; */
+import * as CanvasCore from '../../core/CanvasCore.jsx';
 
 export default class InfiniteCanvas extends Component {
 
@@ -427,53 +427,33 @@ export default class InfiniteCanvas extends Component {
 
     _draw() {
         const {canvas} = this.refs;
-        const {width, height} = canvas;
+
+        // TODO(william): Actually track coreState
+        // instead of manufacturing it anew every frame.
+        const coreState = {
+            canvasDimensions: {
+                width: canvas.width,
+                height: canvas.height,
+            },
+            viewOptions: this.props.viewOptions,
+            position: this.state.position,
+            lastMouse: this.state.lastMouse,
+            mouseDown: this.state.mouseDown,
+            keysDown: this.state.keysDown,
+        };
+
         const ctx = canvas.getContext('2d', {alpha: 'false'});
-        ctx.clearRect(0, 0, width, height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        const {width: rowWidth, height: rowHeight} = this._getRowDimensions();
-        const scalingFactor = this._getScalingFactor(this.state.position.y);
-
-        // Viewport dimensions and position, in absolute coordinates.
-        const viewportWidth = rowWidth / scalingFactor;
-        const viewportXc = this.state.position.x * width + rowWidth / 2;
-        const viewportXl = viewportXc - viewportWidth / 2;
-        const viewportXr = viewportXc + viewportWidth / 2;
-
-        // The y-position of the top of the top row, in absolute coordinates.
-        const topY = rowHeight * this.state.position.y;
-        const rowMin = Math.ceil(topY / rowHeight);
-        const rowMax = Math.min(
-            this._getMaxSafeRow(),
-            Math.floor((topY + height) / rowHeight));
-
-        // Paint one extra row above so that things move into view smoothly.
-        // We don't need to paint a row below
-        // because everything has top-gravity.
-        range(Math.max(0, rowMin - 1), rowMax + 1).forEach(row => {
-            const absoluteYc = rowHeight * row + 20;
-            const canvasYc = absoluteYc - this.state.position.y * rowHeight;
-
-            // We only have to paint the nodes that are in view.
-            // Determine these bounds.
-            const nodes = Math.pow(2, row);
-            const colMin = Math.ceil(nodes * viewportXl / rowWidth - 0.5);
-            const colMax = Math.floor(nodes * viewportXr / rowWidth - 0.5);
-
-            // Similarly, paint one extra column in each direction.
-            range(
-                Math.max(0, colMin - 1),
-                Math.min(nodes - 1, colMax + 1) + 1).forEach(col => {
-                // We find the offset from the viewport center (OFVC)
-                // in absolute coordinates,
-                // then convert that to canvas coordinates.
-                const absoluteXc = rowWidth * (col + 0.5) / nodes;
-                const absoluteOFVC = absoluteXc - viewportXc;
-                const canvasOFVC = absoluteOFVC * (rowWidth / viewportWidth);
-                const canvasXc = rowWidth / 2 + canvasOFVC;
-                this._drawNode(ctx, row, col, canvasXc, canvasYc);
-            });
-        });
+        CanvasCore.getRowsInView(coreState).forEach(row =>
+            CanvasCore.getColumnsInView(coreState, row).forEach(col => {
+                const {x, y} = CanvasCore.getNodeCanvasCoordinates(
+                    coreState, row, col);
+                // Avoid painting rows that are just out of bounds.
+                if (y < canvas.height) {
+                    this._drawNode(ctx, row, col, x, y);
+                }
+            }));
     }
 
     _drawNode(ctx, row, col, x, y) {
