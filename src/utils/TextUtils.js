@@ -39,11 +39,3 @@ export function list(entries) {
             return `${init.join(", ")}, and ${last}`;
     }
 }
-
-export default {
-    ngettext,
-    list,
-    quantity,
-
-    numberish,
-};

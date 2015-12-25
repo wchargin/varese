@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 
-import TextUtils from '../../src/utils/TextUtils';
+import * as TextUtils from '../../src/utils/TextUtils';
 
 describe('TextUtils', () => {
 

@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 
 import {canonicalValues, intervalNames} from '../../core/HarmonicData';
 import Rational from '../../core/Rational';
-import TextUtils from '../../utils/TextUtils';
+import * as TextUtils from '../../utils/TextUtils';
 
 export default class RationalizerSettings extends Component {
 
