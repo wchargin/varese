@@ -1,7 +1,7 @@
-import {describe, it, before, after} from 'mocha';
+import {describe, it} from 'mocha';
 import {expect} from 'chai';
 
-import {makeBox, mocking} from '../TestUtils';
+import {makeBox, mocking, declareMochaMock} from '../TestUtils';
 import {initialState as initialReduxState} from '../TestData';
 const {treeViewOptions: initialViewOptions} = initialReduxState;
 
@@ -326,6 +326,7 @@ describe('CanvasUIAdapter', () => {
             expect(element).to.equal(canvas);
             return { width: getWidthBox() };
         };
+        declareMochaMock(window, 'getComputedStyle', mockedGetComputedStyle);
 
         // We'll use this box to store whatever event listener the mixin sets.
         const {getBox: getListenerBox, setBox: setListenerBox} = makeBox();
@@ -333,23 +334,7 @@ describe('CanvasUIAdapter', () => {
             expect(name).to.equal('resize');
             setListenerBox(fn);
         };
-
-        // TestUtils mocks don't seem to work here;
-        // this is because we need the mocking to happen outside the 'it',
-        // but the 'it's are all cached and used later
-        // after the mock is torn down.
-        // As a workaround, we can mock manually with Mocha's hooks.
-        // To really fix this, we should rewrite the mock function.
-        const oldGetComputedStyle = window.getComputedStyle;
-        const oldAddEventListener = window.addEventListener;
-        before(() => {
-            window.getComputedStyle = mockedGetComputedStyle;
-            window.addEventListener = mockedAddEventListener;
-        });
-        after(() => {
-            window.getComputedStyle = oldGetComputedStyle;
-            window.addEventListener = oldAddEventListener;
-        });
+        declareMochaMock(window, 'addEventListener', mockedAddEventListener);
 
         it("sets a listener", () => {
             setWidthBox("234px");  // not the initial value
