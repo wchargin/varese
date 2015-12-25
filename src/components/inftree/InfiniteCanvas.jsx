@@ -59,12 +59,11 @@ export default class InfiniteCanvas extends Component {
     constructor() {
         super();
         this.state = {
+            coreState: CanvasCore.initialState(),
+            //
             lastMouse: null,  // canvas coordinates
             mouseDown: false,
             keysDown: [],     // a list of numeric key codes
-            //
-            // TODO(william): Move all the state and logic to CanvasCore.
-            coreState: CanvasCore.initialState(),
         };
 
         // We attach the following properties to the instance itself
@@ -423,15 +422,7 @@ export default class InfiniteCanvas extends Component {
 
     _draw() {
         const {canvas} = this.refs;
-
-        // TODO(william): Actually track coreState
-        // instead of manufacturing it anew every frame.
-        const coreState = {
-            ...this.state.coreState,
-            lastMouse: this.state.lastMouse,
-            mouseDown: this.state.mouseDown,
-            keysDown: this.state.keysDown,
-        };
+        const {coreState} = this.state;
 
         const ctx = canvas.getContext('2d', {alpha: 'false'});
         ctx.clearRect(0, 0, canvas.width, canvas.height);
