@@ -1,6 +1,6 @@
 import {PropTypes} from 'react';
 
-export const limits = PropTypes.shape({
+const limits = PropTypes.shape({
     minCombined: PropTypes.number.isRequired,
     maxCombined: PropTypes.number.isRequired,
     minIndividual: PropTypes.number.isRequired,
@@ -15,9 +15,9 @@ const limitsHandlersShape = {
     onSetLimitValue: PropTypes.func.isRequired,
     onSetLimitEnabled: PropTypes.func.isRequired,
 };
-export const limitsHandlers = PropTypes.shape(limitsHandlersShape);
+const limitsHandlers = PropTypes.shape(limitsHandlersShape);
 
-export const viewOptions = PropTypes.shape({
+const viewOptions = PropTypes.shape({
     levels: PropTypes.number.isRequired,
     infiniteLevels: PropTypes.number.isRequired,
     infiniteHeight: PropTypes.number.isRequired,
@@ -32,7 +32,7 @@ export const viewOptions = PropTypes.shape({
     limits: limits.isRequired,
 });
 
-export const viewOptionsHandlers = PropTypes.shape({
+const viewOptionsHandlers = PropTypes.shape({
     onSetLevels: PropTypes.func.isRequired,
     onSetInfiniteLevels: PropTypes.func.isRequired,
     onSetInfiniteHeight: PropTypes.func.isRequired,
