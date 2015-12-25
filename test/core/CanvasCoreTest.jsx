@@ -10,19 +10,20 @@ import * as CanvasCore from '../../src/core/CanvasCore';
 
 describe('CanvasCore', () => {
     // Fix some dimensions so we get predictable results.
+    const baseDimensions = { width: 600, height: 400 };
     const baseViewOptions = {
         ...initialViewOptions,
         infiniteLevels: 4,
+        infiniteHeight: baseDimensions.height,
     };
-    const baseDimensions = { width: 600, height: 400 };
     //
     // Utilities for generating the initial canvas state
     // and setting the view options.
     const s0 = (viewOptions = baseViewOptions) =>
         CanvasCore.setViewOptions(
-            CanvasCore.setCanvasDimensions(
+            CanvasCore.setCanvasWidth(
                 CanvasCore.initialState(),
-                baseDimensions.width, baseDimensions.height),
+                baseDimensions.width),
             viewOptions);
     //
     // Allow overriding the (actually internal) 'position' field.
@@ -46,10 +47,9 @@ describe('CanvasCore', () => {
         expect(newState.viewOptions).to.deep.equal(newViewOptions);
     });
 
-    it("sets the canvas dimensions", () => {
-        const newState = CanvasCore.setCanvasDimensions(s0(), 123, 456);
-        expect(newState.canvasDimensions.width).to.equal(123);
-        expect(newState.canvasDimensions.height).to.equal(456);
+    it("sets the canvas width", () => {
+        const newState = CanvasCore.setCanvasWidth(s0(), 123);
+        expect(newState.canvasWidth).to.equal(123);
         expect(newState.viewOptions).to.deep.equal(baseViewOptions);
     });
 
@@ -57,8 +57,6 @@ describe('CanvasCore', () => {
         const initialState = CanvasCore.setViewOptions(
             CanvasCore.initialState(),
             { ...initialViewOptions, infiniteLevels: 3.5 });
-        expect(initialState.canvasDimensions.width).to.equal(800);
-        expect(initialState.canvasDimensions.height).to.equal(600);
         expect(CanvasCore.getRowDimensions(initialState)).to.deep.equal({
             width: 800,
             height: 600 / 3.5,

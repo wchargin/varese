@@ -25,10 +25,7 @@ import {range} from '../utils/Utils';
  */
 export function initialState() {
     return {
-        canvasDimensions: {
-            width: 800,
-            height: 600,
-        },
+        canvasWidth: 800,
         viewOptions: null,  // must be set before you try to do anything!
         //
         // The 'position' field locates the viewport,
@@ -55,15 +52,12 @@ export function setViewOptions(state, viewOptions) {
 }
 
 /*
- * Set the canvas dimensions, and return the new state.
+ * Set the canvas width, and return the new state.
  */
-export function setCanvasDimensions(state, canvasWidth, canvasHeight) {
+export function setCanvasWidth(state, canvasWidth) {
     return {
         ...state,
-        canvasDimensions: {
-            width: canvasWidth,
-            height: canvasHeight,
-        },
+        canvasWidth,
     };
 }
 
@@ -78,10 +72,10 @@ export function setCanvasDimensions(state, canvasWidth, canvasHeight) {
  * Requires 'viewOptions' to have been set.
  */
 export function getRowDimensions(state) {
+    const {viewOptions} = state;
     return {
-        width: state.canvasDimensions.width,
-        height:
-            state.canvasDimensions.height / state.viewOptions.infiniteLevels,
+        width: state.canvasWidth,
+        height: viewOptions.infiniteHeight / viewOptions.infiniteLevels,
     };
 }
 
