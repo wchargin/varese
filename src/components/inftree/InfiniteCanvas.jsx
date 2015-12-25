@@ -218,13 +218,9 @@ export default class InfiniteCanvas extends Component {
         if (this.state.mouseDown) {
             const deltaX = -(newMouse.x - oldMouse.x);
             const deltaY = -(newMouse.y - oldMouse.y);
-            const finalPosition = this._pan({x: deltaX, y: deltaY});
-            // TODO(william): move this into CanvasCore
-            const coreState = {
-                ...this.state.coreState,
-                position: finalPosition,
-            };
-            newState.coreState = coreState;
+            const canvasDeltaXY = { x: deltaX, y: deltaY };
+            newState.coreState = CanvasCore.performPan(
+                this.state.coreState, canvasDeltaXY);
         }
         this.setState(newState);
     }
@@ -236,13 +232,10 @@ export default class InfiniteCanvas extends Component {
         }
         e.preventDefault();
 
-        const finalPosition = this._pan({x: e.deltaX, y: e.deltaY});
         this.setState({
             ...this.state,
-            coreState: {
-                ...this.state.coreState,
-                position: finalPosition,
-            },
+            coreState: CanvasCore.performPan(
+                this.state.coreState, { x: e.deltaX, y: e.deltaY }),
         });
     }
 
@@ -312,13 +305,10 @@ export default class InfiniteCanvas extends Component {
                         x: velocityX * clampedDelta.x,
                         y: velocityY * clampedDelta.y,
                     };
-                    const finalPosition = this._pan(finalDeltas);
                     this.setState({
                         ...this.state,
-                        coreState: {
-                            ...this.state.coreState,
-                            position: finalPosition,
-                        },
+                        coreState: CanvasCore.performPan(
+                            this.state.coreState, finalDeltas),
                     });
                 }, 1000 / 60);
             }
