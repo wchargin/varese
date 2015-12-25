@@ -52,36 +52,25 @@ import {
 } from '../../utils/DisplayUtils';
 
 import * as CanvasCore from '../../core/CanvasCore';
+import * as CanvasUIAdapter from '../../core/CanvasUIAdapter';
 
 export default class InfiniteCanvas extends Component {
 
     constructor() {
         super();
+
         this.state = {
-            coreState: CanvasCore.initialState(),
-            //
-            lastMouse: null,  // canvas coordinates
-            mouseDown: false,
-            keysDown: [],     // a list of numeric key codes
+            uiState: CanvasUIAdapter.initialState(CanvasCore.initialState()),
         };
+        const getState = () => this.state.uiState;
+        const setState = uiState => this.setState({ uiState });
+        const getCanvas = () => this.refs.canvas;
 
-        // We attach the following properties to the instance itself
-        // instead of using React's state
-        // because they're orthogonal to the rendering pipeline.
-
-        // An event handler for window.onResize.
-        this._resizeListener = () => {
-            if (this._resizeCanvas()) {
-                this._draw();
-            }
-        };
-
-        // The interval ID used while keys are pressed.
-        // This is set when the user presses a key when none had been pressed
-        // (see _handleKeyDown)
-        // and unset when the user releases the last key
-        // (see _handleKeyUp).
-        this._keyInterval = null;
+        this._canvasEventHandlers = CanvasUIAdapter.createHandlers(
+            getState, setState);
+        CanvasUIAdapter.mixInLifecycles(this,
+            CanvasUIAdapter.createLifecycleMixins(
+                getState, setState, getCanvas));
 
         // Two functions are memoized for scrolling performance.
         // These maps are used to cache the results,
@@ -90,21 +79,7 @@ export default class InfiniteCanvas extends Component {
         this._fastPositionToPitchesMemo = new Map();
     }
 
-    _updateViewOptions(newViewOptions) {
-        const coreState = CanvasCore.setViewOptions(
-            this.state.coreState, newViewOptions);
-        this.setState({ coreState });
-    }
-
-    componentWillMount() {
-        this._updateViewOptions(this.props.viewOptions);
-    }
-
     componentWillReceiveProps(newProps) {
-        if (newProps.viewOptions !== this.props.viewOptions) {
-            this._updateViewOptions(newProps.viewOptions);
-        }
-
         // Some prop changes can invalidate these caches.
         // We just clear them always for simplicity.
         this._fastFindChordRootOffsetMemo.clear();  // <= rationalizer
@@ -145,16 +120,7 @@ export default class InfiniteCanvas extends Component {
                 width: "100%",
                 height: this.props.viewOptions.infiniteHeight,
             }}
-            //
-            onMouseDown={this._handleMouseDown.bind(this)}
-            onMouseMove={this._handleMouseMove.bind(this)}
-            onWheel={this._handleMouseWheel.bind(this)}
-            onMouseUp={this._handleMouseUp.bind(this)}
-            onMouseLeave={this._handleMouseLeave.bind(this)}
-            //
-            onKeyDown={this._handleKeyDown.bind(this)}
-            onKeyUp={this._handleKeyUp.bind(this)}
-            onBlur={this._handleBlur.bind(this)}
+            {...this._canvasEventHandlers}
             tabIndex={0}
         >
             <div className="alert alert-danger">
@@ -169,203 +135,16 @@ export default class InfiniteCanvas extends Component {
     }
 
     componentDidMount() {
-        this._resizeCanvas();
         this._draw();
-        window.addEventListener('resize', this._resizeListener);
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('resize', this._resizeListener);
     }
 
     componentDidUpdate() {
-        this._resizeCanvas();
         this._draw();
-    }
-
-    _resizeCanvas() {
-        const {canvas} = this.refs;
-        const widthString = window.getComputedStyle(canvas).width;
-        const width = parseInt(widthString.match(/(\d+)px/)[1], 10);
-        if (width !== canvas.width) {
-            canvas.width = width;
-            const coreState =
-                CanvasCore.setCanvasWidth(this.state.coreState, width);
-            this.setState({ coreState });
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    _handleMouseDown() {
-        this.setState({
-            ...this.state,
-            mouseDown: true,
-        });
-    }
-
-    _handleMouseMove(e) {
-        const oldMouse = this.state.lastMouse;
-        const newMouse = this._getRelativeMousePosition(e);
-        const newState = {
-            ...this.state,
-            lastMouse: newMouse,
-            // possibly mutated below
-        };
-        if (this.state.mouseDown) {
-            const deltaX = -(newMouse.x - oldMouse.x);
-            const deltaY = -(newMouse.y - oldMouse.y);
-            const canvasDeltaXY = { x: deltaX, y: deltaY };
-            newState.coreState = CanvasCore.performPan(
-                this.state.coreState, canvasDeltaXY);
-        }
-        this.setState(newState);
-    }
-
-    _handleMouseWheel(e) {
-        // Don't be annoying and grab all the things above yourself!
-        if (document.activeElement !== e.target) {
-            return;
-        }
-        e.preventDefault();
-
-        this.setState({
-            ...this.state,
-            coreState: CanvasCore.performPan(
-                this.state.coreState, { x: e.deltaX, y: e.deltaY }),
-        });
-    }
-
-    _handleMouseUp() {
-        this._stopDrag();
-    }
-
-    _handleMouseLeave() {
-        this._stopDrag();
-    }
-
-    _stopDrag() {
-        this.setState({
-            ...this.state,
-            mouseDown: false,
-        });
-    }
-
-    /*
-     * Given a MouseEvent (or SyntheticMouseEvent) object,
-     * determine the canvas coordinates of the mouse pointer
-     * (assuming the event target is in fact the canvas).
-     */
-    _getRelativeMousePosition(e) {
-        const {left: baseX, top: baseY} = e.target.getBoundingClientRect();
-        return {
-            x: e.clientX - baseX,
-            y: e.clientY - baseY,
-        };
-    }
-
-    _handleKeyDown(e) {
-        if (this._getMotionDirection(e.which) === null) {
-            return;
-        }
-        if (e.repeat) {
-            return;
-        }
-        if (this.state.keysDown.indexOf(e.which) !== -1) {
-            // This can happen if you press the key,
-            // then click and maybe drag a bit while still holding the key,
-            // then release the mouse while holding the key.
-            return;
-        }
-        this.setState({
-            ...this.state,
-            keysDown: [...this.state.keysDown, e.which],
-        }, () => {
-            if (this._keyInterval === null) {
-                this._keyInterval = window.setInterval(() => {
-                    if (this.state.mouseDown) {
-                        return;
-                    }
-                    const keys = this.state.keysDown;
-                    const deltas = keys.map(k => this._getMotionDirection(k));
-                    const sumDelta = deltas.reduce(
-                        (acc, d) => ({x: acc.x + d.x, y: acc.y + d.y}),
-                        {x: 0, y: 0});
-                    const clampedDelta = {
-                        x: Math.sign(sumDelta.x),
-                        y: Math.sign(sumDelta.y),
-                    };
-                    const slowness = 90;  // frames to traverse full canvas
-                    const velocityX = this.refs.canvas.width / slowness;
-                    const velocityY = this.refs.canvas.height / slowness;
-                    const finalDeltas = {
-                        x: velocityX * clampedDelta.x,
-                        y: velocityY * clampedDelta.y,
-                    };
-                    this.setState({
-                        ...this.state,
-                        coreState: CanvasCore.performPan(
-                            this.state.coreState, finalDeltas),
-                    });
-                }, 1000 / 60);
-            }
-        });
-    }
-
-    _handleKeyUp(e) {
-        const keysDown = this.state.keysDown.filter(x => x !== e.which);
-        this.setState({
-            ...this.state,
-            keysDown,
-        });
-        if (!keysDown.length) {
-            window.clearInterval(this._keyInterval);
-            this._keyInterval = null;
-        }
-    }
-
-    _handleBlur() {
-        this.setState({
-            ...this.state,
-            keysDown: [],
-        });
-        window.clearInterval(this._keyInterval);
-        this._keyInterval = null;
-    }
-
-    /*
-     * Given a numeric key code,
-     * determine whether the associated key represents a movement action.
-     *
-     * If it does, return an object with shape { x: number, y: number },
-     * where each number is either -1, 0, or +1
-     * and indicates the presence and direction of movement along an axis.
-     *
-     * If it doesn't, return null.
-     */
-    _getMotionDirection(which) {
-        switch (which) {
-            case 0x41:  // A
-            case 0x25:  // Left
-                return { x: -1, y: 0 };
-            case 0x57:  // W
-            case 0x26:  // Up
-                return { x: 0, y: -1 };
-            case 0x44:  // D
-            case 0x27:  // Right
-                return { x: +1, y: 0 };
-            case 0x53:  // S
-            case 0x28:  // Down
-                return { x: 0, y: +1 };
-            default:
-                return null;
-        }
     }
 
     _draw() {
         const {canvas} = this.refs;
-        const {coreState} = this.state;
+        const {coreState} = this.state.uiState;
 
         const ctx = canvas.getContext('2d', {alpha: 'false'});
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -471,8 +250,9 @@ export default class InfiniteCanvas extends Component {
         };
         if (viewOptions.alwaysEngrave) {
             engrave();
-        } else if (this.state.lastMouse) {
-            const {x: mouseX, y: mouseY} = this.state.lastMouse;
+        } else if (this.state.uiState.lastMouse) {
+            // TODO(william): Don't reach into 'uiState'.
+            const {x: mouseX, y: mouseY} = this.state.uiState.lastMouse;
             const withinX = Math.abs(mouseX - x) <= width / 2;
             const withinY = y <= mouseY && mouseY <= y + height;
             if (withinX && withinY) {
