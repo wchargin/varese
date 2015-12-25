@@ -7,8 +7,32 @@ export function gcd(a, b) {
 }
 
 /*
+ * You'd like something like 'Array(length).map(callback)' to work,
+ * but it doesn't because this is JavaScript
+ * and "uninitialized array position" and "undefined value at position"
+ * are different things, so 'map' and friends don't work on such arrays.
+ * Instead, this does what you want.
+ *
+ * More precisely, 'length' is the length of an array to create,
+ * and 'callback' is a callback that takes
+ * an index into the array
+ * and (optionally) the previous state of the array
+ * and returns the element at the given index.
+ *
+ * For example: 'buildArray(5, x => x * x)' returns [0, 1, 4, 9, 16],
+ * and 'buildArray(5, (i, r) => (r[i - 1] || 0) + i)' returns [0, 1, 3, 6, 10].
+ */
+export function buildArray(length, callback) {
+    const result = Array(length);
+    for (let i = 0; i < length; i++) {
+        result[i] = callback(i, result);
+    }
+    return result;
+}
+
+/*
  * Takes either one, two, or three arguments:
- *     
+ *
  *   - range(b)       = [0, 1, ..., b - 1];
  *   - range(a, b)    = [a, a + 1, ..., b - 1]; or
  *   - range(a, b, s) = [a, a + s, ..., a + ks]
@@ -52,7 +76,7 @@ export function range(...args) {
             throw new Error(
                 `expected '${value}' to be finite, but got: ${value}`);
         }
-    })
+    });
 
     // Make sure the step size is non-zero.
     if (step === 0) {
@@ -62,30 +86,6 @@ export function range(...args) {
     // Finally, create an populate an array.
     return buildArray(Math.max(0, Math.ceil((max - min) / step)), (i, r) =>
         i === 0 ? min : (r[i - 1] + step));
-}
-
-/*
- * You'd like something like 'Array(length).map(callback)' to work,
- * but it doesn't because this is JavaScript
- * and "uninitialized array position" and "undefined value at position"
- * are different things, so 'map' and friends don't work on such arrays.
- * Instead, this does what you want.
- *
- * More precisely, 'length' is the length of an array to create,
- * and 'callback' is a callback that takes
- * an index into the array
- * and (optionally) the previous state of the array
- * and returns the element at the given index.
- *
- * For example: 'buildArray(5, x => x * x)' returns [0, 1, 4, 9, 16],
- * and 'buildArray(5, (i, r) => (r[i - 1] || 0) + i)' returns [0, 1, 3, 6, 10].
- */
-export function buildArray(length, callback) {
-    const result = Array(length);
-    for (let i = 0; i < length; i++) {
-        result[i] = callback(i, result);
-    }
-    return result;
 }
 
 export function arraysEqual(arr1, arr2, comparator = (a, b) => a === b) {
@@ -106,8 +106,8 @@ export function flatten(arrays) {
 
 export default {
     gcd,
-    range,
     buildArray,
+    range,
     arraysEqual,
     flatten,
 };

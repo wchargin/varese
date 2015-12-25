@@ -208,7 +208,6 @@ describe('CanvasCore', () => {
             context("from halfway right across the second level", () => {
                 // (See the 'pans horizontally' section above
                 // for an explanation of these values.)
-                const farEdge = 0.375;
                 const initialX = 0.125;
                 const state = sp(xy(initialX, 2));
                 //
