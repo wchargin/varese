@@ -71,6 +71,7 @@ export default class InfiniteCanvas extends Component {
             keysDown: [],     // a list of numeric key codes
             //
             // TODO(william): Move all the state and logic to CanvasCore.
+            coreState: CanvasCore.initialState(),
         };
 
         // We attach the following properties to the instance itself
@@ -98,7 +99,21 @@ export default class InfiniteCanvas extends Component {
         this._fastPositionToPitchesMemo = new Map();
     }
 
-    componentWillReceiveProps() {
+    _updateViewOptions(newViewOptions) {
+        const coreState = CanvasCore.setViewOptions(
+            this.state.coreState, newViewOptions);
+        this.setState({ coreState });
+    }
+
+    componentWillMount() {
+        this._updateViewOptions(this.props.viewOptions);
+    }
+
+    componentWillReceiveProps(newProps) {
+        if (newProps.viewOptions !== this.props.viewOptions) {
+            this._updateViewOptions(newProps.viewOptions);
+        }
+
         // Some prop changes can invalidate these caches.
         // We just clear them always for simplicity.
         this._fastFindChordRootOffsetMemo.clear();  // <= rationalizer
