@@ -155,7 +155,8 @@
             "words": true,
             "nonwords": false,
         }],
-        "spaced-comment": [1, "always"],    // require or disallow a space immediately following the // in a line comment (off by default)
+        "spaced-comment":                           // require a space immediately following a comment...
+            [1, "always", { exceptions: ["/"] }],   // ...unless it's a banner comment with a bunch of slashes
 
         // ES6
         "no-var": 2, // require let or const instead of var (off by default)
