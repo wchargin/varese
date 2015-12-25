@@ -175,9 +175,12 @@ function componentWillReceiveProps(getState, setState, getCanvas, newProps) {
     }
 }
 
+function componentDidUpdate(getState, setState, getCanvas) {
+    setState(resizeCanvas(getCanvas(), getState()));
+}
+
 // TODO(william) STOPSHIP: Implement these
 /* eslint-disable no-unused-vars */
-function componentDidUpdate(getState, setState, getCanvas) {}
 function componentWillUnmount(getState, setState, getCanvas) {}
 /* eslint-enable */
 

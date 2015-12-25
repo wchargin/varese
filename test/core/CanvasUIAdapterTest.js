@@ -476,4 +476,42 @@ describe('CanvasUIAdapter', () => {
         });
     });
 
+    describe('lifecycle mixin componentDidUpdate', () => {
+        const {getBox, canvas, handlers, lifecycleMixins} = create();
+
+        // We'll use this box as the mock for 'getComputedStyle'.
+        const {getBox: getWidthBox, setBox: setWidthBox} = makeBox();
+        const mockedGetComputedStyle = (element) => {
+            expect(element).to.equal(canvas);
+            return { width: getWidthBox() };
+        };
+        declareMochaMock(window, 'getComputedStyle', mockedGetComputedStyle);
+
+        // We'll use this box to store whatever event listener the mixin sets.
+        const {getBox: getListenerBox, setBox: setListenerBox} = makeBox();
+        const mockedAddEventListener = (name, fn) => {
+            expect(name).to.equal('resize');
+            setListenerBox(fn);
+        };
+        declareMochaMock(window, 'addEventListener', mockedAddEventListener);
+
+        // We just ignore the 'setInterval' callback.
+        declareMochaMock(window, 'setInterval', () => {});
+
+        it("can still mount the component", () => {
+            setWidthBox("800px");
+            lifecycleMixins.componentDidMount.call({});
+        });
+        it("updates the width on update", () => {
+            setWidthBox("777px");
+            lifecycleMixins.componentDidUpdate.call({});
+            expect(canvas.width).to.equal(777);
+        });
+        it("updates the state on update", () => {
+            setWidthBox("999px");
+            lifecycleMixins.componentDidUpdate.call({});
+            expect(getBox().coreState.canvasWidth).to.equal(999);
+        });
+    });
+
 });
