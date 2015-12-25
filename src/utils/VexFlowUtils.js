@@ -59,7 +59,3 @@ export function pitchesToStaveNote(pitches, duration = "w") {
 
     return noteWithAccidentals;
 }
-
-export default {
-    pitchesToStaveNote,
-};

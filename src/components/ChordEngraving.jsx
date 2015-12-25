@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 
 import Vex from 'vexflow';
-import VexFlowUtils from '../utils/VexFlowUtils';
+import {pitchesToStaveNote} from '../utils/VexFlowUtils';
 
 /*
  * Engrave a chord and display it!
@@ -51,7 +51,7 @@ export default class ChordEngraving extends Component {
 
     _renderNote() {
         const {notes, width} = this.props;
-        const chord = VexFlowUtils.pitchesToStaveNote(notes);
+        const chord = pitchesToStaveNote(notes);
 
         // VexFlow supports, you know, actual music,
         // which generally comprises multiple notes in sequence.
