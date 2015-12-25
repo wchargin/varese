@@ -105,9 +105,16 @@ function handleKeyUp(getState, setState) {}
 function handleBlur(getState, setState) {}
 /* eslint-enable */
 
+function componentWillMount(getState, setState) {
+    const state = getState();
+    const coreState = CanvasCore.setViewOptions(
+        state.coreState,
+        this.props.viewOptions);
+    setState({ ...state, coreState });
+}
+
 // TODO(william) STOPSHIP: Implement these
 /* eslint-disable no-unused-vars */
-function componentWillMount(getState, setState, getCanvas) {}
 function componentDidMount(getState, setState, getCanvas) {}
 function componentWillReceiveProps(getState, setState, getCanvas) {}
 function componentDidUpdate(getState, setState, getCanvas) {}

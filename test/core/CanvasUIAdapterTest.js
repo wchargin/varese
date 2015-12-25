@@ -237,4 +237,20 @@ describe('CanvasUIAdapter', () => {
         });
     });
 
+    describe('lifecycle mixin componentWillMount', () => {
+        const {getBox, lifecycleMixins} = create();
+        const newViewOptions = {
+            ...baseViewOptions,
+            infiniteLevels: baseViewOptions.infiniteLevels + 1,
+        };
+        const component = { props: { viewOptions: newViewOptions } };
+        it("should update the core state's view options", () => {
+            expect(getBox().coreState.viewOptions)
+                .to.deep.equal(baseViewOptions);
+            lifecycleMixins.componentWillMount.call(component);
+            expect(getBox().coreState.viewOptions)
+                .to.deep.equal(newViewOptions);
+        });
+    });
+
 });
