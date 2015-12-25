@@ -84,7 +84,7 @@ export function declareMochaMock(target, propertyName, newValue) {
     let oldExisted;
     let oldValue;
     before(`set up mock for '${propertyName}'`, () => {
-        oldValue = target[propertyName]
+        oldValue = target[propertyName];
         oldExisted = Object.prototype.hasOwnProperty.call(
             target, propertyName);
         target[propertyName] = newValue;

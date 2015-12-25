@@ -58,7 +58,7 @@ export function mixInLifecycles(target, mixins) {
         const mixedInFunction = mixins[name];
         const existing = target[name];
         if (typeof existing === 'function') {
-            target[name] = function(...args) {
+            target[name] = function mixedInLifecycleMethod(...args) {
                 mixedInFunction.apply(this, args);
                 return existing.apply(this, args);
             };
@@ -206,7 +206,7 @@ function componentDidUpdate(getState, setState, getCanvas) {
     }
 }
 
-function componentWillUnmount(getState, setState, getCanvas) {
+function componentWillUnmount(getState) {
     const state = getState();
     window.removeEventListener('resize', state.resizeListenerFunction);
     window.clearInterval(state.keyIntervalId);

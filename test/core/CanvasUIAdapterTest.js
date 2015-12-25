@@ -127,10 +127,10 @@ describe('CanvasUIAdapter', () => {
             foo: () => push(12),
             bar: () => push(88),
             baz: () => push(97),
-            requireThisOnMixin: function() {
+            requireThisOnMixin: function firstOnMixin() {
                 return this.quux;
             },
-            requireThisOnOriginal: function() {
+            requireThisOnOriginal: function secondOnMixin() {
                 if (!this.quux) {
                     throw new Error();
                 }
@@ -139,7 +139,7 @@ describe('CanvasUIAdapter', () => {
         const target = {
             bar: () => push(36),
             baz: 101,
-            requireThisOnOriginal: function() {
+            requireThisOnOriginal: function secondOnTarget() {
                 return this.quux;
             },
             quux: 17,
@@ -434,7 +434,7 @@ describe('CanvasUIAdapter', () => {
         it("executes without error", () => {
             setWidthBox("234px");  // not the initial value
             lifecycleMixins.componentDidMount.call({});
-        })
+        });
         it("sets a listener", () => {
             expect(getListenerBox()).to.be.a('function');
         });
@@ -628,7 +628,7 @@ describe('CanvasUIAdapter', () => {
 
         it("executes without error", () => {
             lifecycleMixins.componentWillUnmount.call({});
-        })
+        });
         it("removes the event listener", () => {
             expect(getListenerBox()).to.equal(fakeResizeListener);
         });
