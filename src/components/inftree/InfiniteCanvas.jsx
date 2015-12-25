@@ -441,7 +441,7 @@ export default class InfiniteCanvas extends Component {
         const viewportXr = viewportXc + viewportWidth / 2;
 
         // The y-position of the top of the top row, in absolute coordinates.
-        const topY = rowHeight * (this.state.position.y - 0.5);
+        const topY = rowHeight * this.state.position.y;
         const rowMin = Math.ceil(topY / rowHeight);
         const rowMax = Math.min(
             this._getMaxSafeRow(),
@@ -451,7 +451,7 @@ export default class InfiniteCanvas extends Component {
         // We don't need to paint a row below
         // because everything has top-gravity.
         range(Math.max(0, rowMin - 1), rowMax + 1).forEach(row => {
-            const absoluteYc = rowHeight * (row + 0.5);
+            const absoluteYc = rowHeight * row + 20;
             const canvasYc = absoluteYc - this.state.position.y * rowHeight;
 
             // We only have to paint the nodes that are in view.
