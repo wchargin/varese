@@ -49,7 +49,7 @@ export default class InfiniteCanvas extends Component {
         super();
 
         this.state = {
-            uiState: CanvasUIAdapter.initialState(CanvasCore.initialState()),
+            uiState: CanvasUIAdapter.initialState(),
         };
         const getState = () => this.state.uiState;
         const setState = uiState => this.setState({ uiState });

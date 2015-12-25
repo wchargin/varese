@@ -5,7 +5,7 @@ import * as CanvasCore from './CanvasCore';
 // Middleware creators
 ///////////////////////////////////////////////////////////////////////////////
 
-export function initialState(coreState) {
+export function initialState(coreState = CanvasCore.initialState()) {
     return {
         lastMouse: null,
         mouseDown: false,

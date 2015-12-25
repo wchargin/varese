@@ -59,6 +59,10 @@ describe('CanvasUIAdapter', () => {
             expect(initialState(coreState))
                 .to.have.property('coreState')
                 .that.deep.equals(coreState));
+        it("provides the default initial state if you don't specify one", () =>
+            expect(initialState())
+                .to.have.property('coreState')
+                .that.deep.equals(CanvasCore.initialState()));
     });
 
     describe('#getCoreAccessor', () => {
