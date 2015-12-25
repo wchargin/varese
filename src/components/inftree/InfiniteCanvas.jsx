@@ -45,7 +45,6 @@ import Vex from 'vexflow';
 import {findChordRootOffset} from '../../core/HarmonicSeries';
 import {positionToPitches} from '../../core/TreeSpace';
 import {pitchesToStaveNote} from '../../utils/VexFlowUtils';
-import {range} from '../../utils/Utils';
 import {
     withinLimits,
     formatMaybeRoot,
