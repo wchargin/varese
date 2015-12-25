@@ -59,13 +59,6 @@ export default class InfiniteCanvas extends Component {
     constructor() {
         super();
         this.state = {
-            // The 'position' field locates the viewport,
-            // which is anchored with top-center gravity
-            // and described in idealized coordinates.
-            position: {
-                x: 0,
-                y: 0,
-            },
             lastMouse: null,  // canvas coordinates
             mouseDown: false,
             keysDown: [],     // a list of numeric key codes
@@ -226,7 +219,12 @@ export default class InfiniteCanvas extends Component {
             const deltaX = -(newMouse.x - oldMouse.x);
             const deltaY = -(newMouse.y - oldMouse.y);
             const finalPosition = this._pan({x: deltaX, y: deltaY});
-            newState.position = finalPosition;
+            // TODO(william): move this into CanvasCore
+            const coreState = {
+                ...this.state.coreState,
+                position: finalPosition,
+            };
+            newState.coreState = coreState;
         }
         this.setState(newState);
     }
@@ -241,7 +239,10 @@ export default class InfiniteCanvas extends Component {
         const finalPosition = this._pan({x: e.deltaX, y: e.deltaY});
         this.setState({
             ...this.state,
-            position: finalPosition,
+            coreState: {
+                ...this.state.coreState,
+                position: finalPosition,
+            },
         });
     }
 
@@ -312,7 +313,13 @@ export default class InfiniteCanvas extends Component {
                         y: velocityY * clampedDelta.y,
                     };
                     const finalPosition = this._pan(finalDeltas);
-                    this.setState({...this.state, position: finalPosition});
+                    this.setState({
+                        ...this.state,
+                        coreState: {
+                            ...this.state.coreState,
+                            position: finalPosition,
+                        },
+                    });
                 }, 1000 / 60);
             }
         });
@@ -385,29 +392,10 @@ export default class InfiniteCanvas extends Component {
      * and should indicate the desired vector displacement across the canvas,
      * in canvas coordinates.
      *
-     * The return value is the new value for 'this.state.position'.
+     * The return value is the new value for 'this.state.coreState.position'.
      */
     _pan(canvasDeltaXY) {
-        const {width: rowWidth, height: rowHeight} = this._getRowDimensions();
-
-        const maxLevel = this._getMaxSafeRow();
-
-        const newY = this.state.position.y + canvasDeltaXY.y / rowHeight;
-        const minY = 0;
-        const maxY = maxLevel - this.props.viewOptions.infiniteLevels;
-        const maxYPadding = 2;  // don't chop off the bottom nodes
-        const finalY = Math.max(minY, Math.min(newY, maxY + maxYPadding));
-
-        const scalingFactor = this._getScalingFactor(finalY);
-
-        const perceivedWidth = rowWidth * scalingFactor;
-        const newX = this.state.position.x + canvasDeltaXY.x / perceivedWidth;
-        const rangeX = 1 - 1 / scalingFactor;
-        const minX = -rangeX / 2;
-        const maxX = +rangeX / 2;
-        const finalX = Math.max(minX, Math.min(newX, maxX));
-
-        return { x: finalX, y: finalY };
+        return CanvasCore.getPanResult(this.state.coreState, canvasDeltaXY);
     }
 
     /*
@@ -450,7 +438,6 @@ export default class InfiniteCanvas extends Component {
         // instead of manufacturing it anew every frame.
         const coreState = {
             ...this.state.coreState,
-            position: this.state.position,
             lastMouse: this.state.lastMouse,
             mouseDown: this.state.mouseDown,
             keysDown: this.state.keysDown,
