@@ -69,9 +69,15 @@ function handleWheel(getState, setState, e) {
     setState({ ...state, coreState: newCoreState });
 }
 
+function handleMouseUp(getState, setState) {
+    setState({
+        ...getState(),
+        mouseDown: false,
+    });
+}
+
 // TODO(william) STOPSHIP: Implement these
 /* eslint-disable no-unused-vars */
-function handleMouseUp(getState, setState) {}
 function handleKeyDown(getState, setState) {}
 function handleKeyUp(getState, setState) {}
 function handleBlur(getState, setState) {}
