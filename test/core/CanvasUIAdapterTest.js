@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 
-import {makeBox} from '../TestUtils';
+import {makeBox, mocking} from '../TestUtils';
 import {initialState as initialReduxState} from '../TestData';
 const {treeViewOptions: initialViewOptions} = initialReduxState;
 
@@ -155,12 +155,8 @@ describe('CanvasUIAdapter', () => {
 
         // This one relies on document.activeElement for focus checking.
         // Happily, it looks like we can just set that property!
-        const mockingFocus = (active, callback) => {
-            const previouslyActive = document.activeElement;
-            document.activeElement = active;
-            callback();
-            document.activeElement = previouslyActive;
-        };
+        const mockingFocus = (active, callback) =>
+            mocking(document, 'activeElement', active, callback);
         const target = {};  // random dummy object to use for focusing
 
         const preventedDefault = makeBox(false);
