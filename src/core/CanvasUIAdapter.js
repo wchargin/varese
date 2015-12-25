@@ -11,6 +11,9 @@ export function initialState(coreState) {
         mouseDown: false,
         keysDown: [],
         coreState,
+        //
+        resizeListenerFunction: null,
+        keyIntervalId: null,
     };
 }
 
