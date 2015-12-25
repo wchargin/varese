@@ -318,7 +318,7 @@ describe('CanvasUIAdapter', () => {
     });
 
     describe('lifecycle mixin componentDidMount', () => {
-        const {getBox, canvas, lifecycleMixins} = create();
+        const {getBox, canvas, handlers, lifecycleMixins} = create();
 
         // We'll use this box as the mock for 'getComputedStyle'.
         const {getBox: getWidthBox, setBox: setWidthBox} = makeBox();
@@ -336,10 +336,25 @@ describe('CanvasUIAdapter', () => {
         };
         declareMochaMock(window, 'addEventListener', mockedAddEventListener);
 
-        it("sets a listener", () => {
+        // Finally, we'll use this box for the 'setInterval' callback.
+        const setIntervalReturnValue = 66;
+        const {getBox: getIntervalBox, setBox: setIntervalBox} = makeBox();
+        const mockedSetInterval = (fn, time) => {
+            expect(time).to.be.within(1, 100);
+            setIntervalBox(fn);
+            return setIntervalReturnValue;
+        };
+        declareMochaMock(window, 'setInterval', mockedSetInterval);
+
+        it("executes without error", () => {
             setWidthBox("234px");  // not the initial value
             lifecycleMixins.componentDidMount.call({});
+        })
+        it("sets a listener", () => {
             expect(getListenerBox()).to.be.a('function');
+        });
+        it("sets an interval", () => {
+            expect(getIntervalBox()).to.be.a('function');
         });
         it("updates the width on mount", () => {
             expect(canvas.width).to.equal(234);
@@ -350,6 +365,69 @@ describe('CanvasUIAdapter', () => {
             getListenerBox()();  // simulate resizing the window
             expect(canvas.width).to.equal(345);
             expect(getBox().coreState.canvasWidth).to.equal(345);
+        });
+        describe("key interval", () => {
+            const getPosition = () => getBox().coreState.position;
+            it("doesn't change the initialized value", () =>
+                expect(getPosition()).to.deep.equal(xy(0, 0)));
+            it("moves when a key is just pressed", () => {
+                const previous = getPosition();
+                handlers.onKeyDown({ which: 0x53, repeat: false });  // 'S'
+                getIntervalBox()();
+                const next = getPosition();
+                expect(next.y).to.be.greaterThan(previous.y);
+                expect(next.x).to.equal(previous.x);
+            });
+            it("moves while a key is still pressed", () => {
+                const previous = getPosition();
+                getIntervalBox()();
+                const next = getPosition();
+                expect(next.y).to.be.greaterThan(previous.y);
+                expect(next.x).to.equal(previous.x);
+            });
+            it("moves in two directions at once", () => {
+                const previous = getPosition();
+                handlers.onKeyDown({ which: 0x41, repeat: false });  // 'A'
+                getIntervalBox()();
+                const next = getPosition();
+                expect(next.y).to.be.greaterThan(previous.y);
+                expect(next.x).to.be.lessThan(previous.x);
+            });
+            it("discards a key once it's been released", () => {
+                const previous = getPosition();
+                handlers.onKeyUp({ which: 0x53 });  // 'S'
+                getIntervalBox()();
+                const next = getPosition();
+                expect(next.y).to.equal(previous.y);
+                expect(next.x).to.be.lessThan(previous.x);
+            });
+            it("does nothing once all keys have been released", () => {
+                const previous = getPosition();
+                handlers.onKeyUp({ which: 0x41 });  // 'A'
+                getIntervalBox()();
+                getIntervalBox()();
+                getIntervalBox()();
+                const next = getPosition();
+                expect(next).to.deep.equal(previous);
+            });
+            it("does nothing while two opposing keys are pressed", () => {
+                const previous = getPosition();
+                handlers.onKeyDown({ which: 0x44 });  // 'D'
+                handlers.onKeyDown({ which: 0x25 });  // Left
+                getIntervalBox()();
+                getIntervalBox()();
+                getIntervalBox()();
+                const next = getPosition();
+                expect(next).to.deep.equal(previous);
+            });
+            it("moves while two opposing keys and a third are pressed", () => {
+                const previous = getPosition();
+                handlers.onKeyDown({ which: 0x26 });  // Up
+                getIntervalBox()();
+                const next = getPosition();
+                expect(next.y).to.be.lessThan(previous.y);
+                expect(next.x).to.equal(previous.x);
+            });
         });
     });
 

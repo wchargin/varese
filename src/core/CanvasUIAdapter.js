@@ -153,9 +153,15 @@ function componentDidMount(getState, setState, getCanvas) {
     const resizeListenerFunction = () =>
         setState(resizeCanvas(getCanvas(), getState()));
     window.addEventListener('resize', resizeListenerFunction);
+
+    const keyIntervalId = window.setInterval(
+        () => processKeyTick(getState, setState, getCanvas),
+        1000 / 60);
+
     setState({
         ...resizeCanvas(getCanvas(), getState()),
         resizeListenerFunction,
+        keyIntervalId,
     });
 }
 
@@ -237,4 +243,39 @@ function resizeCanvas(canvas, state) {
         const coreState = CanvasCore.setCanvasWidth(state.coreState, width);
         return { ...state, coreState };
     }
+}
+
+function processKeyTick(getState, setState, getCanvas) {
+    const state = getState();
+    if (state.mouseDown) {
+        return;
+    }
+    const keys = state.keysDown;
+    if (keys.length === 0) {
+        // Not strictly necessary because of the 'clampedDelta' check below,
+        // but maybe a bit helpful in avoiding a few CPU cycles.
+        return;
+    }
+    const deltas = keys.map(k => getMotionDirection(k));
+    const sumDelta = deltas.reduce(
+        (acc, d) => ({x: acc.x + d.x, y: acc.y + d.y}),
+        {x: 0, y: 0});
+    const clampedDelta = {
+        x: Math.sign(sumDelta.x),
+        y: Math.sign(sumDelta.y),
+    };
+    if (clampedDelta.x === 0 && clampedDelta.y === 0) {
+        return;
+    }
+    const slowness = 90;  // frames to traverse full canvas
+    const velocityX = getCanvas().width / slowness;
+    const velocityY = getCanvas().height / slowness;
+    const finalDeltas = {
+        x: velocityX * clampedDelta.x,
+        y: velocityY * clampedDelta.y,
+    };
+    setState({
+        ...state,
+        coreState: CanvasCore.performPan(state.coreState, finalDeltas),
+    });
 }
