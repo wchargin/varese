@@ -35,9 +35,6 @@ export function initialState() {
             x: 0,
             y: 0,
         },
-        lastMouse: null,  // canvas coordinates
-        mouseDown: false,
-        keysDown: [],     // a list of numeric key codes
     };
 }
 
