@@ -30,10 +30,7 @@ describe('CanvasUIAdapter', () => {
                 baseDimensions.width),
             viewOptions);
     //
-    // Allow overriding the (actually internal) 'position' field.
-    const sp = (position, state = s0()) => ({ ...state, position });
-    //
-    // ...and do so easily with a helper function to save some typing.
+    // Save a few characters when creating position vectors.
     const xy = (x, y) => ({ x, y });
 
     const create = () => {
