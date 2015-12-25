@@ -33,4 +33,18 @@ describe('CanvasUIAdapter', () => {
         });
     });
 
+    describe('handler onMouseDown', () => {
+        const {getBox, handlers} = create();
+        it("should be initialized with 'mouseDown' as false", () =>
+            expect(getBox().mouseDown).to.equal(false));
+        it("should set 'mouseDown' to true when false", () => {
+            handlers.onMouseDown({});
+            expect(getBox().mouseDown).to.equal(true);
+        });
+        it("should leave 'mouseDown' as true when already true", () => {
+            handlers.onMouseDown({});
+            expect(getBox().mouseDown).to.equal(true);
+        });
+    });
+
 });

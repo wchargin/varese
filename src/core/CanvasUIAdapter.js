@@ -22,9 +22,15 @@ export function createHandlers(getState, setState) {
     };
 }
 
+function handleMouseDown(getState, setState) {
+    setState({
+        ...getState(),
+        mouseDown: true,
+    });
+}
+
 // TODO(william) STOPSHIP: Implement these
 /* eslint-disable no-unused-vars */
-function handleMouseDown(getState, setState) {}
 function handleMouseMove(getState, setState) {}
 function handleWheel(getState, setState) {}
 function handleMouseUp(getState, setState) {}
