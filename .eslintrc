@@ -108,7 +108,9 @@
         "no-shadow-restricted-names": 2,    // disallow shadowing of names such as arguments
         "no-undef": 2,                      // disallow use of undeclared variables unless mentioned in a /* global */ block
         "no-unused-vars": 2,                // disallow declaration of variables that are not used in the code
-        "no-use-before-define": 2,          // disallow use of variables before they are defined
+        "no-use-before-define":             // disallow use of variables before they are defined...
+            [2, "nofunc"],                  // ...but allow hoisted function declarations
+
 
         "brace-style": 1,           // enforce one true brace style (off by default)
         "camelcase": 1,             // require camel case names
