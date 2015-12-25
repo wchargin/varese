@@ -53,9 +53,24 @@ function handleMouseMove(getState, setState, e) {
     });
 }
 
+function handleWheel(getState, setState, e) {
+    // If the user is just scrolling down the page
+    // and their mouse happens to pass over the canvas,
+    // we don't want to capture that scroll event.
+    // Only scroll when we have focus.
+    if (document.activeElement !== e.target) {
+        return;
+    }
+    e.preventDefault();
+
+    const state = getState();
+    const newCoreState = CanvasCore.performPan(
+        state.coreState, { x: e.deltaX, y: e.deltaY });
+    setState({ ...state, coreState: newCoreState });
+}
+
 // TODO(william) STOPSHIP: Implement these
 /* eslint-disable no-unused-vars */
-function handleWheel(getState, setState) {}
 function handleMouseUp(getState, setState) {}
 function handleKeyDown(getState, setState) {}
 function handleKeyUp(getState, setState) {}

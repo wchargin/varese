@@ -124,4 +124,64 @@ describe('CanvasUIAdapter', () => {
         });
     });
 
+    describe('handler onWheel', () => {
+
+        // This one relies on document.activeElement for focus checking.
+        // Happily, it looks like we can just set that property!
+        const mockingFocus = (active, callback) => {
+            const previouslyActive = document.activeElement;
+            document.activeElement = active;
+            callback();
+            document.activeElement = previouslyActive;
+        };
+        const target = {};  // random dummy object to use for focusing
+
+        const preventedDefault = makeBox(false);
+
+        const {getBox, handlers} = create();
+        const makeEvent = (deltaX, deltaY) => ({
+            deltaX,
+            deltaY,
+            target,
+            preventDefault: () => preventedDefault.setBox(true),
+        });
+        const resetPreventedDefault = () => preventedDefault.setBox(false);
+
+        it("(1) should do nothing when scrolling while unfocused", () => {
+            resetPreventedDefault();
+            mockingFocus(null, () => handlers.onWheel(makeEvent(10, 20)));
+            expect(preventedDefault.getBox()).to.equal(false);
+            expect(getBox().coreState).to.deep.equal(s0());
+        });
+
+        it("then (2) should scroll vertically when focused", () => {
+            resetPreventedDefault();
+            mockingFocus(target, () => handlers.onWheel(makeEvent(0, 50)));
+            expect(preventedDefault.getBox()).to.equal(true);
+            expect(getBox().coreState.position).to.deep.equal(xy(0, 0.5));
+        });
+
+        it("then (3) should scroll diagonally", () => {
+            resetPreventedDefault();
+            mockingFocus(target, () => handlers.onWheel(makeEvent(300, 50)));
+            expect(preventedDefault.getBox()).to.equal(true);
+            expect(getBox().coreState.position).to.deep.equal(xy(0.25, 1));
+        });
+
+        it("then (4) should do nothing when unfocused again", () => {
+            resetPreventedDefault();
+            mockingFocus(null, () => handlers.onWheel(makeEvent(123, 234)));
+            expect(preventedDefault.getBox()).to.equal(false);
+            expect(getBox().coreState.position).to.deep.equal(xy(0.25, 1));
+        });
+
+        it("finally (5) should scroll horizontally", () => {
+            resetPreventedDefault();
+            mockingFocus(target, () => handlers.onWheel(makeEvent(-600, 0)));
+            expect(preventedDefault.getBox()).to.equal(true);
+            expect(getBox().coreState.position).to.deep.equal(xy(-0.25, 1));
+        });
+
+    });
+
 });
