@@ -98,9 +98,57 @@ function handleMouseLeave(getState, setState) {
     });
 }
 
+/*
+ * Given a numeric key code,
+ * determine whether the associated key represents a movement action.
+ *
+ * If it does, return an object with shape { x: number, y: number },
+ * where each number is either -1, 0, or +1
+ * and indicates the presence and direction of movement along an axis.
+ *
+ * If it doesn't, return null.
+ */
+function getMotionDirection(which) {
+    switch (which) {
+        case 0x41:  // A
+        case 0x25:  // Left
+            return { x: -1, y: 0 };
+        case 0x57:  // W
+        case 0x26:  // Up
+            return { x: 0, y: -1 };
+        case 0x44:  // D
+        case 0x27:  // Right
+            return { x: +1, y: 0 };
+        case 0x53:  // S
+        case 0x28:  // Down
+            return { x: 0, y: +1 };
+        default:
+            return null;
+    }
+}
+
+function handleKeyDown(getState, setState, e) {
+    const state = getState();
+    if (e.repeat) {
+        return;
+    }
+    if (getMotionDirection(e.which) === null) {
+        return;
+    }
+    if (state.keysDown.indexOf(e.which) !== -1) {
+        // This can happen if you press the key,
+        // then click and maybe drag a bit while still holding the key,
+        // then release the mouse while holding the key.
+        return;
+    }
+    setState({
+        ...state,
+        keysDown: [...state.keysDown, e.which],
+    });
+}
+
 // TODO(william) STOPSHIP: Implement these
 /* eslint-disable no-unused-vars */
-function handleKeyDown(getState, setState) {}
 function handleKeyUp(getState, setState) {}
 function handleBlur(getState, setState) {}
 /* eslint-enable */

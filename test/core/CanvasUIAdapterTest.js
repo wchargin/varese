@@ -233,6 +233,41 @@ describe('CanvasUIAdapter', () => {
         });
     });
 
+    describe('handler onKeyDown', () => {
+        const {getBox, handlers} = create();
+        const makeEvent = (which, repeat = false) => ({ which, repeat });
+        it("should initialize 'keysDown' to an empty array", () =>
+            expect(getBox().keysDown).to.deep.equal([]));
+        it("should add a WASD key to 'keysDown'", () => {
+            handlers.onKeyDown(makeEvent(0x41));  // 'A'
+            expect(getBox().keysDown).to.deep.equal([0x41]);
+        });
+        it("shouldn't add a non-directional key to 'keysDown'", () => {
+            handlers.onKeyDown(makeEvent(0x42));  // 'B'
+            expect(getBox().keysDown).to.deep.equal([0x41]);
+        });
+        it("shouldn't add a mashed ('repeat') key to 'keysDown'", () => {
+            handlers.onKeyDown(makeEvent(0x44, true));  // 'D'
+            expect(getBox().keysDown).to.deep.equal([0x41]);
+        });
+        it("should add an arrow key to 'keysDown'", () => {
+            handlers.onKeyDown(makeEvent(0x28));  // 'Down'
+            expect(getBox().keysDown).to.deep.equal([0x41, 0x28]);
+        });
+        it("shouldn't add the most recent key again", () => {
+            handlers.onKeyDown(makeEvent(0x28));  // 'Down'
+            expect(getBox().keysDown).to.deep.equal([0x41, 0x28]);
+        });
+        it("shouldn't add a previous key again", () => {
+            handlers.onKeyDown(makeEvent(0x41));  // 'A'
+            expect(getBox().keysDown).to.deep.equal([0x41, 0x28]);
+        });
+        it("should add one more key, to make sure it's not broken", () => {
+            handlers.onKeyDown(makeEvent(0x44));  // 'D'
+            expect(getBox().keysDown).to.deep.equal([0x41, 0x28, 0x44]);
+        });
+    });
+
     describe('lifecycle mixin componentWillMount', () => {
         const {getBox, lifecycleMixins} = create();
         const newViewOptions = {
