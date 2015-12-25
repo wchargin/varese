@@ -73,36 +73,6 @@ export default class InfiniteCanvas extends Component {
         this._fastPositionToPitchesMemo = new Map();
     }
 
-    componentWillReceiveProps(newProps) {
-        // Some prop changes can invalidate these caches.
-        // We just clear them always for simplicity.
-        this._fastFindChordRootOffsetMemo.clear();  // <= rationalizer
-        this._fastPositionToPitchesMemo.clear();    // <= treeNumber, rootBass
-    }
-
-    _fastFindChordRootOffset(notes) {
-        // Ugly, but should work for our case (all integers).
-        const key = notes.join(",");
-        const memo = this._fastFindChordRootOffsetMemo;
-        if (!memo.has(key)) {
-            memo.set(key, findChordRootOffset(this.props.rationalizer, notes));
-        }
-        return memo.get(key);
-    }
-
-    _fastPositionToPitches(row, col) {
-        const key = `${row},${col}`;
-        const memo = this._fastPositionToPitchesMemo;
-        if (!memo.has(key)) {
-            const notes = positionToPitches(
-                this.props.viewOptions.treeNumber,
-                row, col,
-                this.props.viewOptions.rootBass);
-            memo.set(key, notes);
-        }
-        return memo.get(key);
-    }
-
     render() {
         return <canvas
             ref="canvas"
@@ -130,6 +100,13 @@ export default class InfiniteCanvas extends Component {
 
     componentDidMount() {
         this._draw();
+    }
+
+    componentWillReceiveProps(newProps) {
+        // Some prop changes can invalidate these caches.
+        // We just clear them always for simplicity.
+        this._fastFindChordRootOffsetMemo.clear();  // <= rationalizer
+        this._fastPositionToPitchesMemo.clear();    // <= treeNumber, rootBass
     }
 
     componentDidUpdate() {
@@ -299,6 +276,29 @@ export default class InfiniteCanvas extends Component {
         ctx.arc(x + r, y + h - r, r, p2, 2 * p2);
         ctx.lineTo(x, y + r);
         ctx.arc(x + r, y + r, r, 2 * p2, 3 * p2);
+    }
+
+    _fastFindChordRootOffset(notes) {
+        // Ugly, but should work for our case (all integers).
+        const key = notes.join(",");
+        const memo = this._fastFindChordRootOffsetMemo;
+        if (!memo.has(key)) {
+            memo.set(key, findChordRootOffset(this.props.rationalizer, notes));
+        }
+        return memo.get(key);
+    }
+
+    _fastPositionToPitches(row, col) {
+        const key = `${row},${col}`;
+        const memo = this._fastPositionToPitchesMemo;
+        if (!memo.has(key)) {
+            const notes = positionToPitches(
+                this.props.viewOptions.treeNumber,
+                row, col,
+                this.props.viewOptions.rootBass);
+            memo.set(key, notes);
+        }
+        return memo.get(key);
     }
 
 }
