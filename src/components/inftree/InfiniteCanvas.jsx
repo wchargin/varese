@@ -52,7 +52,7 @@ import {
     formatPitchesAndSemitones,
 } from '../../utils/DisplayUtils';
 
-import * as CanvasCore from '../../core/CanvasCore.jsx';
+import * as CanvasCore from '../../core/CanvasCore';
 
 export default class InfiniteCanvas extends Component {
 
