@@ -191,7 +191,11 @@ function componentWillReceiveProps(getState, setState, getCanvas, newProps) {
 }
 
 function componentDidUpdate(getState, setState, getCanvas) {
-    setState(resizeCanvas(getCanvas(), getState()));
+    const state = getState();
+    const newState = resizeCanvas(getCanvas(), state);
+    if (newState !== state) {
+        setState(newState);
+    }
 }
 
 function componentWillUnmount(getState, setState, getCanvas) {
@@ -261,6 +265,8 @@ function resizeCanvas(canvas, state) {
         canvas.width = width;
         const coreState = CanvasCore.setCanvasWidth(state.coreState, width);
         return { ...state, coreState };
+    } else {
+        return state;
     }
 }
 

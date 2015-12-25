@@ -565,6 +565,11 @@ describe('CanvasUIAdapter', () => {
             lifecycleMixins.componentDidUpdate.call({});
             expect(getBox().coreState.canvasWidth).to.equal(999);
         });
+        it("doesn't update the state when the width hasn't changed", () => {
+            const previous = getBox();
+            lifecycleMixins.componentDidUpdate.call({});
+            expect(getBox()).to.equal(previous);  // not deep equal!
+        });
     });
 
     describe('lifecycle mixin componentWillUnmount', () => {
