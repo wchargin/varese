@@ -51,8 +51,8 @@ export function mixInLifecycles(target, mixins) {
         const existing = target[name];
         if (typeof existing === 'function') {
             target[name] = function(...args) {
-                mixedInFunction(...args);
-                return existing(...args);
+                mixedInFunction.apply(this, args);
+                return existing.apply(this, args);
             };
         } else {
              target[name] = mixedInFunction;

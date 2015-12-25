@@ -95,11 +95,23 @@ describe('CanvasUIAdapter', () => {
             foo: () => push(12),
             bar: () => push(88),
             baz: () => push(97),
+            requireThisOnMixin: function() {
+                return this.quux;
+            },
+            requireThisOnOriginal: function() {
+                if (!this.quux) {
+                    throw new Error();
+                }
+            },
         };
         const target = {
             bar: () => push(36),
             baz: 101,
+            requireThisOnOriginal: function() {
+                return this.quux;
+            },
             quux: 17,
+            unrelated: 234,
         };
         it("completes without error", () => {
             mixInLifecycles(target, mixins);
@@ -120,8 +132,12 @@ describe('CanvasUIAdapter', () => {
             target.baz();
             expect(getBox()).to.deep.equal([97]);
         });
+        it("calls new functions with 'this' set", () =>
+            expect(target.requireThisOnMixin()).to.equal(17));
+        it("calls extended functions with 'this' set", () =>
+            expect(target.requireThisOnOriginal()).to.equal(17));
         it("doesn't overwrite unrelated propeties", () =>
-            expect(target).to.have.property('quux', 17));
+            expect(target).to.have.property('unrelated', 234));
     });
 
     describe('handler onMouseDown', () => {
