@@ -32,7 +32,7 @@ export function createHandlers(getState, setState) {
 }
 
 export function createLifecycleMixins(getState, setState, getCanvas) {
-    const link = fn => function(...args) {
+    const link = fn => function linkedLifecycleMixin(...args) {
         // note: not bound to lexical 'this' (which is probably undefined here)
         return fn.apply(this, [getState, setState, getCanvas, ...args]);
     };
