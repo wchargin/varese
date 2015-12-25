@@ -45,6 +45,21 @@ export function createLifecycleMixins(getState, setState, getCanvas) {
     };
 }
 
+export function mixInLifecycles(target, mixins) {
+    Object.keys(mixins).forEach(name => {
+        const mixedInFunction = mixins[name];
+        const existing = target[name];
+        if (typeof existing === 'function') {
+            target[name] = function(...args) {
+                mixedInFunction(...args);
+                return existing(...args);
+            };
+        } else {
+             target[name] = mixedInFunction;
+        }
+    });
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Event handlers

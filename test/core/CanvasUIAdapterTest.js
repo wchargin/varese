@@ -7,9 +7,10 @@ const {treeViewOptions: initialViewOptions} = initialReduxState;
 
 import * as CanvasCore from '../../src/core/CanvasCore';
 import {
+    initialState,
     createHandlers,
     createLifecycleMixins,
-    initialState,
+    mixInLifecycles,
 } from '../../src/core/CanvasUIAdapter';
 
 describe('CanvasUIAdapter', () => {
@@ -85,6 +86,42 @@ describe('CanvasUIAdapter', () => {
             Object.keys(lifecycleMixins).forEach(key =>
                 expect(lifecycleMixins[key]).to.be.a('function'));
         });
+    });
+
+    describe('#mixInLifecycles', () => {
+        const {getBox, setBox} = makeBox([]);
+        const push = elem => (setBox([...getBox(), elem]), getBox());
+        const mixins = {
+            foo: () => push(12),
+            bar: () => push(88),
+            baz: () => push(97),
+        };
+        const target = {
+            bar: () => push(36),
+            baz: 101,
+            quux: 17,
+        };
+        it("completes without error", () => {
+            mixInLifecycles(target, mixins);
+        });
+        it("adds entirely new functions", () => {
+            setBox([]);
+            target.foo();
+            expect(getBox()).to.deep.equal([12]);
+        });
+        it("left-composes to existing functions", () => {
+            setBox([]);
+            const result = target.bar();
+            expect(getBox()).to.deep.equal([88, 36]);
+            expect(getBox()).to.equal(result);
+        });
+        it("overwrites properties that had non-function values", () => {
+            setBox([]);
+            target.baz();
+            expect(getBox()).to.deep.equal([97]);
+        });
+        it("doesn't overwrite unrelated propeties", () =>
+            expect(target).to.have.property('quux', 17));
     });
 
     describe('handler onMouseDown', () => {
