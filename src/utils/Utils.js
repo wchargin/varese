@@ -103,11 +103,3 @@ export function arraysEqual(arr1, arr2, comparator = (a, b) => a === b) {
 export function flatten(arrays) {
     return Array.prototype.concat.apply([], arrays);
 }
-
-export default {
-    gcd,
-    buildArray,
-    range,
-    arraysEqual,
-    flatten,
-};
