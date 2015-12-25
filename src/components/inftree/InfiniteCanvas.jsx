@@ -198,6 +198,9 @@ export default class InfiniteCanvas extends Component {
         const width = parseInt(widthString.match(/(\d+)px/)[1], 10);
         if (width !== canvas.width) {
             canvas.width = width;
+            const coreState =
+                CanvasCore.setCanvasWidth(this.state.coreState, width);
+            this.setState({ coreState });
             return true;
         } else {
             return false;
@@ -446,11 +449,7 @@ export default class InfiniteCanvas extends Component {
         // TODO(william): Actually track coreState
         // instead of manufacturing it anew every frame.
         const coreState = {
-            canvasDimensions: {
-                width: canvas.width,
-                height: canvas.height,
-            },
-            viewOptions: this.props.viewOptions,
+            ...this.state.coreState,
             position: this.state.position,
             lastMouse: this.state.lastMouse,
             mouseDown: this.state.mouseDown,
