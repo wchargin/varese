@@ -156,6 +156,17 @@ export function getPanResult(state, canvasDeltaXY) {
 }
 
 /*
+ * Get the new position due to the provided pan (see 'getPanResult')
+ * and apply it to the state, returning the new state.
+ */
+export function performPan(state, canvasDeltaXY) {
+    return {
+        ...state,
+        position: getPanResult(state, canvasDeltaXY),
+    };
+}
+
+/*
  * Determine which rows should be painted in the current viewport.
  * This includes all rows with any node completely within bounds,
  * and up to one row direct above those rows

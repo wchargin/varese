@@ -241,6 +241,11 @@ describe('CanvasCore', () => {
         });
     });
 
+    // The heavy testing is in 'getPanResult'.
+    it("#performPan moves the viewport down", () =>
+        expect(CanvasCore.performPan(s0(), xy(0, 100)).position)
+            .to.deep.equal(xy(0, 1)));
+
     describe('#getRowsInView', () => {
         const {getRowsInView, maxSafeRow} = CanvasCore;
         it("should yield [0..4] for the initial viewport", () =>
