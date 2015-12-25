@@ -26,4 +26,19 @@ describe('TestUtils', () => {
         });
     });
 
+    describe('mocking', () => {
+        const {mocking} = TestUtils;
+        const target = { foo: 77 };
+        it("overwrites and restores a property that already exists", () => {
+            expect(target.foo).to.equal(77);
+            mocking(target, 'foo', 88, () => expect(target.foo).to.equal(88));
+            expect(target.foo).to.equal(77);
+        });
+        it("sets up and tears down a new property name", () => {
+            expect(target.foo).to.not.contain.key('bar');
+            mocking(target, 'bar', 88, () => expect(target.bar).to.equal(88));
+            expect(target.foo).to.not.contain.key('bar');
+        });
+    });
+
 });

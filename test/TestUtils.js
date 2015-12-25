@@ -41,3 +41,20 @@ export function makeBox(initialValue = null) {
         },
     };
 }
+
+/*
+ * Mock out a property while running a callback.
+ * Example usage: mocking(window, 'setInterval', mySetInterval, () => { ... }).
+ */
+export function mocking(target, propertyName, newValue, callback) {
+    const oldExisted = Object.prototype.hasOwnProperty.call(
+        target, propertyName);
+    const oldValue = target[propertyName];
+    target[propertyName] = newValue;
+    callback();
+    if (oldExisted) {
+        target[propertyName] = oldValue;
+    } else {
+        delete target[propertyName];
+    }
+}
