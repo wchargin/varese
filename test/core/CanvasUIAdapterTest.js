@@ -572,15 +572,8 @@ describe('CanvasUIAdapter', () => {
         };
         declareMochaMock(window, 'getComputedStyle', mockedGetComputedStyle);
 
-        // We'll use this box to store whatever event listener the mixin sets.
-        const {setBox: setListenerBox} = makeBox();
-        const mockedAddEventListener = (name, fn) => {
-            expect(name).to.equal('resize');
-            setListenerBox(fn);
-        };
-        declareMochaMock(window, 'addEventListener', mockedAddEventListener);
-
-        // We just ignore the 'setInterval' callback.
+        // We just ignore the 'addEventListener' and 'setInterval' callbacks.
+        declareMochaMock(window, 'addEventListener', () => {});
         declareMochaMock(window, 'setInterval', () => {});
 
         it("can still mount the component", () => {
