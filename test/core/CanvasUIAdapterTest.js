@@ -8,6 +8,8 @@ const {treeViewOptions: initialViewOptions} = initialReduxState;
 import * as CanvasCore from '../../src/core/CanvasCore';
 import {
     initialState,
+    getCoreAccessor,
+    getMouseAccessor,
     createHandlers,
     createLifecycleMixins,
     mixInLifecycles,
@@ -57,6 +59,32 @@ describe('CanvasUIAdapter', () => {
             expect(initialState(coreState))
                 .to.have.property('coreState')
                 .that.deep.equals(coreState));
+    });
+
+    describe('#getCoreAccessor', () => {
+        it("should access the initial core state", () => {
+            const coreState = s0();
+            const state = initialState(coreState);
+            const getState = () => state;
+            const getCoreState = getCoreAccessor(getState);
+            expect(getCoreState()).to.equal(coreState);
+        });
+    });
+
+    describe('#getMouseAccessor', () => {
+        it("should return 'null' for the initial mouse position", () => {
+            const state = initialState(s0());
+            const getState = () => state;
+            const getLastMouse = getMouseAccessor(getState);
+            expect(getLastMouse()).to.equal(null);
+        });
+        it("should return the new mouse position after a change", () => {
+            const {getBox, setBox} = makeBox(initialState(s0));
+            const getLastMouse = getMouseAccessor(getBox);
+            expect(getLastMouse()).to.equal(null);
+            setBox({ ...getBox(), lastMouse: xy(12, 34) });
+            expect(getLastMouse()).to.deep.equal(xy(12, 34));
+        });
     });
 
     describe('#createHandlers', () => {

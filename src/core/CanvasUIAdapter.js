@@ -17,6 +17,14 @@ export function initialState(coreState) {
     };
 }
 
+export function getCoreAccessor(getState) {
+    return () => getState().coreState;
+}
+
+export function getMouseAccessor(getState) {
+    return () => getState().lastMouse;
+}
+
 export function createHandlers(getState, setState) {
     const link = fn => fn.bind(this, getState, setState);
     return {
