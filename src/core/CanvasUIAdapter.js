@@ -23,6 +23,17 @@ export function createHandlers(getState, setState) {
     };
 }
 
+export function createLifecycleMixins(getState, setState, getCanvas) {
+    const link = fn => fn.bind(this, getState, setState, getCanvas);
+    return {
+        componentWillMount: link(componentWillMount),
+        componentDidMount: link(componentDidMount),
+        componentWillReceiveProps: link(componentWillReceiveProps),
+        componentDidUpdate: link(componentDidUpdate),
+        componentWillUnmount: link(componentWillUnmount),
+    };
+}
+
 function handleMouseDown(getState, setState) {
     setState({
         ...getState(),
@@ -89,4 +100,13 @@ function handleMouseLeave(getState, setState) {
 function handleKeyDown(getState, setState) {}
 function handleKeyUp(getState, setState) {}
 function handleBlur(getState, setState) {}
+/* eslint-enable */
+
+// TODO(william) STOPSHIP: Implement these
+/* eslint-disable no-unused-vars */
+function componentWillMount(getState, setState, getCanvas) {}
+function componentDidMount(getState, setState, getCanvas) {}
+function componentWillReceiveProps(getState, setState, getCanvas) {}
+function componentDidUpdate(getState, setState, getCanvas) {}
+function componentWillUnmount(getState, setState, getCanvas) {}
 /* eslint-enable */

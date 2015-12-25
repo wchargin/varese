@@ -6,7 +6,11 @@ import {initialState as initialReduxState} from '../TestData';
 const {treeViewOptions: initialViewOptions} = initialReduxState;
 
 import * as CanvasCore from '../../src/core/CanvasCore';
-import {createHandlers, initialState} from '../../src/core/CanvasUIAdapter';
+import {
+    createHandlers,
+    createLifecycleMixins,
+    initialState,
+} from '../../src/core/CanvasUIAdapter';
 
 describe('CanvasUIAdapter', () => {
     // Fix some dimensions so we get predictable results.
@@ -34,7 +38,15 @@ describe('CanvasUIAdapter', () => {
 
     const create = () => {
         const {getBox, setBox} = makeBox(initialState(s0()));
-        return { getBox, setBox, handlers: createHandlers(getBox, setBox) };
+        const canvas = { ...baseDimensions };
+        return {
+            getBox,
+            setBox,
+            canvas,
+            handlers: createHandlers(getBox, setBox),
+            lifecycleMixins:
+                createLifecycleMixins(getBox, setBox, () => canvas),
+        };
     };
 
     describe('#initialState', () => {
@@ -60,6 +72,21 @@ describe('CanvasUIAdapter', () => {
             const handlers = create().handlers;
             Object.keys(handlers).forEach(key =>
                 expect(handlers[key]).to.be.a('function'));
+        });
+    });
+
+    describe('#createLifecycleMixins', () => {
+        it("should be a function", () =>
+            expect(createLifecycleMixins).to.be.a('function'));
+        it("should return an object", () =>
+            expect(create()).to.be.an('object'));
+        it("should return an object with at least one property", () =>
+            expect(Object.keys(create().lifecycleMixins))
+            .to.have.length.at.least(1));
+        it("should return an object all of whose values are functions", () => {
+            const lifecycleMixins = create().lifecycleMixins;
+            Object.keys(lifecycleMixins).forEach(key =>
+                expect(lifecycleMixins[key]).to.be.a('function'));
         });
     });
 
