@@ -45,6 +45,7 @@ export default class TrichordView extends Component {
                     style: {
                         textAlign: "center",
                         display: "block",
+                        marginTop: -1,
                     },
                 }}
                 viewOptions={this.props.viewOptions}
