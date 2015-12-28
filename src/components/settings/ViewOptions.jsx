@@ -1,10 +1,8 @@
 import React, {Component, PropTypes} from 'react';
 
-import {pitchToName} from '../../core/PitchNames';
-
 import CustomPropTypes from '../CustomPropTypes';
 import LimitsOptions from './LimitsOptions';
-import SingleNoteInput from '../SingleNoteInput';
+import StackedNoteInput from '../StackedNoteInput';
 import {Table, Row, Cell, LabelCell, CheckboxCell} from './SettingsTable';
 
 /*
@@ -84,12 +82,12 @@ export default class ViewOptions extends Component {
                         />
                     </Cell>
                     <Cell>
-                        <SingleNoteInput
-                            value={values.rootBass}
-                            displayValue={pitchToName(
-                                values.rootBass, true, values.showOctaves)}
-                            onChange={value => handlers.onSetRootBass(value)}
+                        <StackedNoteInput
+                            value={[values.rootBass]}
+                            onChange={arr => handlers.onSetRootBass(arr[0])}
                             className="form-control"
+                            viewOptions={values}
+                            inputProps={{ className: "form-control", size: 3 }}
                         />
                     </Cell>
                 </Row>
