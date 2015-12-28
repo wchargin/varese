@@ -128,54 +128,6 @@ export default class TrichordView extends Component {
         </strong>;
     }
 
-    /*
-     * Parameters:
-     *   - 'noteIndex' is the index of the note that has changed,
-     *     where the bottom-most note in the chord has index 0;
-     *   - 'newNote' is the new value for that note,
-     *     as a number of semitones above middle C;
-     *   - 'displayText' is the text value of the input that changed,
-     *     which may need to be copied to a different input box.
-     */
-    _handleChange(noteIndex, newNote, displayText) {
-        this._updatePitch(noteIndex, newNote, displayText);
-    }
-
-    _updatePitch(noteIndex, newNote, maybeDisplayText) {
-        const {notes} = this.props;
-        const newNotes = [
-            ...notes.slice(0, noteIndex),
-            newNote,
-            ...notes.slice(noteIndex + 1),
-        ];
-
-        // Now here comes the tricky part.
-        // We need to sort the notes so the chord is still ascending,
-        // but if this causes the focus to switch---
-        // e.g., you edit the middle note and make it higher than the high note
-        // so that further edits to the same "thing"
-        // should actually change the high note---
-        // then we need to keep track of that.
-        const oldIndex = noteIndex;
-        const taggedNotes = newNotes.map((note, thisIndex) => ({
-            note,
-            isTarget: thisIndex === oldIndex,
-        }));
-        const notesAscending = [...taggedNotes].sort((a, b) =>
-            a.note - b.note);
-        const newIndex = notesAscending.findIndex(note => note.isTarget);
-
-        // Handle that case where a note's position in the chord has changed.
-        if (newIndex !== noteIndex) {
-            const oldRef = this.refs["note-" + oldIndex];
-            const newRef = this.refs["note-" + newIndex];
-            newRef.takeStateFrom(oldRef, maybeDisplayText);
-        }
-
-        // Finally, we can just discard the tagging information.
-        this.props.onChange(notesAscending.map(x => x.note));
-    }
-
 }
 TrichordView.propTypes = {
     rationalizer: PropTypes.func.isRequired,
