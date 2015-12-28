@@ -12,7 +12,7 @@ import CustomPropTypes from '../CustomPropTypes';
 
 import ActionBar from './ActionBar';
 import ChordEngraving from '../ChordEngraving';
-import SingleNoteInput from '../SingleNoteInput';
+import StackedNoteInput from '../StackedNoteInput';
 
 export default class TrichordView extends Component {
     constructor() {
@@ -36,22 +36,19 @@ export default class TrichordView extends Component {
         const {noteNames, semitoneNames} = formatPitchesAndSemitones(
             notes, this.props.viewOptions);
 
-        const noteViews = noteNames.map((name, index) => {
-            if (this.props.onChange) {
-                return <SingleNoteInput
-                    ref={"note-" + index}
-                    key={"note-" + index}
-                    type="text"
-                    displayValue={name}
-                    value={notesAscending[index]}
-                    style={{ textAlign: "center", width: "100%" }}
-                    onChange={(newPitch, displayText) =>
-                        this._handleChange(index, newPitch, displayText)}
-                />;
-            } else {
-                return <strong key={"note-" + index}>{name}</strong>;
-            }
-        });
+        const noteViews = this.props.onChange ?
+            <StackedNoteInput
+                value={notesAscending}
+                onChange={this.props.onChange}
+                style={{ display: "inline-block", width: "100%" }}
+                inputStyle={{ textAlign: "center", display: "block" }}
+                viewOptions={this.props.viewOptions}
+                key="edit-view"
+            /> :
+            (noteNames
+                .map((name, index) =>
+                     <strong key={"note-" + index}>{name}</strong>)
+                .slice().reverse());
 
         const rootView = this._renderRootView(notesAscending);
 
@@ -67,7 +64,7 @@ export default class TrichordView extends Component {
         };
 
         const lines = [
-            ...noteViews.slice().reverse(),      // show descending
+            noteViews,
             this.props.viewOptions.showRoots && rootView,
             ...semitoneViews.slice().reverse(),  // show descending
         ];
