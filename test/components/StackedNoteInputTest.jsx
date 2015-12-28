@@ -30,24 +30,28 @@ describe('StackedNoteInput', () => {
             onChange={() => {}}
             viewOptions={viewOptionsOctavesShown}
             style={{ outline: "thin red solid" }}
-            inputStyle={{ outline: "thick blue dotted" }}
+            inputProps={{ style: { outline: "thick blue dotted" } }}
         />);
         const div = scryManyWithTag(component, 'div')[0];
         expect(div.style.outline).to.equal("thin red solid");
     });
 
-    it("renders the input elements with the provided style", () => {
+    it("renders the input elements with the provided extra props", () => {
         const component = renderIntoDocument(<StackedNoteInput
             value={[1, 5, 8]}
             onChange={() => {}}
             viewOptions={viewOptionsOctavesShown}
             style={{ outline: "thin red solid" }}
-            inputStyle={{ outline: "thick blue dotted" }}
+            inputProps={{
+                style: { outline: "thick blue dotted" },
+                className: "magical",
+            }}
         />);
         const inputs = scryManyWithTag(component, 'input');
         expect(inputs.length).to.be.at.least(1);
         inputs.forEach(input => {
             expect(input.style.outline).to.equal("thick blue dotted");
+            expect(input.className).to.equal("magical");
         });
     });
 

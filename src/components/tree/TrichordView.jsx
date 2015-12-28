@@ -41,7 +41,12 @@ export default class TrichordView extends Component {
                 value={notesAscending}
                 onChange={this.props.onChange}
                 style={{ display: "inline-block", width: "100%" }}
-                inputStyle={{ textAlign: "center", display: "block" }}
+                inputProps={{
+                    style: {
+                        textAlign: "center",
+                        display: "block",
+                    },
+                }}
                 viewOptions={this.props.viewOptions}
                 key="edit-view"
             />] :

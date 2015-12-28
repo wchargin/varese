@@ -54,7 +54,7 @@ export default class StackedNoteInput extends Component {
             }}
             onKeyDown={e => this._handleKeyDown(e, index)}
             key={index}
-            style={this.props.inputStyle}
+            {...this.props.inputProps}
         />;
     }
 
@@ -162,5 +162,5 @@ StackedNoteInput.propTypes = {
     viewOptions: CustomPropTypes.viewOptions.isRequired,
     //
     style: PropTypes.object,        // optional
-    inputStyle: PropTypes.object,   // optional
+    inputProps: PropTypes.object,   // optional
 };
