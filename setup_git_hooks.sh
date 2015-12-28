@@ -16,5 +16,8 @@ if ! grep -x "$PRE_COMMIT_TEXT" "$PRE_COMMIT_FILE" 1>/dev/null 2>&1; then
 else
     echo 'Pre-commit hook already installed.'
 fi
+if [[ ! -x "$PRE_COMMIT_FILE" ]]; then
+    chmod +x "$PRE_COMMIT_FILE"
+fi
 
 echo 'Done.'
