@@ -234,4 +234,90 @@ describe('StackedNoteInput', () => {
         specs.forEach(runSpec);
     });
 
+    context("when pressing the arrow keys", () => {
+        const {getBox, setBox} = makeBox([0, 4, 7]);
+        const renderComponent = () => renderIntoDocument(<StackedNoteInput
+            value={getBox()}
+            onChange={setBox}
+            viewOptions={viewOptionsOctavesShown}
+        />);
+        const getInputs = (component) => scryManyWithTag(component, 'input');
+        const runSpec = (({
+            specName,
+            first = false,
+            blurInputIndex = null,
+            inputIndex,
+            newFocusedIndex = inputIndex,
+            event,
+            newNotes,
+            newTexts,
+        }) => {
+            it(specName, () => {
+                const inputs = getInputs(renderComponent());
+                if (blurInputIndex !== null) {
+                    Simulate.blur(inputs[blurInputIndex]);
+                }
+                if (first || blurInputIndex !== null) {
+                    Simulate.focus(inputs[inputIndex]);
+                }
+                Simulate.keyDown(inputs[inputIndex], event);
+                expect(getBox()).to.deep.equal(newNotes);
+                const rerenderedInputs = getInputs(renderComponent());
+                expect(rerenderedInputs.map(x => x.value))
+                    .to.deep.equal(newTexts);
+                expect(document.activeElement).to.equal(
+                    inputs[newFocusedIndex]);
+            });
+        });
+        const specs = [{
+            specName: "should raise a note by a semitone",
+            first: true,
+            inputIndex: 1,      // middle
+            event: { key: "ArrowUp" },
+            newNotes: [0, 5, 7],
+            newTexts: ["G4", "F4", "C4"],
+        }, {
+            specName: "should raise a note by another semitone",
+            inputIndex: 1,      // middle
+            event: { key: "ArrowUp" },
+            newNotes: [0, 6, 7],
+            newTexts: ["G4", "F\u266F4", "C4"],
+        }, {
+            specName: "should raise a note by an octave",
+            blurInputIndex: 1,  // middle
+            inputIndex: 0,      // top
+            event: { key: "ArrowUp", shiftKey: true },
+            newNotes: [0, 6, 19],
+            newTexts: ["G5", "F\u266F4", "C4"],
+        }, {
+            specName: "should lower a note by a semitone",
+            inputIndex: 0,      // top
+            event: { key: "ArrowDown" },
+            newNotes: [0, 6, 18],
+            newTexts: ["F\u266F5", "F\u266F4", "C4"],
+        }, {
+            specName: "should lower a note by another semitone",
+            inputIndex: 0,      // top
+            event: { key: "ArrowDown" },
+            newNotes: [0, 6, 17],
+            newTexts: ["F5", "F\u266F4", "C4"],
+        }, {
+            specName: "should lower a note by an octave",
+            blurInputIndex: 0,  // top
+            inputIndex: 2,      // bottom
+            event: { key: "ArrowDown", shiftKey: true },
+            newNotes: [-12, 6, 17],
+            newTexts: ["F5", "F\u266F4", "C3"],
+        }, {
+            specName: "should lower a note by an octave, across another note",
+            blurInputIndex: 2,  // bottom
+            inputIndex: 0,      // top
+            event: { key: "ArrowDown", shiftKey: true },
+            newNotes: [-12, 5, 6],
+            newTexts: ["F\u266F4", "F4", "C3"],
+            newFocusedIndex: 1,     // used to be top; is now middle
+        }];
+        specs.forEach(runSpec);
+    });
+
 });

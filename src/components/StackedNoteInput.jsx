@@ -52,6 +52,7 @@ export default class StackedNoteInput extends Component {
                     });
                 }
             }}
+            onKeyDown={e => this._handleKeyDown(e, index)}
             key={index}
             style={this.props.inputStyle}
         />;
@@ -97,6 +98,27 @@ export default class StackedNoteInput extends Component {
             // Parse succeeded. Update the note in the chord.
             this._updateNote(newNote, newText, noteIndex);
         }
+    }
+
+    _handleKeyDown(e, noteIndex) {
+        const direction = ({
+            "ArrowUp": +1,
+            "ArrowDown": -1,
+        })[e.key];
+
+        // Ignore other keys.
+        if (direction === undefined) {
+            return;
+        }
+
+        // Don't move the cursor around
+        // (and don't select everything when holding shift).
+        e.preventDefault();
+
+        // Jump full octaves when holding shift.
+        const delta = e.shiftKey ? direction * 12 : direction;
+        const newNote = this.props.value[noteIndex] + delta;
+        this._updateNote(newNote, pitchToName(newNote, true, true), noteIndex);
     }
 
     _updateNote(newNote, newText, noteIndex) {
