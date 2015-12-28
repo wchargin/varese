@@ -93,8 +93,13 @@ export default class StackedNoteInput extends Component {
                 focusedText: newText,
             });
             return;
+        } else {
+            // Parse succeeded. Update the note in the chord.
+            this._updateNote(newNote, newText, noteIndex);
         }
+    }
 
+    _updateNote(newNote, newText, noteIndex) {
         // Replace the old note in the chord.
         const notes = this.props.value;
         const newNotes = [
