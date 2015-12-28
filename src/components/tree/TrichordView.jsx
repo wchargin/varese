@@ -37,14 +37,14 @@ export default class TrichordView extends Component {
             notes, this.props.viewOptions);
 
         const noteViews = this.props.onChange ?
-            <StackedNoteInput
+            [<StackedNoteInput
                 value={notesAscending}
                 onChange={this.props.onChange}
                 style={{ display: "inline-block", width: "100%" }}
                 inputStyle={{ textAlign: "center", display: "block" }}
                 viewOptions={this.props.viewOptions}
                 key="edit-view"
-            /> :
+            />] :
             (noteNames
                 .map((name, index) =>
                      <strong key={"note-" + index}>{name}</strong>)
@@ -64,7 +64,7 @@ export default class TrichordView extends Component {
         };
 
         const lines = [
-            noteViews,
+            ...noteViews,
             this.props.viewOptions.showRoots && rootView,
             ...semitoneViews.slice().reverse(),  // show descending
         ];
