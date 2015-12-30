@@ -4,6 +4,8 @@ import {expect} from 'chai';
 import Rational from '../../src/core/Rational';
 import HarmonicSeries from '../../src/core/HarmonicSeries';
 
+import {mocking} from '../TestUtils';
+
 // NOTE: This next dependency is implemented in terms of HarmonicSeries!
 // This isn't necessarily a problem, but it is something to be aware of.
 import {
@@ -110,6 +112,17 @@ describe('HarmonicSeries', () => {
         const badRationalizer = HarmonicSeries.extendRationalizer(badRatios);
         it("should fail when one of the ratios is zero",
             testBad(badRationalizer, 10, 16, "zero_ratio"));
+
+        // Inject an actual, unexpected error into the call stack
+        // and make sure it's not silenced.
+        it("should allow unexpected errors to be actually thrown", () =>
+            mocking(Rational.prototype, 'toNumber',
+                () => {
+                    throw new Error("???");
+                },
+                () => {
+                    expect(() => findRootOffset(cr, 3, 7)).to.throw("???");
+                }));
     });
 
     describe("#findChordRootOffset", () => {
