@@ -470,6 +470,21 @@ describe('CanvasUIAdapter', () => {
                 expect(next.y).to.be.greaterThan(previous.y);
                 expect(next.x).to.equal(previous.x);
             });
+            it("stops moving while the mouse is pressed", () => {
+                const previous = getPosition();
+                handlers.onMouseDown({ });
+                getIntervalBox()();
+                const next = getPosition();
+                expect(next).to.deep.equal(previous);
+            });
+            it("moves again once the mouse is released", () => {
+                const previous = getPosition();
+                handlers.onMouseUp({ });
+                getIntervalBox()();
+                const next = getPosition();
+                expect(next.y).to.be.greaterThan(previous.y);
+                expect(next.x).to.equal(previous.x);
+            });
             it("moves in two directions at once", () => {
                 const previous = getPosition();
                 handlers.onKeyDown({ which: 0x41, repeat: false });  // 'A'
