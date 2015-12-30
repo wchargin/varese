@@ -1,3 +1,0 @@
---compilers js:babel-register test/TestEnvironmentSetup.js
-test/TestEnvironmentSetup.js
---reporter dot
