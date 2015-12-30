@@ -51,6 +51,6 @@ Page.defaultProps = {
     links: [
         { path: "calculator", name: "Root calculator" },
         { path: "tree", name: "Tree explorer" },
-        { path: "infinite-tree", name: "Infinite tree", flag: "beta" },
+        { path: "infinite-tree", name: "Infinite tree" },
     ],
 };

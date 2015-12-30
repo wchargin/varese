@@ -24,10 +24,6 @@ class InfiniteTreeExplorer extends Component {
         return <Page path="infinite-tree">
             <h1>
                 Infinite chord tree explorer
-                {" "}
-                <span style={{ color: "red", fontSize: "75%" }}>
-                    {"beta".toUpperCase()}
-                </span>
             </h1>
             <ViewOptions
                 infinite={true}
