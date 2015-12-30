@@ -6,7 +6,7 @@
  * Khan Academy's LocalStore module,
  * and also KaVideoPlayer's SafeLocalStore module.
  */
-const LocalStore = {
+export default {
     // Bump this to expire all old values.
     version: 1,
     keyPrefix: "varese",
@@ -82,5 +82,3 @@ const LocalStore = {
     },
 
 };
-window.LocalStore = LocalStore;
-export default LocalStore;
