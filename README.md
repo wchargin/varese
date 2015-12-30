@@ -1,4 +1,4 @@
-# [Varèse][Varese]-inspired pitch space tools [![Build status](https://travis-ci.org/WChargin/varese.svg?branch=master)](https://travis-ci.org/WChargin/varese)
+# [Varèse][Varese]-inspired pitch space tools [![Build status](https://travis-ci.org/WChargin/varese.svg?branch=master)](https://travis-ci.org/WChargin/varese) [![Coverage Status](https://coveralls.io/repos/WChargin/varese/badge.svg?branch=master&service=github)](https://coveralls.io/github/WChargin/varese?branch=master)
 
   [Varese]: https://en.wikipedia.org/wiki/Edgard_Var%C3%A8se
 
