@@ -14,7 +14,7 @@ import {initialState} from '../TestData';
 import StackedNoteInput from '../../src/components/StackedNoteInput';
 
 describe('StackedNoteInput', () => {
-    const baseViewOptions = initialState.viewOptions;
+    const baseViewOptions = initialState.treeViewOptions;
     const viewOptionsOctavesShown = {
         ...baseViewOptions,
         showOctaves: true,
