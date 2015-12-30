@@ -324,4 +324,18 @@ describe('StackedNoteInput', () => {
         specs.forEach(runSpec);
     });
 
+    it("should ignore when non-arrow keys are pressed", () => {
+        const {getBox, setBox} = makeBox([0, 4, 7]);
+        const component = renderIntoDocument(<StackedNoteInput
+            value={getBox()}
+            onChange={setBox}
+            viewOptions={viewOptionsOctavesShown}
+        />);
+        const input = scryManyWithTag(component, 'input')[1];
+        ["A", "W", "Space", "Enter"].forEach(key => {
+            Simulate.keyDown(input, { key, repeat: false });
+            expect(getBox()).to.deep.equal([0, 4, 7]);
+        });
+    });
+
 });
