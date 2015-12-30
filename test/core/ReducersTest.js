@@ -264,4 +264,12 @@ describe('reducer', () => {
 
     });
 
+    it("passes the state through unknown actions", () => {
+        const state = { foo: 234, baz: "bar" };
+        const event = {
+            type: "DEFINITELY_NOT_REAL",
+        };
+        expect(reducer(state, event)).to.equal(state);
+    });
+
 });
