@@ -105,10 +105,8 @@ describe('TextUtils', () => {
             expect(list([8, 9])).to.equal("8 and 9"));
         it("works for a 1-list", () =>
             expect(list([10])).to.equal("10"));
-
-        // The empty list is intentionally not tested
-        // because the behavior is roughly unspecified.
-
+        it("works for a 0-list, returning the empty string", () =>
+           expect(list([])).to.equal(""));
     });
 
 });
