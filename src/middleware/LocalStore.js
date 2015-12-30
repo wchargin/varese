@@ -1,5 +1,11 @@
-// Borrowed heavily from Khan Academy's LocalStore
-// and KaVideoPlayer's SafeLocalStore.
+/*
+ * A simple abstraction over 'localStorage'
+ * to provide transparent JSON serialization and deserialization.
+ *
+ * The implementation is borrowed heavily from
+ * Khan Academy's LocalStore module,
+ * and also KaVideoPlayer's SafeLocalStore module.
+ */
 const LocalStore = {
     // Bump this to expire all old values.
     version: 1,
@@ -26,8 +32,8 @@ const LocalStore = {
         } catch (e) {
             // If we had trouble retrieving, like FF's NS_FILE_CORRUPTED:
             // http://stackoverflow.com/q/18877643/
+            return whenUnavailable;
         }
-        return null;
     },
 
     set(key, data) {
@@ -39,13 +45,8 @@ const LocalStore = {
         try {
             window.localStorage[this.cacheKey(key)] = stringified;
         } catch (e) {
-            // I'll never go over the limit for this app, right?
-            // (yeah, yeah, famous last words)
-            if (window.console) {
-                /* eslint-disable no-console */
-                console.warn(e);
-                /* eslint-enabled */
-            }
+            // Probably went over the storage limit...that's not good.
+            throw e;
         }
     },
 
