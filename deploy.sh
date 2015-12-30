@@ -82,7 +82,7 @@ cp -r "$EXPLODE"/* "$TMPDIR"
 git checkout gh-pages
 cp -r "$TMPDIR"/* .
 git add "${STAGE[@]}"
-git commit -m "Deploy: $SOURCE_COMMIT"
+git commit --no-verify -m "Deploy: $SOURCE_COMMIT"
 
 echo
 msg="Please review the build output (index.html) now. Do you want to deploy?"
