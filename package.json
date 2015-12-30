@@ -11,6 +11,7 @@
     "unit-test": "mocha --compilers js:babel-register test/TestEnvironmentSetup.js 'test/**/*.@(js|jsx)' -R dot",
     "lint": "node node_modules/eslint/bin/eslint.js src test --ext '.js,.jsx'",
     "coverage": "babel-node ./node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha -- test/TestEnvironmentSetup.js 'test/**/*.@(js|jsx)' -R dot",
+    "travis-coveralls": "npm run coverage && cat ./coverage/lcov.info | coveralls",
     "test": "npm run lint && npm run unit-test"
   },
   "babel": {
@@ -42,6 +43,7 @@
     "babel-preset-react": "^6.3.13",
     "babel-register": "^6.3.13",
     "chai": "^3.4.1",
+    "coveralls": "^2.11.6",
     "eslint": "^1.10.3",
     "eslint-plugin-react": "^3.11.3",
     "jsdom": "^3.1.2",
