@@ -76,6 +76,48 @@ describe('TrichordView', () => {
         verifyNodes(strongs, ["G", "E", "C", "C"]);
     });
 
+    context("when the chord is out of limits", () => {
+        const notes = [0, 4, 888];
+        const viewOptions = {
+            ...baseViewOptions,
+            limits: {
+                ...baseViewOptions.limits,
+                maxCombinedEnabled: true,
+                maxCombined: 24,
+            },
+        };
+        const props = {
+            ...baseProps,
+            viewOptions,
+            notes,
+        };
+        const isTransparent = element => {
+            const {opacity} = element.style;
+            return 0 < opacity && opacity < 1;
+        };
+        it("renders a transparent view", () => {
+            const component = renderIntoDocument(<TrichordView {...props} />);
+            const divs = scryManyWithTag(component, 'div');
+            expect(divs.filter(isTransparent)).to.have.length(1);
+        });
+        it("renders a transparent editor", () => {
+            const component = renderIntoDocument(<TrichordView
+                {...props}
+                onChange={() => {}}
+            />);
+            const divs = scryManyWithTag(component, 'div');
+            expect(divs.filter(isTransparent)).to.have.length(1);
+        });
+        it("renders a transparent button", () => {
+            const component = renderIntoDocument(<TrichordView
+                {...props}
+                onClick={() => {}}
+            />);
+            const button = findOneWithTag(component, 'button');
+            expect(button).to.satisfy(isTransparent);
+        });
+    });
+
     it("pretty-prints notes and roots", () => {
         const component = renderIntoDocument(<TrichordView
             {...baseProps}
