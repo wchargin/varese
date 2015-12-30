@@ -18,6 +18,7 @@ import {describe, it} from 'mocha';
 import {expect} from 'chai';
 
 import React, {Component} from 'react';
+import Vex from 'vexflow';  // to mock things out
 
 import {
     renderIntoDocument,
@@ -40,14 +41,18 @@ describe('InfiniteCanvas', () => {
     propsToMockAsNoop.forEach(prop => declareMochaMock(window, prop, noop));
     declareMochaMock(window, 'getComputedStyle', () => ({ width: "720px" }));
     const canvasMockClassName = 'mocked-canvas-component';
+    const dimensions = {
+        width: 720,
+        height: initialState.treeViewOptions.infiniteHeight || 480,
+    };
     class CanvasMock extends Component {
         render() {
             return <div className={canvasMockClassName} />;
         }
         constructor() {
             super();
-            this.width = 720;
-            this.height = initialState.treeViewOptions.infiniteHeight || 480;
+            this.width = dimensions.width;
+            this.height = dimensions.height;
         }
         getContext() {
             return {
@@ -59,7 +64,7 @@ describe('InfiniteCanvas', () => {
                 fillStyle: '',
                 fillText: noop,
                 lineTo: noop,
-                measureText: () => 100,
+                measureText: () => ({ width: 100 }),
                 moveTo: noop,
                 stroke: noop,
                 strokeStyle: '',
@@ -118,5 +123,59 @@ describe('InfiniteCanvas', () => {
         },
     }];
     specs.forEach(runSpec);
+
+    describe("for engravings", () => {
+        declareMochaMock(Vex.Flow, 'Renderer', class {
+            getContext() {
+                return { provenance: "mocked Vex.Flow.Renderer#getContext()" };
+            }
+            static get Backends() {
+                return { CANVAS: null };
+            }
+        });
+        declareMochaMock(Vex.Flow, 'Stave', class {
+            addClef() {
+                return this;
+            }
+            setContext() {
+                return this;
+            }
+            draw() {
+            }
+        });
+        declareMochaMock(Vex.Flow.Formatter, 'FormatAndDraw', () => { });
+        const verify = (position, newViewOptions = {}) => {
+            const element = <InfiniteCanvas
+                viewOptions={{
+                    ...baseViewOptions,
+                    ...newViewOptions,
+                }}
+                rationalizer={canonicalRationalizer}
+            />;
+            const component = renderIntoDocument(element);
+            component._getLastMouse = () => position;
+            component.setState(component.state);
+            expect(scryManyWithClass(component, canvasMockClassName))
+                .to.have.length(1);
+        };
+        it("should render a hover engraving to the right", () => {
+            const position = {
+                x: dimensions.width * 5 / 6,
+                y: 30 + dimensions.height / baseViewOptions.infiniteLevels,
+            };
+            verify(position);
+        });
+        it("should render a hover engraving to the left", () => {
+            const position = {
+                x: dimensions.width * 1 / 6,
+                y: 30 + dimensions.height / baseViewOptions.infiniteLevels,
+            };
+            verify(position);
+        });
+        it("should render a hover engraving due to 'alwaysEngrave'", () => {
+            const position = { x: 0, y: 0 };
+            verify(position, { alwaysEngrave: true });
+        });
+    });
 
 });
