@@ -20,7 +20,8 @@ describe('VexFlowUtils', () => {
             }));
         }
 
-        const makeCTriad = () => pitchesToStaveNote([0, 4, 7]);
+        const makeCTriad = (duration = undefined) =>
+            pitchesToStaveNote([0, 4, 7], duration);
         it("generates the correct notes for a middle C major triad", () =>
             expect(makeCTriad().getKeys()).to.deep.equal(
                 ["c/4", "e/4", "g/4"]));
@@ -44,6 +45,9 @@ describe('VexFlowUtils', () => {
                 ["c/3", "c/4", "e/5"]));
         it("adds no accidentals to this particular chord", () =>
             expect(getAccidentals(makeWide())).to.deep.equal([]));
+
+        it("allows specifying a non-whole-note duration", () =>
+            expect(makeCTriad('q').duration).to.equal('q'));
     });
 
 });
