@@ -178,4 +178,35 @@ describe('InfiniteCanvas', () => {
         });
     });
 
+    it("can receive new props without error", () => {
+        class StatefulWrapper extends Component {
+            constructor() {
+                super();
+                this.state = {
+                    newViewOptions: {},
+                };
+            }
+            render() {
+                return <InfiniteCanvas
+                    viewOptions={{
+                        ...baseViewOptions,
+                        ...this.state.newViewOptions,
+                    }}
+                    rationalizer={canonicalRationalizer}
+                />;
+            }
+        }
+        const element = <StatefulWrapper />;
+        const component = renderIntoDocument(element);
+        expect(scryManyWithClass(component, canvasMockClassName))
+            .to.have.length(1);
+        component.setState({
+            newViewOptions: {
+                infiniteLevels: 4,
+            },
+        });
+        expect(scryManyWithClass(component, canvasMockClassName))
+            .to.have.length(1);
+    });
+
 });
