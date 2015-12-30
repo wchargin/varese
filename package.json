@@ -7,7 +7,7 @@
   "scripts": {
     "start": "webpack-dev-server",
     "build": "NODE_ENV=production webpack",
-    "test-just": "mocha --compilers js:babel-register test/TestEnvironmentSetup.js -R dot",
+    "test-just": "mocha --compilers js:babel-register test/TestEnvironmentSetup.js -R spec",
     "unit-test": "mocha --compilers js:babel-register test/TestEnvironmentSetup.js 'test/**/*.@(js|jsx)' -R dot",
     "lint": "node node_modules/eslint/bin/eslint.js src test --ext '.js,.jsx'",
     "coverage": "babel-node ./node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha -- test/TestEnvironmentSetup.js 'test/**/*.@(js|jsx)' -R dot",
