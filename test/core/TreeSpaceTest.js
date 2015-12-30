@@ -18,6 +18,8 @@ describe('TreeSpace', () => {
         it("finds the RRR child of the root", test(3, 7, [r, r, r]));
         it("returns null when the column is too small", test(3, -1, null));
         it("returns null when the column is too big", test(3, 8, null));
+        it("works with default arguments of 0 and 1", () =>
+            expect(positionToPath(3, 2)).to.deep.equal([0, 1, 0]));
     });
 
     describe('#positionToPitches', () => {
