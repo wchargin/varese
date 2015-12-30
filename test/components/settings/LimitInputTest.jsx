@@ -69,13 +69,27 @@ describe('LimitInput', () => {
     });
 
     it("disables spinners exactly when they should be disabled", () => {
-        const component = renderIntoDocument(<LimitInput
-            {...makeBoxesAndProps().props}
-        />);
-        const inputs = scryManyWithTag(component, 'input');
-        const spinners = getSpinners(inputs);
-        expect(spinners[0].disabled).to.equal(true);
-        expect(spinners[1].disabled).to.equal(false);
+        {
+            const component = renderIntoDocument(<LimitInput
+                {...makeBoxesAndProps().props}
+            />);
+            const inputs = scryManyWithTag(component, 'input');
+            const spinners = getSpinners(inputs);
+            expect(spinners[0].disabled).to.equal(true);
+            expect(spinners[1].disabled).to.equal(false);
+        }
+        {
+            const component = renderIntoDocument(<LimitInput
+                {...makeBoxesAndProps({
+                    minEnabled: true,
+                    maxEnabled: false,
+                }).props}
+            />);
+            const inputs = scryManyWithTag(component, 'input');
+            const spinners = getSpinners(inputs);
+            expect(spinners[0].disabled).to.equal(false);
+            expect(spinners[1].disabled).to.equal(true);
+        }
     });
 
     it("renders an empty value when a spinner is disabled", () => {
