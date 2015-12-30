@@ -46,9 +46,13 @@ export default class ChordInput extends Component {
                 }}
                 spellCheck={false}
             />
-            <span style={{
-                marginLeft: 10,
-            }}>{this.state.error}</span>
+            {this.state.error && <span
+                className="error-message"
+                style={{
+                    marginLeft: 10,
+                }}>
+                    {this.state.error}
+                </span>}
         </div>;
     }
 
