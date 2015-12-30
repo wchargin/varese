@@ -54,6 +54,18 @@ describe('reducer', () => {
             expect(ratios3[8]).to.deep.equal(r8);
             expect(ratios3[9]).to.deep.equal(ratios1[9]);
         });
+
+        it("throws when the ratio index is negative", () =>
+            expect(() => reducer(state3, Actions.setAcousticRatio(-1, r6)))
+                .to.throw(/index/));
+
+        it("throws when the ratio index is 11 or higher", () =>
+            expect(() => reducer(state3, Actions.setAcousticRatio(11, r6)))
+                .to.throw(/index/));
+
+        it("throws when the provided ratio is not a Rational", () =>
+            expect(() => reducer(state3, Actions.setAcousticRatio(3, 0.5)))
+                .to.throw(/Rational/));
     });
 
     it(":SET_INFINITE_TREE_LEVELS sets the infinite tree levels",

@@ -42,7 +42,7 @@ function setAcousticRatio(state, index, ratio) {
     const {acousticRatios} = state;
     if (index < 0 || index >= acousticRatios.length) {
         throw new Error(
-            `acoustic ratio is out of bounds: ` +
+            `acoustic ratio index is out of bounds: ` +
             `got ${index}, but array length is ${acousticRatios.length}`);
     }
     if (!(ratio instanceof Rational)) {
