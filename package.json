@@ -8,8 +8,9 @@
     "start": "webpack-dev-server",
     "build": "NODE_ENV=production webpack",
     "test-just": "mocha --compilers js:babel-register test/TestEnvironmentSetup.js",
-    "test": "npm run test-just -- 'test/**/*.@(js|jsx)'",
-    "lint": "node node_modules/eslint/bin/eslint.js src test --ext '.js,.jsx'"
+    "unit-test": "mocha --compilers js:babel-register test/TestEnvironmentSetup.js 'test/**/*.@(js|jsx)'",
+    "lint": "node node_modules/eslint/bin/eslint.js src test --ext '.js,.jsx'",
+    "test": "npm run lint && npm run unit-test"
   },
   "babel": {
     "ignore": [
