@@ -50,11 +50,11 @@
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
-    "history": "1.13.x",
+    "history": "1.17.0",
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
     "react-redux": "^4.0.0",
-    "react-router": "^1.0.2",
+    "react-router": "1.0.3",
     "redux": "^3.0.4",
     "vexflow": "^1.2.36"
   }
