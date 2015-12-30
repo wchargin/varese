@@ -1,7 +1,7 @@
 /*
  * This is a *very* minimal test for InfiniteCanvas;
  * it just ensures that the component renders without error
- * when passed the default view options and canonical rationalizer.
+ * when passed a variety of different sets of 'viewOptions'.
  * The main logic tests are in:
  *      test/core/CanvasCoreTest.js
  *      test/core/CanvasUIAdapterTest.js
@@ -76,14 +76,47 @@ describe('InfiniteCanvas', () => {
         return originalCreateElement.apply(React, newArgs);
     });
 
-    it("should render a <canvas>", () => {
-        const element = <InfiniteCanvas
-            viewOptions={initialState.treeViewOptions}
-            rationalizer={canonicalRationalizer}
-        />;
-        const component = renderIntoDocument(element);
-        expect(scryManyWithClass(component, canvasMockClassName))
-            .to.have.length(1);
-    });
+    const baseViewOptions = initialState.treeViewOptions;
+    const runSpec = ({ when, newViewOptions }) => {
+        const suffix = when === null ? '' : ` when ${when}`;
+        const specName = `should render a <canvas>${suffix}`;
+        const viewOptions = {
+            ...baseViewOptions,
+            ...newViewOptions,
+        };
+        it(specName, () => {
+            const element = <InfiniteCanvas
+                viewOptions={viewOptions}
+                rationalizer={canonicalRationalizer}
+            />;
+            const component = renderIntoDocument(element);
+            expect(scryManyWithClass(component, canvasMockClassName))
+                .to.have.length(1);
+        });
+    };
+    const specs = [{
+        when: null,
+        newViewOptions: {},
+    }, {
+        when: "'showRoots' has been changed",
+        newViewOptions: { showRoots: !baseViewOptions.showRoots },
+    }, {
+        when: "'highQuality' has been changed",
+        newViewOptions: { highQuality: !baseViewOptions.highQuality },
+    }, {
+        when: "'rainbowFactor' has been changed",
+        newViewOptions: { rainbowFactor: 0.2 - baseViewOptions.rainbowFactor },
+    }, {
+        when: "a chord is invisible",
+        newViewOptions: {
+            treeNumber: 1,
+            limits: {
+                ...baseViewOptions.limits,
+                minCombined: 88,
+                minCombinedEnabled: true,
+            },
+        },
+    }];
+    specs.forEach(runSpec);
 
 });
