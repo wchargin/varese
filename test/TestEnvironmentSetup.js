@@ -12,4 +12,3 @@ Object.keys(window).forEach((key) => {
   }
 });
 
-require("babel-polyfill");

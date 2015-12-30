@@ -10,6 +10,7 @@
     "test-just": "mocha --compilers js:babel-register test/TestEnvironmentSetup.js",
     "unit-test": "mocha --compilers js:babel-register test/TestEnvironmentSetup.js 'test/**/*.@(js|jsx)'",
     "lint": "node node_modules/eslint/bin/eslint.js src test --ext '.js,.jsx'",
+    "coverage": "babel-node ./node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha -- test/TestEnvironmentSetup.js 'test/**/*.@(js|jsx)'",
     "test": "npm run lint && npm run unit-test"
   },
   "babel": {
@@ -30,7 +31,9 @@
   "author": "William Chargin",
   "license": "MIT",
   "devDependencies": {
+    "babel-cli": "^6.3.17",
     "babel-core": "^6.3.15",
+    "babel-istanbul": "^0.5.9",
     "babel-loader": "^6.2.0",
     "babel-plugin-syntax-object-rest-spread": "^6.3.13",
     "babel-plugin-transform-object-rest-spread": "^6.3.13",
