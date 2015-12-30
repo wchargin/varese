@@ -1,7 +1,6 @@
-# [Varèse][Varese]-inspired pitch space tools ![Travis status][]
+# [Varèse][Varese]-inspired pitch space tools [![Build status](https://travis-ci.org/WChargin/varese.svg?branch=master)](https://travis-ci.org/WChargin/varese)
 
   [Varese]: https://en.wikipedia.org/wiki/Edgard_Var%C3%A8se
-  [Travis status]: https://travis-ci.org/WChargin/varese.svg?branch=master
 
 ## What?
 
