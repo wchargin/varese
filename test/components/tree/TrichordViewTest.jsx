@@ -2,16 +2,19 @@ import {describe, describe as context, it} from 'mocha';
 import {expect} from 'chai';
 
 import React from 'react';
+import {scryRenderedComponentsWithType} from 'react-addons-test-utils';
 import {
     Simulate,
     renderIntoDocument,
     findOneWithTag,
     scryManyWithTag,
     makeBox,
+    declareMochaMock,
 } from '../../TestUtils';
 import {initialState, canonicalRationalizer} from '../../TestData';
 
 import TrichordView from '../../../src/components/tree/TrichordView';
+import ChordEngraving from '../../../src/components/ChordEngraving';
 
 describe('TrichordView', () => {
 
@@ -185,6 +188,33 @@ describe('TrichordView', () => {
             expect(getBox()).to.equal(null);
             Simulate.click(infoldButton);
             expect(getBox()).to.deep.equal([0, 1, 4]);  // was [0, 4, 7]
+        });
+    });
+
+    context("regarding the engraving", () => {
+        // This tries to do some stuff with SVG bounding boxes,
+        // which isn't implemented in JSDom (which is fine).
+        declareMochaMock(ChordEngraving.prototype, '_renderNote', () => {});
+        const renderComponent = () => renderIntoDocument(<TrichordView
+            {...baseProps}
+            onClick={() => {}}
+        />);
+        const findTarget = component => scryManyWithTag(component, 'div')[0];
+        const findEngravings = component =>
+            scryRenderedComponentsWithType(component, ChordEngraving);
+        it("shows an engraving on mouseEnter", () => {
+            const component = renderComponent();
+            expect(findEngravings(component)).to.have.length(0);
+            Simulate.mouseEnter(findTarget(component));
+            expect(findEngravings(component)).to.have.length(1);
+        });
+        it("hides an engraving on mouseLeave", () => {
+            const component = renderComponent();
+            expect(findEngravings(component)).to.have.length(0);
+            Simulate.mouseEnter(findTarget(component));
+            expect(findEngravings(component)).to.have.length(1);
+            Simulate.mouseLeave(findTarget(component));
+            expect(findEngravings(component)).to.have.length(0);
         });
     });
 
