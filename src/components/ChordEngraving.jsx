@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 
 import Vex from 'vexflow';
+import {withinEngravingRange} from '../utils/DisplayUtils';
 import {pitchesToStaveNote} from '../utils/VexFlowUtils';
 
 /*
@@ -26,15 +27,8 @@ export default class ChordEngraving extends Component {
         }
     }
 
-    static withinRange(notes) {
-        const [pianoMin, pianoMax] = [-40, 48];
-        const leeway = 24;
-        const [min, max] = [pianoMin - leeway, pianoMax + leeway];
-        return notes.every(x => min < x && x < max);
-    }
-
     _shouldRenderNote() {
-        return ChordEngraving.withinRange(this.props.notes);
+        return withinEngravingRange(this.props.notes);
     }
 
     componentDidMount() {

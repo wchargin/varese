@@ -34,6 +34,13 @@ export function withinLimits(notes, limits) {
     return true;
 }
 
+export function withinEngravingRange(notes) {
+    const [pianoMin, pianoMax] = [-40, 48];
+    const leeway = 24;
+    const [min, max] = [pianoMin - leeway, pianoMax + leeway];
+    return notes.every(x => min < x && x < max);
+}
+
 /*
  * Given a result of HarmonicSeries.findChordRootOffset,
  *

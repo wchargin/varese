@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 
 import PitchNames from '../../core/PitchNames';
 import {findChordRootOffset} from '../../core/HarmonicSeries';
+import {withinEngravingRange} from '../../utils/DisplayUtils';
 
 import ChordEngraving from '../ChordEngraving';
 import ChordInput from '../ChordInput';
@@ -88,7 +89,7 @@ class ChordOutput extends Component {
                 const str = offset.toString().replace(/-/g, "\u2212");
                 const note = PitchNames.pitchToName(offset, true);
 
-                if (!ChordEngraving.withinRange(chord)) {
+                if (!withinEngravingRange(chord)) {
                     return <div className="alert alert-info">
                         The root of that chord is <strong>{note}</strong>,
                         at {str} {noun}.

@@ -70,6 +70,22 @@ describe('DisplayUtils', () => {
             test(true, gdb, 1, 8, 3, 5, {xc: true}));
     });
 
+    describe('#withinEngravingRange', () => {
+        const {withinEngravingRange} = DisplayUtils;
+        it("should accept the empty chord", () =>
+            expect(withinEngravingRange([])).to.equal(true));
+        it("should accept a C4-major triad", () =>
+            expect(withinEngravingRange([0, 4, 7])).to.equal(true));
+        it("should accept a chord that spans the piano", () =>
+            expect(withinEngravingRange([-40, 0, 48])).to.equal(true));
+        it("should reject a chord way off the top of the piano", () =>
+            expect(withinEngravingRange([288, 292, 295])).to.equal(false));
+        it("should reject a chord way off the bottom of the piano", () =>
+            expect(withinEngravingRange([-240, -244, -247])).to.equal(false));
+        it("should reject a chord with just one ridiculous note", () =>
+            expect(withinEngravingRange([-10, 20, 300])).to.equal(false));
+    });
+
     describe('#formatMaybeRoot', () => {
         const {formatMaybeRoot: fmr} = DisplayUtils;
         const yes = result => ({ status: "success", result });
