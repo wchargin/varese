@@ -103,14 +103,16 @@ describe('RationalizerSettings', () => {
         />);
         const getInput = component =>
             scryManyWithTag(component, 'input')[0];
-        it("processes a click handler", () => {
-            // TODO(william): upgrade JSDom to get the selection API
-            // (see tmpvar/jsdom#1305)
-            // so that we can write a proper test here
-            // instead of just noting that it doesn't crah.
+        it("selects the full text of the component on click", () => {
             const component = renderComponent();
             const input = getInput(component);
             Simulate.click(input);
+            expect(input.selectionStart).to.equal(0);
+            expect(input.selectionEnd).to.equal(input.value.length);
+            // NOTE: not input.value.length - 1,
+            // because there are n + 1 places for the caret to be
+            // (e.g., |a|b|c|),
+            // and these are thus indexed from 0 through n, inclusive.
         });
         it("lets the user type some text that's not quite right", () => {
             const component = renderComponent();
