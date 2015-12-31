@@ -78,7 +78,7 @@ export default class ViewOptions extends Component {
                             max={12}
                             value={values.treeNumber}
                             onChange={e => handlers.onSetTreeNumber(
-                                parseInt(e.target.value, 10))}
+                                e.target.valueAsNumber)}
                         />
                     </Cell>
                     <Cell>

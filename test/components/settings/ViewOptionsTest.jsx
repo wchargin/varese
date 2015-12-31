@@ -172,7 +172,7 @@ describe('ViewOptions', () => {
             Simulate.change(
                 scryManyWithTag(component, 'input')
                     .filter(x => x.id === 'treeNumber')[0],
-                { target: { value: '5' } });
+                { target: { valueAsNumber: 5 } });
             expect(getBox()).to.equal(5);
         });
         it("sets the root bass", () => {
