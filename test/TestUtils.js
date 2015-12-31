@@ -11,6 +11,8 @@ export {
     scryRenderedDOMComponentsWithTag as scryManyWithTag,
     findRenderedDOMComponentWithClass as findOneWithClass,
     scryRenderedDOMComponentsWithClass as scryManyWithClass,
+    findRenderedComponentWithType as findOneWithType,
+    scryRenderedComponentsWithType as scryManyWithType,
 } from 'react-addons-test-utils';
 
 /*
