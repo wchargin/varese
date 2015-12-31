@@ -151,7 +151,7 @@ class AcousticRatioEntry extends Component {
             id={this.props.id}
             className="form-control"
             value={text}
-            onChange={() => this._handleChange()}
+            onChange={e => this._handleChange(e.target.value)}
             onBlur={() => this.setState({ text: null })}
             onClick={() => this.refs.input.select()}
             style={{
@@ -179,10 +179,8 @@ class AcousticRatioEntry extends Component {
         }
     }
 
-    _handleChange() {
-        const text = this.refs.input.value;
+    _handleChange(text) {
         this.setState({ text });
-
         const value = this._fromString(text);
         if (value.result) {
             this.props.onChange(value.result);
