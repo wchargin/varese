@@ -63,13 +63,18 @@ export default class TrichordTree extends Component {
             width: `calc(100vw - ${2 * widePadding}px)`,
             left: `calc(-50vw + ${widePadding}px + 50%)`,
         } : {};
+        const className = this.props.viewOptions.wide ? "wide-tree" : "";
+        const style ={
+            ...wideStyle,
+            marginBottom: 20,
+        };
 
         return <div>
             {this.props.viewOptions.showRoots && <InvalidRootWarnings
                 chords={flatten(chords)}
                 rationalizer={rationalizer}
             />}
-            <div style={{...wideStyle, marginBottom: 20}}>
+            <div className={className} style={style}>
                 <TreeView
                     elements={nodes}
                     spacing={2 * size}
