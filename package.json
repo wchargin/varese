@@ -8,9 +8,9 @@
     "start": "webpack-dev-server",
     "build": "NODE_ENV=production webpack",
     "test-just": "mocha --compilers js:babel-register test/TestEnvironmentSetup.js -R spec",
-    "unit-test": "mocha --compilers js:babel-register test/TestEnvironmentSetup.js 'test/**/*.@(js|jsx)' -R dot",
+    "unit-test": "mocha --compilers js:babel-register test/TestEnvironmentSetup.js 'test/**/*.@(js|jsx)' -R dot -s -1",
     "lint": "node node_modules/eslint/bin/eslint.js src test --ext '.js,.jsx'",
-    "coverage": "babel-node ./node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha -- test/TestEnvironmentSetup.js 'test/**/*.@(js|jsx)' -R dot",
+    "coverage": "babel-node ./node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha -- test/TestEnvironmentSetup.js 'test/**/*.@(js|jsx)' -R dot -s -1",
     "travis-coveralls": "npm run coverage && cat ./coverage/lcov.info | coveralls",
     "test": "npm run lint && npm run unit-test"
   },
