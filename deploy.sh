@@ -5,6 +5,10 @@ set -e
 # Disable this if you've already run 'npm build'.
 : "${BUILD:=true}"
 
+# Set this to "true" if you just want to save the contents to a
+# standalone application without deploying to the site.
+: "${BUILD_ONLY:=false}"
+
 # Explode the contents of this directory,
 # and the stage the following enclosed files and folders.
 EXPLODE=dist
@@ -78,6 +82,13 @@ else
     printf '%s\n' "Warning: skipping build."
 fi
 cp -r "$EXPLODE"/* "$TMPDIR"
+
+if [[ "$BUILD_ONLY" == "true" ]]; then
+    printf 'BUILD_ONLY is set; stopping here.\n'
+    printf 'Contents available in: %s\n' "$TMPDIR"
+    exit 0
+fi
+
 
 git checkout gh-pages
 cp -r "$TMPDIR"/* .
