@@ -47,7 +47,7 @@ ensure_no_stopships() {
 prompt() {
     >&2 printf '%s\n' "$1"
     >&2 printf 'yes/no> '
-    read line
+    read -r line
     if [[ "$line" != "yes" ]]; then
         >&2 printf '%s\n' "Aborting!"
     fi
