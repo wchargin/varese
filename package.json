@@ -67,7 +67,7 @@
     "cross-env": "^5.2.0",
     "eslint": "^6.2.2",
     "eslint-plugin-react": "^7.14.3",
-    "jsdom": "7.2.0",
+    "jsdom": "^7.2.2",
     "merge": "^1.2.1",
     "mocha": "^6.2.0",
     "nyc": "^14.1.1",
