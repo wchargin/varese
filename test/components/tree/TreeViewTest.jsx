@@ -12,6 +12,7 @@ import {
 import TreeView from '../../../src/components/tree/TreeView';
 
 describe('TreeView', () => {
+    // eslint-disable-next-line react/prop-types
     const TreeElement = ({ name }) => <i className="tree-element">{name}</i>;
     const treeElements = [
         [

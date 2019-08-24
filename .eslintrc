@@ -1,4 +1,17 @@
 {
+    "parser": "babel-eslint",
+
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module"
+    },
+
+    "settings": {
+        "react": {
+            "version": "detect"
+        },
+    },
+
     "env": {
         "browser": true,
         "node": true,
@@ -6,32 +19,6 @@
     },
 
     "plugins": ["react"],
-
-    "ecmaFeatures": {
-        "arrowFunctions": true,
-        "binaryLiterals": true,
-        "blockBindings": true,
-        "classes": true,
-        "defaultParams": true,
-        "destructuring": true,
-        "experimentalObjectRestSpread": true,
-        "forOf": true,
-        "generators": true,
-        "modules": true,
-        "objectLiteralComputedProperties": true,
-        "objectLiteralDuplicateProperties": true,
-        "objectLiteralShorthandMethods": true,
-        "objectLiteralShorthandProperties": true,
-        "octalLiterals": true,
-        "regexUFlag": true,
-        "regexYFlag": true,
-        "spread": true,
-        "superInFunctions": true,
-        "templateStrings": true,
-        "unicodeCodePointEscapes": true,
-        "globalReturn": true,
-        "jsx": true
-    },
 
     "rules": {
         // 0 = don't warn or error
@@ -62,7 +49,6 @@
         "no-negated-in-lhs": 2,             // disallow negation of the left operand of an in expression
         "no-obj-calls": 2,                  // disallow the use of object properties of the global object (Math and JSON) as functions
         "no-regex-spaces": 2,               // disallow multiple spaces in a regular expression literal
-        "quote-props": 2,                   // disallow reserved words being used as object literal keys (off by default)
         "no-sparse-arrays": 2,              // disallow sparse arrays
         "no-unreachable": 2,                // disallow unreachable statements after a return, throw, continue, or break statement
         "use-isnan": 2,                     // disallow comparisons with the value NaN
@@ -78,7 +64,6 @@
         "no-alert": 2,                      // disallow the use of alert, confirm, and prompt
         "no-caller": 2,                     // disallow use of arguments.caller or arguments.callee
         "no-div-regex": 2,                  // disallow division operators explicitly at beginning of regular expression (off by default)
-        "no-empty-label": 2,                // disallow use of labels for anything other then loops and switches
         "no-eval": 2,                       // disallow use of eval()
         "no-fallthrough": 1,                // disallow fallthrough of case statements
         "no-implied-eval": 2,               // disallow use of eval()-like methods
@@ -96,7 +81,6 @@
         "no-return-assign": 2,              // disallow use of assignment in return statement
         "no-script-url": 1,                 // disallow use of javascript: urls.
         "no-self-compare": 2,               // disallow comparisons where both sides are exactly the same (off by default)
-        "no-sequences": 2,                  // disallow use of comma operator
         "no-throw-literal": 2,              // restrict what can be thrown as an exception (off by default)
         "no-unused-expressions": 2,         // disallow usage of expressions in statement position
         "no-with": 2,                       // disallow use of the with statement
@@ -144,7 +128,7 @@
             "before": false,
             "after": true,
         }],                         // enforce spacing before and after semicolons
-        "space-after-keywords": [1, "always"],
+        "keyword-spacing": [1],
         "space-before-blocks": [1, "always"],
         "space-before-function-paren": [1, "never"],    // require or disallow space before function opening parenthesis (off by default)
         "space-in-parens": [1, "never"],
