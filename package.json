@@ -59,7 +59,6 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.5.5",
     "babel-eslint": "^10.0.2",
-    "babel-istanbul": "^0.12.2",
     "babel-loader": "^8.0.6",
     "babel-plugin-istanbul": "^5.2.0",
     "chai": "^3.4.1",
